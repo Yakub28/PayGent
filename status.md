@@ -1,26 +1,61 @@
-# PayGent Project Status - April 25, 2026
+# PayGent Project Status — April 25, 2026
 
-## ✅ Completed Tasks
-- **Environment Setup**: Created `requirements.txt` and `setup_paygent.sh` with verified dependencies (FastAPI, Lexe-SDK, LangChain).
-- **Core Infrastructure**: Established `utils/lexe_client.py` for centralized Lexe wallet management.
-- **Provider Implementation**: Built a FastAPI service in `services/intelligence.py` that enforces the L402 protocol (402 Payment Required).
-- **Consumer Agent**: Developed an autonomous agent in `agents/consumer_agent.py` using LangChain tools to detect 402 errors and handle Lightning payments via Lexe.
-- **Demo Mode Implementation**: Optimized the system for a "single-wallet" demo environment, bypassing Lightning's "cannot pay self" restriction while maintaining the L402 protocol flow.
-- **Documentation**: Created a comprehensive `README.md` and a `.gitignore` to protect sensitive credentials.
+## Current State: Complete
 
-## 🛠 Tech Stack Details
-- **Payment Layer**: Lexe Python SDK (Self-custodial)
-- **API Standard**: L402 (Lightning Service Authentication Tokens)
-- **Agent Framework**: LangChain
-- **Backend**: FastAPI (Asynchronous)
+All 19 implementation tasks finished. 13/13 tests passing. TypeScript compiles clean.
 
-## 🚀 Current State: Demo Ready
-The project successfully demonstrates an autonomous "Reasoning-as-a-Service" market.
-- **Provider** generates Lightning Invoices.
-- **Agent** pays invoices and retries requests automatically.
-- **Outcome**: Agent retrieves high-value intelligence after micro-payment settlement.
+## What Was Built
 
-## 📋 Next Steps
-- **Multi-Node Testing**: Deploy two separate Lexe nodes to verify cross-wallet settlement.
-- **Advanced Macaroons**: Implement real macaroon attenuation (caveats) for more granular access control.
-- **UI Dashboard**: Build a simple frontend to visualize the agent's balance and incoming/outgoing micro-payments.
+### Backend (FastAPI + SQLite + Lexe Lightning)
+
+- **Service Registry** — providers register endpoints with a price; consumers discover services without exposing internal URLs
+- **L402 Payment Router** — full Lightning paywall: issues invoices, verifies settlement via Lexe SDK, proxies to provider, records 10% fee split
+- **3 AI Provider Services** — Web Summarizer (25 sat), Code Reviewer (100 sat), Sentiment Analyzer (50 sat) — all powered by Claude Haiku
+- **Stats API** — total volume, fees earned, call count, live wallet balance
+- **Startup Seeding** — 3 services auto-registered on first launch
+
+### Frontend (Next.js + TypeScript + Tailwind)
+
+- **Stats Bar** — live volume, fees, calls, and marketplace wallet balance
+- **Service Catalog** — lists registered services with descriptions and prices
+- **Transaction Feed** — live payment history with status, amounts, fees, and relative timestamps
+- **3-second auto-polling** — dashboard updates without refresh
+
+### Consumer Agent
+
+- Discovers services via REST
+- Auto-handles L402: detects 402, parses invoice, pays via Lexe wallet, retries with auth header
+- Gracefully handles same-wallet demo mode
+- Runs 3 demo tasks end-to-end
+
+## Tech Stack
+
+| Component | Technology |
+|---|---|
+| Backend | Python 3.11+, FastAPI, SQLite |
+| Payments | Lexe SDK, Lightning Network, L402 protocol |
+| AI | Anthropic Claude Haiku |
+| Frontend | Next.js 16, TypeScript, Tailwind CSS v4 |
+| Tests | pytest, 13 tests, all passing |
+
+## File Counts
+
+- 14 Python source files
+- 5 test files (13 tests)
+- 5 TypeScript/TSX files
+- 18 feature commits
+
+## Next Steps Before Demo
+
+1. **Configure `.env`** with real Lexe credentials (marketplace + consumer wallets) and Anthropic API key
+2. **Run `python agents/consumer_agent.py`** against live backend to verify real Lightning settlement
+3. **Demo rehearsal** — run all 3 terminals, show live payment feed updating
+
+## Remaining Improvements (Post-Hackathon)
+
+- Replace `@app.on_event("startup")` with FastAPI lifespan handler (deprecation warning)
+- Replace `datetime.utcnow()` with `datetime.now(UTC)` throughout
+- Real provider wallet payouts (currently no-op, recorded in DB)
+- Refund logic for failed provider calls
+- Rate limiting and macaroon attenuation
+- Multi-node testing across independent Lexe instances
