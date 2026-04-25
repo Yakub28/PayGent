@@ -1,0 +1,7 @@
+fastapi
+uvicorn
+lexe-sdk
+requests
+pydantic
+langchain
+python-dotenv
