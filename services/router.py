@@ -24,7 +24,7 @@ def _payment_required(macaroon: str, invoice: str):
 
 def _verify_payment(payment_hash: str) -> bool:
     wallet = get_marketplace_wallet()
-    payments = wallet.list_payments(PaymentFilter())
+    payments = wallet.list_payments(PaymentFilter.ALL)
     return any(
         getattr(p, "payment_hash", None) == payment_hash
         and getattr(p, "status", None) in ("succeeded", "settled", "completed")

@@ -27,7 +27,7 @@ class L402Client:
         response = requests.post(url, json=payload, headers=headers)
 
         if response.status_code == 402:
-            print(f"  → 402 Payment Required")
+            print(f"  -> 402 Payment Required")
             www_auth = response.headers.get("WWW-Authenticate", "")
             macaroon_match = re.search(r'macaroon="([^"]+)"', www_auth)
             invoice_match = re.search(r'invoice="([^"]+)"', www_auth)
@@ -38,13 +38,13 @@ class L402Client:
             macaroon = macaroon_match.group(1)
             invoice = invoice_match.group(1)
 
-            print(f"  → Paying invoice {invoice[:30]}...")
+            print(f"  -> Paying invoice {invoice[:30]}...")
             try:
                 result = self.wallet.pay_invoice(invoice)
-                print(f"  → Payment sent (index: {result.index})")
+                print(f"  -> Payment sent (index: {result.index})")
             except Exception as e:
                 if "cannot pay ourselves" in str(e).lower():
-                    print(f"  → Same-wallet detected (demo mode). Proceeding.")
+                    print(f"  -> Same-wallet detected (demo mode). Proceeding.")
                 else:
                     raise
 
