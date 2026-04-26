@@ -23,23 +23,33 @@ export default function TransactionFeed({ transactions }: Props) {
         {transactions.map((t) => (
           <div
             key={t.id}
-            className="flex items-center justify-between px-4 py-3 border-b border-gray-800 last:border-0"
+            className="px-4 py-3 border-b border-gray-800 last:border-0"
           >
-            <div className="flex items-center gap-3">
-              <span className={t.status === "paid" ? "text-green-400" : "text-yellow-400"}>
-                {t.status === "paid" ? "✓" : "⏳"}
-              </span>
-              <span className="text-white font-medium">
-                {t.service_name ?? t.service_id.slice(0, 8)}
-              </span>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <span className={t.status === "paid" ? "text-green-400" : "text-yellow-400"}>
+                  {t.status === "paid" ? "✓" : "⏳"}
+                </span>
+                <span className="text-white font-medium">
+                  {t.service_name ?? t.service_id.slice(0, 8)}
+                </span>
+              </div>
+              <div className="flex items-center gap-6 text-sm">
+                <span className="text-gray-300">{t.amount_sats} sat</span>
+                <span className="text-purple-400">fee: {t.fee_sats ?? "—"} sat</span>
+                {t.status === "paid" && (
+                  t.quality_score !== null ? (
+                    <span className="text-green-400 font-mono">{t.quality_score}/100</span>
+                  ) : (
+                    <span className="text-gray-600 text-xs">scoring…</span>
+                  )
+                )}
+                <span className="text-gray-500">{timeAgo(t.created_at)}</span>
+              </div>
             </div>
-            <div className="flex items-center gap-6 text-sm">
-              <span className="text-gray-300">{t.amount_sats} sat</span>
-              <span className="text-purple-400">
-                fee: {t.fee_sats ?? "—"} sat
-              </span>
-              <span className="text-gray-500">{timeAgo(t.created_at)}</span>
-            </div>
+            {t.score_reason && (
+              <div className="text-xs text-gray-500 mt-1 ml-6">{t.score_reason}</div>
+            )}
           </div>
         ))}
       </div>
