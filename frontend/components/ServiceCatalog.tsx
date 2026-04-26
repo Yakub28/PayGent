@@ -9,6 +9,12 @@ const ICONS: Record<string, string> = {
   "Sentiment Analyzer": "📊",
 };
 
+const TIER_STYLES: Record<string, string> = {
+  bronze: "bg-amber-900 text-amber-300 border border-amber-700",
+  silver: "bg-blue-900 text-blue-300 border border-blue-700",
+  gold: "bg-yellow-900 text-yellow-300 border border-yellow-700",
+};
+
 export default function ServiceCatalog({ services }: Props) {
   return (
     <div className="mb-8">
@@ -22,8 +28,25 @@ export default function ServiceCatalog({ services }: Props) {
             <div className="flex items-center gap-3">
               <span className="text-2xl">{ICONS[s.name] ?? "⚡"}</span>
               <div>
-                <div className="font-medium text-white">{s.name}</div>
+                <div className="flex items-center gap-2">
+                  <span className="font-medium text-white">{s.name}</span>
+                  <span className={`text-xs px-2 py-0.5 rounded-full ${TIER_STYLES[s.tier] ?? TIER_STYLES.bronze}`}>
+                    {s.tier.charAt(0).toUpperCase() + s.tier.slice(1)}
+                  </span>
+                </div>
                 <div className="text-sm text-gray-400">{s.description}</div>
+                <div className="flex items-center gap-3 mt-1">
+                  {s.avg_quality_score !== null ? (
+                    <span className="text-xs text-gray-500">
+                      Avg: {Math.round(s.avg_quality_score)}
+                    </span>
+                  ) : s.call_count > 0 ? (
+                    <span className="text-xs text-gray-600 italic">scoring…</span>
+                  ) : null}
+                  {s.call_count > 0 && (
+                    <span className="text-xs text-gray-600">{s.call_count} calls</span>
+                  )}
+                </div>
               </div>
             </div>
             <div className="text-purple-400 font-mono font-bold whitespace-nowrap ml-4">

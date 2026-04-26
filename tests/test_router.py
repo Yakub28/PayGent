@@ -12,6 +12,7 @@ def client(tmp_path, monkeypatch):
 
     with get_db() as conn:
         conn.execute(
+            "INSERT INTO services (id, name, description, price_sats, endpoint_url, provider_wallet, created_at, is_active) VALUES (?,?,?,?,?,?,?,?)",
             "INSERT INTO services (id, name, description, price_sats, endpoint_url, "
             "provider_wallet, created_at, is_active) VALUES (?,?,?,?,?,?,?,?)",
             ("svc1", "Test", "desc", 25,
@@ -51,6 +52,7 @@ def test_call_with_valid_payment_returns_provider_response(tmp_path, monkeypatch
 
     with get_db() as conn:
         conn.execute(
+            "INSERT INTO services (id, name, description, price_sats, endpoint_url, provider_wallet, created_at, is_active) VALUES (?,?,?,?,?,?,?,?)",
             "INSERT INTO services (id, name, description, price_sats, endpoint_url, "
             "provider_wallet, created_at, is_active) VALUES (?,?,?,?,?,?,?,?)",
             ("svc1", "Test", "desc", 100,
@@ -63,13 +65,16 @@ def test_call_with_valid_payment_returns_provider_response(tmp_path, monkeypatch
     macaroon = "testmacaroon=="
     router_module.pending_payments[macaroon] = {
         "payment_hash": "paidhash123",
-        "service_id": "svc1"
+        "service_id": "svc1",
+        "txn_id": "txn-test-uuid",
     }
 
     from unittest.mock import patch
     with patch("services.router.get_marketplace_wallet") as mock_wallet, \
          patch("services.router._verify_payment", return_value=True), \
          patch("services.router._call_provider", return_value={"result": "ok"}), \
+         patch("services.router._pay_provider"), \
+         patch("services.router.score_and_update"):
          patch("services.router._settle_provider", return_value=(10, 90)):
         sys.modules.pop("main", None)
         from main import app

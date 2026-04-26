@@ -13,6 +13,12 @@ import base64
 import uuid
 import httpx
 from datetime import datetime
+from fastapi import APIRouter, BackgroundTasks, Header, HTTPException
+from lexe import PaymentFilter
+from database import get_db
+from models import CallServiceRequest
+from services.wallet_manager import get_marketplace_wallet
+from services.scorer import score_and_update
 from fastapi import APIRouter, Header, HTTPException
 from database import get_db
 from models import CallServiceRequest
@@ -37,7 +43,15 @@ def _payment_required(macaroon: str, invoice: str):
 
 
 def _verify_payment(payment_hash: str) -> bool:
+    wallet = get_marketplace_wallet()
+    payments = wallet.list_payments(PaymentFilter.ALL)
+    return any(
+        getattr(p, "payment_hash", None) == payment_hash
+        and getattr(p, "status", None) in ("succeeded", "settled", "completed")
+        for p in payments
+    )
     return is_invoice_settled(payment_hash)
+
 
 
 async def _call_provider(endpoint_url: str, input_data) -> dict:
@@ -47,6 +61,10 @@ async def _call_provider(endpoint_url: str, input_data) -> dict:
         return response.json()
 
 
+def _pay_provider(provider_wallet: str, provider_sats: int):
+    # In v1 all providers are internal (same wallet).
+    # This is a no-op recorded for accounting only.
+    pass
 def _settle_provider(service: dict, payment_hash: str, total_sats: int) -> tuple[int, int]:
     """Move the provider's share from marketplace to the provider wallet.
 
@@ -66,10 +84,12 @@ def _settle_provider(service: dict, payment_hash: str, total_sats: int) -> tuple
     return fee_sats, provider_sats
 
 
+
 @router.post("/services/{service_id}/call")
 async def call_service(
     service_id: str,
     req: CallServiceRequest,
+    background_tasks: BackgroundTasks,
     authorization: str = Header(None),
 ):
     with get_db() as conn:
@@ -89,14 +109,21 @@ async def call_service(
             description=f"PayGent: {service['name']}",
         )
         macaroon = _generate_macaroon(invoice_obj.payment_hash)
+        txn_id = str(uuid.uuid4())
         pending_payments[macaroon] = {
             "payment_hash": invoice_obj.payment_hash,
             "service_id": service_id,
+            "txn_id": txn_id,
             "consumer_agent_id": req.consumer_agent_id,
         }
-        txn_id = str(uuid.uuid4())
         with get_db() as conn:
             conn.execute(
+                "INSERT INTO transactions (id, service_id, payment_hash, amount_sats, fee_sats, provider_sats, status, created_at) VALUES (?,?,?,?,?,?,?,?)",
+                (
+                    txn_id, service_id, invoice_obj.payment_hash,
+                    service["price_sats"], None, None, "pending",
+                    datetime.utcnow().isoformat(),
+                ),
                 "INSERT INTO transactions (id, service_id, payment_hash, amount_sats, "
                 "fee_sats, provider_sats, status, created_at, consumer_agent_id) "
                 "VALUES (?,?,?,?,?,?,?,?,?)",
@@ -135,8 +162,22 @@ async def call_service(
 
     fee_sats, provider_sats = _settle_provider(service, payment_hash, service["price_sats"])
 
+    txn_id = entry.get("txn_id")
     with get_db() as conn:
         conn.execute(
+            """UPDATE transactions SET status='paid', fee_sats=?, provider_sats=?
+               WHERE payment_hash=?""",
+            (fee_sats, provider_sats, payment_hash),
+        )
+
+    _pay_provider(service["provider_wallet"], provider_sats)
+    del pending_payments[macaroon]
+
+    # Fire quality scorer as a background task (does not affect response latency)
+    if txn_id:
+        service_slug = service["name"].lower().replace(" ", "-")
+        background_tasks.add_task(score_and_update, txn_id, service_slug, req.input, result)
+
             "UPDATE transactions SET status='paid', fee_sats=?, provider_sats=? "
             "WHERE payment_hash=?",
             (fee_sats, provider_sats, payment_hash),

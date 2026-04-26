@@ -6,6 +6,11 @@ export interface Service {
   name: string;
   description: string;
   price_sats: number;
+  tier: string;
+  avg_quality_score: number | null;
+  success_rate: number;
+  call_count: number;
+  price_adjusted: boolean;
   provider_agent_id: string | null;
   service_type: string | null;
 }
@@ -20,6 +25,8 @@ export interface Transaction {
   provider_sats: number | null;
   status: string;
   created_at: string;
+  quality_score: number | null;
+  score_reason: string | null;
   consumer_agent_id: string | null;
 }
 
@@ -28,6 +35,8 @@ export interface Stats {
   total_fees_sats: number;
   total_calls: number;
   marketplace_balance_sats: number;
+  top_rated_name: string | null;
+  top_rated_tier: string | null;
 }
 
 export type AgentRole = "consumer" | "provider";

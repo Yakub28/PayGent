@@ -20,6 +20,7 @@ def test_get_db_commits_on_exit():
     init_db()
     with get_db() as conn:
         conn.execute(
+            "INSERT INTO services (id, name, description, price_sats, endpoint_url, provider_wallet, created_at, is_active) VALUES (?,?,?,?,?,?,?,?)",
             "INSERT INTO services (id, name, description, price_sats, endpoint_url, "
             "provider_wallet, created_at, is_active) VALUES (?,?,?,?,?,?,?,?)",
             ("id1","name","desc",10,"http://x","wallet1","2026-01-01",1)
