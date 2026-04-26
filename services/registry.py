@@ -16,7 +16,7 @@ def register_service(req: RegisterServiceRequest):
 
     with get_db() as conn:
         conn.execute(
-            "INSERT INTO services VALUES (?,?,?,?,?,?,?,?)",
+            "INSERT INTO services (id, name, description, price_sats, endpoint_url, provider_wallet, created_at, is_active) VALUES (?,?,?,?,?,?,?,?)",
             (service_id, req.name, req.description, req.price_sats,
              req.endpoint_url, provider_wallet, datetime.utcnow().isoformat(), 1)
         )

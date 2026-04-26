@@ -72,7 +72,7 @@ async def call_service(
         txn_id = str(uuid.uuid4())
         with get_db() as conn:
             conn.execute(
-                "INSERT INTO transactions VALUES (?,?,?,?,?,?,?,?)",
+                "INSERT INTO transactions (id, service_id, payment_hash, amount_sats, fee_sats, provider_sats, status, created_at) VALUES (?,?,?,?,?,?,?,?)",
                 (txn_id, service_id, invoice_obj.payment_hash,
                  service["price_sats"], None, None, "pending",
                  datetime.utcnow().isoformat())

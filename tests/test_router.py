@@ -12,7 +12,7 @@ def client(tmp_path, monkeypatch):
 
     with get_db() as conn:
         conn.execute(
-            "INSERT INTO services VALUES (?,?,?,?,?,?,?,?)",
+            "INSERT INTO services (id, name, description, price_sats, endpoint_url, provider_wallet, created_at, is_active) VALUES (?,?,?,?,?,?,?,?)",
             ("svc1", "Test", "desc", 25,
              "http://localhost:8000/api/providers/test",
              "wallet_abc", datetime.utcnow().isoformat(), 1)
@@ -50,7 +50,7 @@ def test_call_with_valid_payment_returns_provider_response(tmp_path, monkeypatch
 
     with get_db() as conn:
         conn.execute(
-            "INSERT INTO services VALUES (?,?,?,?,?,?,?,?)",
+            "INSERT INTO services (id, name, description, price_sats, endpoint_url, provider_wallet, created_at, is_active) VALUES (?,?,?,?,?,?,?,?)",
             ("svc1", "Test", "desc", 100,
              "http://localhost:8000/api/providers/test",
              "wallet_abc", datetime.utcnow().isoformat(), 1)
