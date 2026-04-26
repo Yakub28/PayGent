@@ -28,7 +28,7 @@ def get_stats():
                  AND (
                      SELECT COUNT(*) FROM transactions
                      WHERE service_id = s.id AND quality_score IS NOT NULL
-                 ) >= 3
+                 ) >= 1
                ORDER BY s.avg_quality_score DESC
                LIMIT 1"""
         ).fetchone()

@@ -76,8 +76,16 @@ def run_demo():
         print(f"  [{s['id'][:8]}] {s['name']} — {s['price_sats']} sats")
 
     tasks = [
-        (services[0]["id"], "https://example.com"),
-        (services[1]["id"], {"code": "def add(a,b): return a+b", "language": "python"}),
+        (services[0]["id"], "https://python.org"),
+        (services[1]["id"], {
+            "code": (
+                "def get_user(id):\n"
+                "    db = open_connection()\n"
+                "    q = 'SELECT * FROM users WHERE id=' + id\n"
+                "    return db.execute(q)\n"
+            ),
+            "language": "python",
+        }),
         (services[2]["id"], "Lightning payments are making agent economies possible!"),
     ]
 

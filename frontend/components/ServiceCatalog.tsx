@@ -36,11 +36,13 @@ export default function ServiceCatalog({ services }: Props) {
                 </div>
                 <div className="text-sm text-gray-400">{s.description}</div>
                 <div className="flex items-center gap-3 mt-1">
-                  {s.avg_quality_score !== null && s.call_count >= 3 && (
+                  {s.avg_quality_score !== null ? (
                     <span className="text-xs text-gray-500">
                       Avg: {Math.round(s.avg_quality_score)}
                     </span>
-                  )}
+                  ) : s.call_count > 0 ? (
+                    <span className="text-xs text-gray-600 italic">scoring…</span>
+                  ) : null}
                   {s.call_count > 0 && (
                     <span className="text-xs text-gray-600">{s.call_count} calls</span>
                   )}
