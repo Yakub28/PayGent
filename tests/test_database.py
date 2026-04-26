@@ -2,12 +2,8 @@ import os
 import pytest
 from database import init_db, get_db
 
-@pytest.fixture(autouse=True)
-def tmp_db(tmp_path, monkeypatch):
-    monkeypatch.setattr("database.DB_PATH", str(tmp_path / "test.db"))
-
 def test_init_db_creates_tables():
-    init_db()
+    # init_db is called by isolated_env fixture
     with get_db() as conn:
         tables = conn.execute(
             "SELECT name FROM sqlite_master WHERE type='table'"
@@ -17,7 +13,7 @@ def test_init_db_creates_tables():
     assert "transactions" in names
 
 def test_get_db_commits_on_exit():
-    init_db()
+    # Fresh isolated DB from fixture
     with get_db() as conn:
         conn.execute(
             "INSERT INTO services (id, name, description, price_sats, endpoint_url, provider_wallet, created_at, is_active) VALUES (?,?,?,?,?,?,?,?)",
@@ -28,7 +24,6 @@ def test_get_db_commits_on_exit():
     assert row is not None
 
 def test_init_db_creates_agents_table():
-    init_db()
     with get_db() as conn:
         names = [t["name"] for t in conn.execute(
             "SELECT name FROM sqlite_master WHERE type='table'"

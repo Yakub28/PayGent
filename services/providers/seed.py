@@ -1,4 +1,6 @@
-from database import get_db
+import os
+import threading
+from database import get_db, get_db_path
 from config import settings
 
 SERVICES = [
@@ -22,19 +24,43 @@ SERVICES = [
     },
 ]
 
+_SEED_LOCK = threading.Lock()
+_SEEDED_FILES: set[str] = set()
+
 def seed_services():
-    from services.registry import register_service
-    from models import RegisterServiceRequest
-
-    with get_db() as conn:
-        existing = conn.execute("SELECT COUNT(*) FROM services WHERE is_active=1").fetchone()[0]
-
-    if existing >= len(SERVICES):
-        print(f"Services already seeded ({existing} active). Skipping.")
+    global _SEEDED_FILES
+    
+    # Environment-level kill switch for all automated tests
+    if os.getenv("TESTING") == "1":
         return
+        
+    current_db = os.path.abspath(get_db_path())
+    
+    if current_db in _SEEDED_FILES:
+        return
+        
+    with _SEED_LOCK:
+        if current_db in _SEEDED_FILES:
+            return
+            
+        from services.registry import register_service
+        from models import RegisterServiceRequest
 
-    print("Seeding marketplace services...")
-    for svc in SERVICES:
-        req = RegisterServiceRequest(**svc)
-        result = register_service(req)
-        print(f"  Registered '{svc['name']}' -> {result.service_id}")
+        for svc in SERVICES:
+            # Atomic check-and-seed
+            with get_db() as conn:
+                try:
+                    existing = conn.execute("SELECT id FROM services WHERE name=? LIMIT 1", (svc["name"],)).fetchone()
+                    if existing:
+                        continue
+                except Exception:
+                    # Tables might not be initialized yet
+                    continue
+                    
+            try:
+                req = RegisterServiceRequest(**svc)
+                register_service(req)
+            except Exception:
+                pass
+                
+        _SEEDED_FILES.add(current_db)

@@ -1,7 +1,13 @@
 import sqlite3
+import os
 from contextlib import contextmanager
 
-DB_PATH = "paygent.db"
+def get_db_path():
+    return os.environ.get("PAYGENT_DB_PATH", "paygent.db")
+
+# Keep DB_PATH for compatibility with existing tests that monkeypatch it,
+# but our own code should prefer calling get_db_path() or using the env var.
+DB_PATH = get_db_path()
 
 def _migrate_db(conn):
     """Add new columns to existing databases. Silently skips if already present."""
@@ -21,6 +27,10 @@ def _migrate_db(conn):
                 raise
 
 def init_db():
+    # Update global DB_PATH from env just in case it changed after import
+    global DB_PATH
+    DB_PATH = get_db_path()
+    
     with get_db() as conn:
         conn.execute("""
             CREATE TABLE IF NOT EXISTS services (
@@ -82,7 +92,7 @@ def init_db():
 
 @contextmanager
 def get_db():
-    conn = sqlite3.connect(DB_PATH)
+    conn = sqlite3.connect(get_db_path())
     conn.row_factory = sqlite3.Row
     try:
         yield conn

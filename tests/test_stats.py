@@ -4,11 +4,9 @@ from unittest.mock import patch, MagicMock
 from datetime import datetime, UTC
 
 @pytest.fixture
-def client(tmp_path, monkeypatch):
-    monkeypatch.setattr("database.DB_PATH", str(tmp_path / "test.db"))
-    from database import init_db, get_db
-    init_db()
-
+def client(isolated_env):
+    from database import get_db
+    
     with get_db() as conn:
         conn.execute(
             "INSERT INTO services (id, name, description, price_sats, endpoint_url, provider_wallet, created_at, is_active) VALUES (?,?,?,?,?,?,?,?)",
@@ -22,9 +20,6 @@ def client(tmp_path, monkeypatch):
             "INSERT INTO transactions (id, service_id, payment_hash, amount_sats, fee_sats, provider_sats, status, created_at) VALUES (?,?,?,?,?,?,?,?)",
             ("tx2", "svc1", "hash2", 100, 10, 90, "paid", datetime.now(UTC).isoformat())
         )
-
-    import sys
-    sys.modules.pop("main", None)
 
     with patch("services.stats.get_marketplace_wallet") as mock_wallet:
         mock_info = MagicMock()
@@ -49,11 +44,10 @@ def test_transactions_returns_list(client):
     assert len(txns) == 2
     assert txns[0]["status"] == "paid"
 
-def test_stats_includes_top_rated_when_enough_calls(tmp_path, monkeypatch):
-    monkeypatch.setattr("database.DB_PATH", str(tmp_path / "test.db"))
-    from database import init_db, get_db
-    init_db()
-
+def test_stats_includes_top_rated_when_enough_calls(isolated_env):
+    from main import app
+    from database import get_db
+    
     with get_db() as conn:
         conn.execute(
             "INSERT INTO services (id, name, description, price_sats, endpoint_url, provider_wallet, created_at, is_active, avg_quality_score) VALUES (?,?,?,?,?,?,?,?,?)",
@@ -65,16 +59,10 @@ def test_stats_includes_top_rated_when_enough_calls(tmp_path, monkeypatch):
             ("tx0", "svc1", "hash0", 25, "paid", datetime.now(UTC).isoformat(), 88)
         )
 
-    import sys
-    sys.modules.pop("main", None)
-
-    from unittest.mock import patch, MagicMock
     with patch("services.stats.get_marketplace_wallet") as mock_wallet:
         mock_info = MagicMock()
         mock_info.balance_sats = 100
         mock_wallet.return_value.node_info.return_value = mock_info
-        from main import app
-        from fastapi.testclient import TestClient
         client = TestClient(app)
         response = client.get("/api/stats")
 
@@ -84,11 +72,10 @@ def test_stats_includes_top_rated_when_enough_calls(tmp_path, monkeypatch):
     assert data["top_rated_tier"] == "bronze"
 
 
-def test_stats_top_rated_is_none_without_enough_calls(tmp_path, monkeypatch):
-    monkeypatch.setattr("database.DB_PATH", str(tmp_path / "test.db"))
-    from database import init_db, get_db
-    init_db()
-
+def test_stats_top_rated_is_none_without_enough_calls(isolated_env):
+    from main import app
+    from database import get_db
+    
     with get_db() as conn:
         conn.execute(
             "INSERT INTO services (id, name, description, price_sats, endpoint_url, provider_wallet, created_at, is_active, avg_quality_score) VALUES (?,?,?,?,?,?,?,?,?)",
@@ -96,16 +83,10 @@ def test_stats_top_rated_is_none_without_enough_calls(tmp_path, monkeypatch):
         )
         # No scored transactions
 
-    import sys
-    sys.modules.pop("main", None)
-
-    from unittest.mock import patch, MagicMock
     with patch("services.stats.get_marketplace_wallet") as mock_wallet:
         mock_info = MagicMock()
         mock_info.balance_sats = 0
         mock_wallet.return_value.node_info.return_value = mock_info
-        from main import app
-        from fastapi.testclient import TestClient
         client = TestClient(app)
         response = client.get("/api/stats")
 

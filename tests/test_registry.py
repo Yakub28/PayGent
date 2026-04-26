@@ -1,17 +1,14 @@
 import pytest
 from fastapi.testclient import TestClient
 from unittest.mock import patch, MagicMock
+import sys
 
 @pytest.fixture
-def client(tmp_path, monkeypatch):
-    import sys
-    monkeypatch.setattr("database.DB_PATH", str(tmp_path / "test.db"))
-    from database import init_db
-    init_db()
-    # Remove cached modules so main/registry are freshly imported under the patch
-    for mod in list(sys.modules.keys()):
-        if mod in ("main", "services.registry"):
-            del sys.modules[mod]
+def client(isolated_env):
+    # isolated_env in conftest already set up fresh DB
+    for mod in ["main", "services.registry"]:
+        sys.modules.pop(mod, None)
+    
     with patch("services.registry.get_marketplace_wallet") as mock_wallet:
         mock_info = MagicMock()
         mock_info.node_pk = "abc123"

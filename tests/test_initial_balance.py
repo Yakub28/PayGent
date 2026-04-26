@@ -1,26 +1,13 @@
 import pytest
 from fastapi.testclient import TestClient
-from datetime import datetime, UTC
-from unittest.mock import patch
+import sys
 
 @pytest.fixture
-def client(tmp_path, monkeypatch):
-    # Setup tmp database
-    db_path = str(tmp_path / "test.db")
-    monkeypatch.setattr("database.DB_PATH", db_path)
-    
-    # Setup tmp mock lightning file
-    lightning_path = str(tmp_path / "mock_lightning.json")
-    monkeypatch.setattr("services.mock_wallet.STATE_FILE", lightning_path)
-    
-    from database import init_db
-    init_db()
-    
-    import sys
-    # Clear modules to ensure fresh import with mocked paths
-    for mod in ["main", "services.agents", "services.wallet_manager", "services.mock_wallet"]:
+def client(isolated_env):
+    # isolated_env fixture in conftest already set up DB and monkeypatched env
+    # but we need to ensure 'main' is re-imported if it was cleared
+    for mod in ["main", "services.agents"]:
         sys.modules.pop(mod, None)
-        
     from main import app
     return TestClient(app)
 
@@ -39,7 +26,7 @@ def test_create_agent_sets_initial_balance(client):
     resp_list = client.get("/api/agents")
     assert resp_list.status_code == 200
     agents = resp_list.json()
-    found = next(a for i, a in enumerate(agents) if a["id"] == data["id"])
+    found = next(a for a in agents if a["id"] == data["id"])
     assert found["balance_sats"] == 5000
 
 def test_create_provider_sets_initial_balance(client):

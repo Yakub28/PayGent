@@ -18,7 +18,7 @@ from typing import Any
 import httpx
 
 from config import settings
-from database import get_db
+from database import get_db, init_db
 from models import SimulationConfig, SimulationEvent, SimulationStatus
 from services.providers import types as ptypes
 from services.wallet_manager import (
@@ -123,7 +123,7 @@ async def _run_one_call(
 
     duration_ms = int((time.time() - started) * 1000)
     return SimulationEvent(
-        timestamp=datetime.utcnow().isoformat(),
+        timestamp=datetime.now(UTC).isoformat(),
         consumer_agent_id=consumer["id"],
         consumer_name=consumer["name"],
         provider_agent_id=provider["id"],
@@ -139,6 +139,9 @@ async def _run_one_call(
 
 
 async def _loop(cfg: SimulationConfig) -> None:
+    # Ensure tables exist in this background loop/thread
+    init_db()
+    
     interval = 1.0 / cfg.rate_per_sec
     while True:
         consumers = _list_agents("consumer")
@@ -162,7 +165,7 @@ async def _loop(cfg: SimulationConfig) -> None:
             raise
         except Exception as e:
             event = SimulationEvent(
-                timestamp=datetime.utcnow().isoformat(),
+                timestamp=datetime.now(UTC).isoformat(),
                 consumer_agent_id=consumer["id"],
                 consumer_name=consumer["name"],
                 provider_agent_id=provider["id"],
@@ -196,11 +199,14 @@ async def _loop(cfg: SimulationConfig) -> None:
 async def start(cfg: SimulationConfig) -> SimulationStatus:
     if STATE.task and not STATE.task.done():
         return current_status()
+    
+    init_db() # Ensure DB is ready in this thread
+    
     STATE.config = cfg
     STATE.iterations = 0
     STATE.successes = 0
     STATE.failures = 0
-    STATE.started_at = datetime.utcnow().isoformat()
+    STATE.started_at = datetime.now(UTC).isoformat()
     STATE.last_event = "starting…"
     STATE.events.clear()
     STATE.task = asyncio.create_task(_loop(cfg))

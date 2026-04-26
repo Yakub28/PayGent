@@ -236,7 +236,7 @@
     "marketplace": {
       "id": "marketplace",
       "label": "PayGent Marketplace",
-      "balance_sats": 1000763,
+      "balance_sats": 1000858,
       "payments": [
         {
           "payment_hash": "a0c82204a608611d3222f42073244d0699c016e425cf1b483744ba2132b98197",
@@ -694,9 +694,180 @@
           "status": "succeeded",
           "created_at": 1777198185.750099,
           "description": "PayGent: prod1 \u00b7 Code Writer"
+        },
+        {
+          "payment_hash": "50af77714532e4d8d18db7e76a42f3e0090c4b07044e9598c18c6ce19ac0b15f",
+          "amount_sats": 50,
+          "direction": "in",
+          "counterparty_id": "46c5c50a-c97f-4f43-a9c2-756af3320051",
+          "status": "succeeded",
+          "created_at": 1777198504.0881221,
+          "description": "PayGent: Quality AI \u00b7 Sentiment Analyzer"
+        },
+        {
+          "payment_hash": "6e6841ddc6a4ac93394580ec82edec44b8b3e9a7cf331df55437bb9899b8fd61",
+          "amount_sats": 50,
+          "direction": "in",
+          "counterparty_id": "09a46faa-f482-4ea5-bb9d-385eaafb0952",
+          "status": "succeeded",
+          "created_at": 1777198561.409652,
+          "description": "PayGent: Quality AI \u00b7 Sentiment Analyzer"
+        },
+        {
+          "payment_hash": "dd3208220e1847cd52aff874c1ffa1d9c51840f25532249d28ef9857148926c5",
+          "amount_sats": 50,
+          "direction": "in",
+          "counterparty_id": "ff84cb40-4507-434d-b0d2-c3ebc7cd96ac",
+          "status": "succeeded",
+          "created_at": 1777198622.375562,
+          "description": "PayGent: Quality AI \u00b7 Sentiment Analyzer"
+        },
+        {
+          "payment_hash": "2f93616d12b6f9548ae7c1826bd4a6ca7c95e90123e757f334fdc13f68884155",
+          "amount_sats": 50,
+          "direction": "in",
+          "counterparty_id": "3f1880ef-51f4-4d3c-8202-e76c08f897be",
+          "status": "succeeded",
+          "created_at": 1777198627.076177,
+          "description": "PayGent: Quality AI \u00b7 Sentiment Analyzer"
+        },
+        {
+          "payment_hash": "77d119f987af9d3cdacc3174fc24aed8d5364e7a4cde8b88f5ceab779c2b5981",
+          "amount_sats": 50,
+          "direction": "in",
+          "counterparty_id": "8bb078a3-e42c-4440-a6ca-96c4733cf9c2",
+          "status": "succeeded",
+          "created_at": 1777198752.310355,
+          "description": "PayGent: Quality AI \u00b7 Sentiment Analyzer"
+        },
+        {
+          "payment_hash": "69ec13ee7e59c0e3a746cd50129cfb50ba15d2958668c7f78243ae7ce3c65753",
+          "amount_sats": 50,
+          "direction": "in",
+          "counterparty_id": "78290fb2-e6b1-44c5-9935-12634c54e0cf",
+          "status": "succeeded",
+          "created_at": 1777198792.699278,
+          "description": "PayGent: Quality AI \u00b7 Sentiment Analyzer"
+        },
+        {
+          "payment_hash": "eddbae842fd020b30d209d9b63122e597e85c311a3053dc26ea47a08f80f2742",
+          "amount_sats": 50,
+          "direction": "in",
+          "counterparty_id": "a0084eed-b3c1-4476-968e-798a5a25b6b3",
+          "status": "succeeded",
+          "created_at": 1777198815.063394,
+          "description": "PayGent: Quality AI \u00b7 Sentiment Analyzer"
+        },
+        {
+          "payment_hash": "9999d9ffb03560d89de074a9c8d4bfa08f41e9552ebefd919f7aa6371d4c20df",
+          "amount_sats": 50,
+          "direction": "in",
+          "counterparty_id": "1915aef9-98c6-4a32-87e4-9c7c3568bf57",
+          "status": "succeeded",
+          "created_at": 1777198837.651958,
+          "description": "PayGent: Quality AI \u00b7 Sentiment Analyzer"
+        },
+        {
+          "payment_hash": "7f4939668bcf5ebd769e29ae1e1fab306821b111bd1f217d85c227a44a6a74d1",
+          "amount_sats": 50,
+          "direction": "in",
+          "counterparty_id": "61e7f3e1-bd53-4dca-b616-4db6fd8dd12d",
+          "status": "succeeded",
+          "created_at": 1777198869.557733,
+          "description": "PayGent: Quality AI \u00b7 Sentiment Analyzer"
+        },
+        {
+          "payment_hash": "dc270decda39b64009e7c1b751fa60a16581e794893af12a86558f788d71d14d",
+          "amount_sats": 50,
+          "direction": "in",
+          "counterparty_id": "66809cca-d3da-48a2-9e3c-e2d903bb32b5",
+          "status": "succeeded",
+          "created_at": 1777198890.813306,
+          "description": "PayGent: Quality AI \u00b7 Sentiment Analyzer"
+        },
+        {
+          "payment_hash": "9f055b0bbe4e35dc285bbc0e4a390c1ae35473ea8e74c946f88b27ed3a542057",
+          "amount_sats": 50,
+          "direction": "in",
+          "counterparty_id": "13fb8a51-66e8-44ca-9cf7-a28767a6d5d6",
+          "status": "succeeded",
+          "created_at": 1777198911.5278451,
+          "description": "PayGent: Quality AI \u00b7 Sentiment Analyzer"
+        },
+        {
+          "payment_hash": "85b1bae9bcaf865fa75b1391e7fce5f9c7f3807c5f6ceaa572feb680fc5cdccb",
+          "amount_sats": 50,
+          "direction": "in",
+          "counterparty_id": "4fa54ba2-882d-4397-90be-f376245f5fef",
+          "status": "succeeded",
+          "created_at": 1777198938.681519,
+          "description": "PayGent: Quality AI \u00b7 Sentiment Analyzer"
+        },
+        {
+          "payment_hash": "e41d0cafccb7364a7174da72521c8723e0ed96b5fdbb2ae2083c68092816a08d",
+          "amount_sats": 50,
+          "direction": "in",
+          "counterparty_id": "926224e4-06b9-4f02-8167-901d0ff48ef3",
+          "status": "succeeded",
+          "created_at": 1777198968.069419,
+          "description": "PayGent: Quality AI \u00b7 Sentiment Analyzer"
+        },
+        {
+          "payment_hash": "85b8e513c5d952c82dc98a37f9a8f295422ec3a15a9fd9c3860993c6271713e4",
+          "amount_sats": 50,
+          "direction": "in",
+          "counterparty_id": "22291785-16fd-48d1-ac58-6188d2dd382d",
+          "status": "succeeded",
+          "created_at": 1777198992.2344582,
+          "description": "PayGent: Quality AI \u00b7 Sentiment Analyzer"
+        },
+        {
+          "payment_hash": "5277e5314a41b724ef707452d51c8812cf59e1f352374b3cf913be8e7aa787e4",
+          "amount_sats": 50,
+          "direction": "in",
+          "counterparty_id": "e50c49c6-75d6-491e-9b98-f89c3338021a",
+          "status": "succeeded",
+          "created_at": 1777199054.467516,
+          "description": "PayGent: Quality AI \u00b7 Sentiment Analyzer"
+        },
+        {
+          "payment_hash": "999852f80bb5b31946c7bd46edbf3e14e72eca8c69b37df38ab54093408c93bd",
+          "amount_sats": 50,
+          "direction": "in",
+          "counterparty_id": "b4530f2f-b00c-4ea6-a85d-47573ed1e737",
+          "status": "succeeded",
+          "created_at": 1777199101.273867,
+          "description": "PayGent: Quality AI \u00b7 Sentiment Analyzer"
+        },
+        {
+          "payment_hash": "60a876e6d19a469bd20a4086715fea0817580a8cb043b252cbb4acb8492e4774",
+          "amount_sats": 50,
+          "direction": "in",
+          "counterparty_id": "45661ff5-6c52-44d1-ab97-870064e3baba",
+          "status": "succeeded",
+          "created_at": 1777199216.359678,
+          "description": "PayGent: Quality AI \u00b7 Sentiment Analyzer"
+        },
+        {
+          "payment_hash": "d140f136073253321fe317a9c6ce3600686326e1a0a5aac0d7c2c03c2e5a92a2",
+          "amount_sats": 50,
+          "direction": "in",
+          "counterparty_id": "e1d9353c-441d-4a90-984e-b2dac6eccd21",
+          "status": "succeeded",
+          "created_at": 1777199290.82112,
+          "description": "PayGent: Quality AI \u00b7 Sentiment Analyzer"
+        },
+        {
+          "payment_hash": "8b1d0b878a043e67014096c97252bdee33cee86df4ff372d24a8634b6b00aa62",
+          "amount_sats": 50,
+          "direction": "in",
+          "counterparty_id": "23e3d128-eccb-41e0-b457-4d24b0ab0e49",
+          "status": "succeeded",
+          "created_at": 1777199444.962267,
+          "description": "PayGent: Quality AI \u00b7 Sentiment Analyzer"
         }
       ],
-      "balance": 1000763,
+      "balance": 1000858,
       "history": [
         {
           "payment_hash": "2e85881049320819b94be5891e564075f1c64ee2865e03add49c0ac49c3491b4",
@@ -1147,6 +1318,177 @@
           "status": "succeeded",
           "created_at": 1777198185.750099,
           "description": "PayGent: prod1 \u00b7 Code Writer"
+        },
+        {
+          "payment_hash": "50af77714532e4d8d18db7e76a42f3e0090c4b07044e9598c18c6ce19ac0b15f",
+          "amount_sats": 50,
+          "direction": "in",
+          "counterparty_id": "46c5c50a-c97f-4f43-a9c2-756af3320051",
+          "status": "succeeded",
+          "created_at": 1777198504.0881221,
+          "description": "PayGent: Quality AI \u00b7 Sentiment Analyzer"
+        },
+        {
+          "payment_hash": "6e6841ddc6a4ac93394580ec82edec44b8b3e9a7cf331df55437bb9899b8fd61",
+          "amount_sats": 50,
+          "direction": "in",
+          "counterparty_id": "09a46faa-f482-4ea5-bb9d-385eaafb0952",
+          "status": "succeeded",
+          "created_at": 1777198561.409652,
+          "description": "PayGent: Quality AI \u00b7 Sentiment Analyzer"
+        },
+        {
+          "payment_hash": "dd3208220e1847cd52aff874c1ffa1d9c51840f25532249d28ef9857148926c5",
+          "amount_sats": 50,
+          "direction": "in",
+          "counterparty_id": "ff84cb40-4507-434d-b0d2-c3ebc7cd96ac",
+          "status": "succeeded",
+          "created_at": 1777198622.375562,
+          "description": "PayGent: Quality AI \u00b7 Sentiment Analyzer"
+        },
+        {
+          "payment_hash": "2f93616d12b6f9548ae7c1826bd4a6ca7c95e90123e757f334fdc13f68884155",
+          "amount_sats": 50,
+          "direction": "in",
+          "counterparty_id": "3f1880ef-51f4-4d3c-8202-e76c08f897be",
+          "status": "succeeded",
+          "created_at": 1777198627.076177,
+          "description": "PayGent: Quality AI \u00b7 Sentiment Analyzer"
+        },
+        {
+          "payment_hash": "77d119f987af9d3cdacc3174fc24aed8d5364e7a4cde8b88f5ceab779c2b5981",
+          "amount_sats": 50,
+          "direction": "in",
+          "counterparty_id": "8bb078a3-e42c-4440-a6ca-96c4733cf9c2",
+          "status": "succeeded",
+          "created_at": 1777198752.310355,
+          "description": "PayGent: Quality AI \u00b7 Sentiment Analyzer"
+        },
+        {
+          "payment_hash": "69ec13ee7e59c0e3a746cd50129cfb50ba15d2958668c7f78243ae7ce3c65753",
+          "amount_sats": 50,
+          "direction": "in",
+          "counterparty_id": "78290fb2-e6b1-44c5-9935-12634c54e0cf",
+          "status": "succeeded",
+          "created_at": 1777198792.699278,
+          "description": "PayGent: Quality AI \u00b7 Sentiment Analyzer"
+        },
+        {
+          "payment_hash": "eddbae842fd020b30d209d9b63122e597e85c311a3053dc26ea47a08f80f2742",
+          "amount_sats": 50,
+          "direction": "in",
+          "counterparty_id": "a0084eed-b3c1-4476-968e-798a5a25b6b3",
+          "status": "succeeded",
+          "created_at": 1777198815.063394,
+          "description": "PayGent: Quality AI \u00b7 Sentiment Analyzer"
+        },
+        {
+          "payment_hash": "9999d9ffb03560d89de074a9c8d4bfa08f41e9552ebefd919f7aa6371d4c20df",
+          "amount_sats": 50,
+          "direction": "in",
+          "counterparty_id": "1915aef9-98c6-4a32-87e4-9c7c3568bf57",
+          "status": "succeeded",
+          "created_at": 1777198837.651958,
+          "description": "PayGent: Quality AI \u00b7 Sentiment Analyzer"
+        },
+        {
+          "payment_hash": "7f4939668bcf5ebd769e29ae1e1fab306821b111bd1f217d85c227a44a6a74d1",
+          "amount_sats": 50,
+          "direction": "in",
+          "counterparty_id": "61e7f3e1-bd53-4dca-b616-4db6fd8dd12d",
+          "status": "succeeded",
+          "created_at": 1777198869.557733,
+          "description": "PayGent: Quality AI \u00b7 Sentiment Analyzer"
+        },
+        {
+          "payment_hash": "dc270decda39b64009e7c1b751fa60a16581e794893af12a86558f788d71d14d",
+          "amount_sats": 50,
+          "direction": "in",
+          "counterparty_id": "66809cca-d3da-48a2-9e3c-e2d903bb32b5",
+          "status": "succeeded",
+          "created_at": 1777198890.813306,
+          "description": "PayGent: Quality AI \u00b7 Sentiment Analyzer"
+        },
+        {
+          "payment_hash": "9f055b0bbe4e35dc285bbc0e4a390c1ae35473ea8e74c946f88b27ed3a542057",
+          "amount_sats": 50,
+          "direction": "in",
+          "counterparty_id": "13fb8a51-66e8-44ca-9cf7-a28767a6d5d6",
+          "status": "succeeded",
+          "created_at": 1777198911.5278451,
+          "description": "PayGent: Quality AI \u00b7 Sentiment Analyzer"
+        },
+        {
+          "payment_hash": "85b1bae9bcaf865fa75b1391e7fce5f9c7f3807c5f6ceaa572feb680fc5cdccb",
+          "amount_sats": 50,
+          "direction": "in",
+          "counterparty_id": "4fa54ba2-882d-4397-90be-f376245f5fef",
+          "status": "succeeded",
+          "created_at": 1777198938.681519,
+          "description": "PayGent: Quality AI \u00b7 Sentiment Analyzer"
+        },
+        {
+          "payment_hash": "e41d0cafccb7364a7174da72521c8723e0ed96b5fdbb2ae2083c68092816a08d",
+          "amount_sats": 50,
+          "direction": "in",
+          "counterparty_id": "926224e4-06b9-4f02-8167-901d0ff48ef3",
+          "status": "succeeded",
+          "created_at": 1777198968.069419,
+          "description": "PayGent: Quality AI \u00b7 Sentiment Analyzer"
+        },
+        {
+          "payment_hash": "85b8e513c5d952c82dc98a37f9a8f295422ec3a15a9fd9c3860993c6271713e4",
+          "amount_sats": 50,
+          "direction": "in",
+          "counterparty_id": "22291785-16fd-48d1-ac58-6188d2dd382d",
+          "status": "succeeded",
+          "created_at": 1777198992.2344582,
+          "description": "PayGent: Quality AI \u00b7 Sentiment Analyzer"
+        },
+        {
+          "payment_hash": "5277e5314a41b724ef707452d51c8812cf59e1f352374b3cf913be8e7aa787e4",
+          "amount_sats": 50,
+          "direction": "in",
+          "counterparty_id": "e50c49c6-75d6-491e-9b98-f89c3338021a",
+          "status": "succeeded",
+          "created_at": 1777199054.467516,
+          "description": "PayGent: Quality AI \u00b7 Sentiment Analyzer"
+        },
+        {
+          "payment_hash": "999852f80bb5b31946c7bd46edbf3e14e72eca8c69b37df38ab54093408c93bd",
+          "amount_sats": 50,
+          "direction": "in",
+          "counterparty_id": "b4530f2f-b00c-4ea6-a85d-47573ed1e737",
+          "status": "succeeded",
+          "created_at": 1777199101.273867,
+          "description": "PayGent: Quality AI \u00b7 Sentiment Analyzer"
+        },
+        {
+          "payment_hash": "60a876e6d19a469bd20a4086715fea0817580a8cb043b252cbb4acb8492e4774",
+          "amount_sats": 50,
+          "direction": "in",
+          "counterparty_id": "45661ff5-6c52-44d1-ab97-870064e3baba",
+          "status": "succeeded",
+          "created_at": 1777199216.359678,
+          "description": "PayGent: Quality AI \u00b7 Sentiment Analyzer"
+        },
+        {
+          "payment_hash": "d140f136073253321fe317a9c6ce3600686326e1a0a5aac0d7c2c03c2e5a92a2",
+          "amount_sats": 50,
+          "direction": "in",
+          "counterparty_id": "e1d9353c-441d-4a90-984e-b2dac6eccd21",
+          "status": "succeeded",
+          "created_at": 1777199290.82112,
+          "description": "PayGent: Quality AI \u00b7 Sentiment Analyzer"
+        },
+        {
+          "payment_hash": "8b1d0b878a043e67014096c97252bdee33cee86df4ff372d24a8634b6b00aa62",
+          "amount_sats": 50,
+          "direction": "in",
+          "counterparty_id": "23e3d128-eccb-41e0-b457-4d24b0ab0e49",
+          "status": "succeeded",
+          "created_at": 1777199444.962267,
+          "description": "PayGent: Quality AI \u00b7 Sentiment Analyzer"
         }
       ]
     },
@@ -1699,6 +2041,883 @@
     },
     "93580bb6-74fb-4190-bdc0-ee8ee587ae1b": {
       "balance": 1000,
+      "history": []
+    },
+    "46c5c50a-c97f-4f43-a9c2-756af3320051": {
+      "balance": 950,
+      "history": [
+        {
+          "payment_hash": "50af77714532e4d8d18db7e76a42f3e0090c4b07044e9598c18c6ce19ac0b15f",
+          "amount_sats": 50,
+          "direction": "out",
+          "counterparty_id": "marketplace",
+          "status": "succeeded",
+          "created_at": 1777198504.086592,
+          "description": "PayGent: Quality AI \u00b7 Sentiment Analyzer"
+        }
+      ],
+      "balance_sats": 950,
+      "payments": [
+        {
+          "payment_hash": "50af77714532e4d8d18db7e76a42f3e0090c4b07044e9598c18c6ce19ac0b15f",
+          "amount_sats": 50,
+          "direction": "out",
+          "counterparty_id": "marketplace",
+          "status": "succeeded",
+          "created_at": 1777198504.086592,
+          "description": "PayGent: Quality AI \u00b7 Sentiment Analyzer"
+        }
+      ]
+    },
+    "cb2752e3-c928-4fbd-887f-3f5699553f9d": {
+      "balance": 45,
+      "history": [],
+      "balance_sats": 45
+    },
+    "f363b6d7-9577-4000-8c0c-f806118f4e44": {
+      "balance": 1000,
+      "history": []
+    },
+    "1a79dd69-292f-4629-93fb-3f4dbf3468cb": {
+      "balance": 0,
+      "history": []
+    },
+    "09a46faa-f482-4ea5-bb9d-385eaafb0952": {
+      "balance": 950,
+      "history": [
+        {
+          "payment_hash": "6e6841ddc6a4ac93394580ec82edec44b8b3e9a7cf331df55437bb9899b8fd61",
+          "amount_sats": 50,
+          "direction": "out",
+          "counterparty_id": "marketplace",
+          "status": "succeeded",
+          "created_at": 1777198561.408319,
+          "description": "PayGent: Quality AI \u00b7 Sentiment Analyzer"
+        }
+      ],
+      "balance_sats": 950,
+      "payments": [
+        {
+          "payment_hash": "6e6841ddc6a4ac93394580ec82edec44b8b3e9a7cf331df55437bb9899b8fd61",
+          "amount_sats": 50,
+          "direction": "out",
+          "counterparty_id": "marketplace",
+          "status": "succeeded",
+          "created_at": 1777198561.408319,
+          "description": "PayGent: Quality AI \u00b7 Sentiment Analyzer"
+        }
+      ]
+    },
+    "e979b561-121c-4186-8a65-0edc1e9c5bbe": {
+      "balance": 45,
+      "history": [],
+      "balance_sats": 45
+    },
+    "811e5259-f29f-4c6c-b584-cae5ccfc9b57": {
+      "balance": 1000,
+      "history": []
+    },
+    "bb4ec69b-3c54-4ac5-92c4-a81242fc6ef3": {
+      "balance": 0,
+      "history": []
+    },
+    "ff84cb40-4507-434d-b0d2-c3ebc7cd96ac": {
+      "balance": 950,
+      "history": [
+        {
+          "payment_hash": "dd3208220e1847cd52aff874c1ffa1d9c51840f25532249d28ef9857148926c5",
+          "amount_sats": 50,
+          "direction": "out",
+          "counterparty_id": "marketplace",
+          "status": "succeeded",
+          "created_at": 1777198622.374136,
+          "description": "PayGent: Quality AI \u00b7 Sentiment Analyzer"
+        }
+      ],
+      "balance_sats": 950,
+      "payments": [
+        {
+          "payment_hash": "dd3208220e1847cd52aff874c1ffa1d9c51840f25532249d28ef9857148926c5",
+          "amount_sats": 50,
+          "direction": "out",
+          "counterparty_id": "marketplace",
+          "status": "succeeded",
+          "created_at": 1777198622.374136,
+          "description": "PayGent: Quality AI \u00b7 Sentiment Analyzer"
+        }
+      ]
+    },
+    "1a03b3c1-a00f-4638-8e97-ef26e1e2bbd6": {
+      "balance": 45,
+      "history": [],
+      "balance_sats": 45
+    },
+    "1af7b801-9772-4c78-8f5a-cc977d82a5a9": {
+      "balance": 1000,
+      "history": []
+    },
+    "f617963b-a2eb-438d-909b-a96b9c6bb412": {
+      "balance": 0,
+      "history": []
+    },
+    "3c19ecc1-1a38-49ca-a96f-de4ab446a376": {
+      "balance": 5000,
+      "history": []
+    },
+    "efa27daf-84b0-43d0-9be7-83c769c33b54": {
+      "balance": 1000,
+      "history": []
+    },
+    "3f1880ef-51f4-4d3c-8202-e76c08f897be": {
+      "balance": 950,
+      "history": [
+        {
+          "payment_hash": "2f93616d12b6f9548ae7c1826bd4a6ca7c95e90123e757f334fdc13f68884155",
+          "amount_sats": 50,
+          "direction": "out",
+          "counterparty_id": "marketplace",
+          "status": "succeeded",
+          "created_at": 1777198627.074666,
+          "description": "PayGent: Quality AI \u00b7 Sentiment Analyzer"
+        }
+      ],
+      "balance_sats": 950,
+      "payments": [
+        {
+          "payment_hash": "2f93616d12b6f9548ae7c1826bd4a6ca7c95e90123e757f334fdc13f68884155",
+          "amount_sats": 50,
+          "direction": "out",
+          "counterparty_id": "marketplace",
+          "status": "succeeded",
+          "created_at": 1777198627.074666,
+          "description": "PayGent: Quality AI \u00b7 Sentiment Analyzer"
+        }
+      ]
+    },
+    "5273805c-a4c2-4118-9dca-6c3008ecdbe7": {
+      "balance": 45,
+      "history": [],
+      "balance_sats": 45
+    },
+    "be1b5aab-7b32-4a2b-964f-ce17f4ebb161": {
+      "balance": 1000,
+      "history": []
+    },
+    "f2e0c13d-0578-4d56-90eb-c40f6a3264ef": {
+      "balance": 0,
+      "history": []
+    },
+    "a1820780-bbde-4bcf-8c0f-dbc593332561": {
+      "balance": 5000,
+      "history": []
+    },
+    "8d068738-5973-457e-a6f5-c7a10cdfd828": {
+      "balance": 1000,
+      "history": []
+    },
+    "8bb078a3-e42c-4440-a6ca-96c4733cf9c2": {
+      "balance": 950,
+      "history": [
+        {
+          "payment_hash": "77d119f987af9d3cdacc3174fc24aed8d5364e7a4cde8b88f5ceab779c2b5981",
+          "amount_sats": 50,
+          "direction": "out",
+          "counterparty_id": "marketplace",
+          "status": "succeeded",
+          "created_at": 1777198752.308816,
+          "description": "PayGent: Quality AI \u00b7 Sentiment Analyzer"
+        }
+      ],
+      "balance_sats": 950,
+      "payments": [
+        {
+          "payment_hash": "77d119f987af9d3cdacc3174fc24aed8d5364e7a4cde8b88f5ceab779c2b5981",
+          "amount_sats": 50,
+          "direction": "out",
+          "counterparty_id": "marketplace",
+          "status": "succeeded",
+          "created_at": 1777198752.308816,
+          "description": "PayGent: Quality AI \u00b7 Sentiment Analyzer"
+        }
+      ]
+    },
+    "241f661d-e339-4719-91d7-f000cbba1747": {
+      "balance": 45,
+      "history": [],
+      "balance_sats": 45
+    },
+    "acfb9ca1-100c-4e0d-8233-de98ec355f9c": {
+      "balance": 1000,
+      "history": []
+    },
+    "28736e9f-5b80-44fb-9b65-f92909df7d84": {
+      "balance": 0,
+      "history": []
+    },
+    "fc365e83-4661-4592-9ac4-1767dee30ee8": {
+      "balance": 5000,
+      "history": []
+    },
+    "331afda1-b222-4a8a-93b6-c9da1819f018": {
+      "balance": 1000,
+      "history": []
+    },
+    "78290fb2-e6b1-44c5-9935-12634c54e0cf": {
+      "balance": 950,
+      "history": [
+        {
+          "payment_hash": "69ec13ee7e59c0e3a746cd50129cfb50ba15d2958668c7f78243ae7ce3c65753",
+          "amount_sats": 50,
+          "direction": "out",
+          "counterparty_id": "marketplace",
+          "status": "succeeded",
+          "created_at": 1777198792.697644,
+          "description": "PayGent: Quality AI \u00b7 Sentiment Analyzer"
+        }
+      ],
+      "balance_sats": 950,
+      "payments": [
+        {
+          "payment_hash": "69ec13ee7e59c0e3a746cd50129cfb50ba15d2958668c7f78243ae7ce3c65753",
+          "amount_sats": 50,
+          "direction": "out",
+          "counterparty_id": "marketplace",
+          "status": "succeeded",
+          "created_at": 1777198792.697644,
+          "description": "PayGent: Quality AI \u00b7 Sentiment Analyzer"
+        }
+      ]
+    },
+    "77b36e3a-d48d-494f-83fb-af8c814d9f4b": {
+      "balance": 45,
+      "history": [],
+      "balance_sats": 45
+    },
+    "c8658bba-02f8-4249-89e1-9b5a44aff476": {
+      "balance": 1000,
+      "history": []
+    },
+    "1b842529-0770-43c2-9b5f-a2beac8b2dcd": {
+      "balance": 0,
+      "history": []
+    },
+    "3f4895c7-58f5-44fe-9771-96fe48014289": {
+      "balance": 5000,
+      "history": []
+    },
+    "209fdd40-038c-496a-af21-b0c90f196247": {
+      "balance": 1000,
+      "history": []
+    },
+    "a0084eed-b3c1-4476-968e-798a5a25b6b3": {
+      "balance": 950,
+      "history": [
+        {
+          "payment_hash": "eddbae842fd020b30d209d9b63122e597e85c311a3053dc26ea47a08f80f2742",
+          "amount_sats": 50,
+          "direction": "out",
+          "counterparty_id": "marketplace",
+          "status": "succeeded",
+          "created_at": 1777198815.061853,
+          "description": "PayGent: Quality AI \u00b7 Sentiment Analyzer"
+        }
+      ],
+      "balance_sats": 950,
+      "payments": [
+        {
+          "payment_hash": "eddbae842fd020b30d209d9b63122e597e85c311a3053dc26ea47a08f80f2742",
+          "amount_sats": 50,
+          "direction": "out",
+          "counterparty_id": "marketplace",
+          "status": "succeeded",
+          "created_at": 1777198815.061853,
+          "description": "PayGent: Quality AI \u00b7 Sentiment Analyzer"
+        }
+      ]
+    },
+    "65b95f31-7404-4c5e-909a-8a71179d507e": {
+      "balance": 45,
+      "history": [],
+      "balance_sats": 45
+    },
+    "c36a2ff5-dd82-47ec-a699-7d9440f43a48": {
+      "balance": 1000,
+      "history": []
+    },
+    "ce7261c4-e59d-4253-acd4-06bf333b1ce4": {
+      "balance": 0,
+      "history": []
+    },
+    "f3cdd419-fa30-4cac-b65d-5f12e09ca8cc": {
+      "balance": 5000,
+      "history": []
+    },
+    "2ce937e0-eee7-4d50-9e34-c82ca02befc0": {
+      "balance": 1000,
+      "history": []
+    },
+    "1915aef9-98c6-4a32-87e4-9c7c3568bf57": {
+      "balance": 950,
+      "history": [
+        {
+          "payment_hash": "9999d9ffb03560d89de074a9c8d4bfa08f41e9552ebefd919f7aa6371d4c20df",
+          "amount_sats": 50,
+          "direction": "out",
+          "counterparty_id": "marketplace",
+          "status": "succeeded",
+          "created_at": 1777198837.650337,
+          "description": "PayGent: Quality AI \u00b7 Sentiment Analyzer"
+        }
+      ],
+      "balance_sats": 950,
+      "payments": [
+        {
+          "payment_hash": "9999d9ffb03560d89de074a9c8d4bfa08f41e9552ebefd919f7aa6371d4c20df",
+          "amount_sats": 50,
+          "direction": "out",
+          "counterparty_id": "marketplace",
+          "status": "succeeded",
+          "created_at": 1777198837.650337,
+          "description": "PayGent: Quality AI \u00b7 Sentiment Analyzer"
+        }
+      ]
+    },
+    "a45a2495-2c35-4792-9252-31297a7d6992": {
+      "balance": 45,
+      "history": [],
+      "balance_sats": 45
+    },
+    "21b1b6d8-bfb0-4f89-b3fa-5b1a57dfbfbb": {
+      "balance": 1000,
+      "history": []
+    },
+    "d6bad28c-e047-4c3e-8277-c509edf48470": {
+      "balance": 0,
+      "history": []
+    },
+    "2d642f0a-de84-4783-bd33-3af92e671d0a": {
+      "balance": 5000,
+      "history": []
+    },
+    "564111c4-fb59-4a7c-8deb-7fa170c773c5": {
+      "balance": 1000,
+      "history": []
+    },
+    "61e7f3e1-bd53-4dca-b616-4db6fd8dd12d": {
+      "balance": 950,
+      "history": [
+        {
+          "payment_hash": "7f4939668bcf5ebd769e29ae1e1fab306821b111bd1f217d85c227a44a6a74d1",
+          "amount_sats": 50,
+          "direction": "out",
+          "counterparty_id": "marketplace",
+          "status": "succeeded",
+          "created_at": 1777198869.5560708,
+          "description": "PayGent: Quality AI \u00b7 Sentiment Analyzer"
+        }
+      ],
+      "balance_sats": 950,
+      "payments": [
+        {
+          "payment_hash": "7f4939668bcf5ebd769e29ae1e1fab306821b111bd1f217d85c227a44a6a74d1",
+          "amount_sats": 50,
+          "direction": "out",
+          "counterparty_id": "marketplace",
+          "status": "succeeded",
+          "created_at": 1777198869.5560708,
+          "description": "PayGent: Quality AI \u00b7 Sentiment Analyzer"
+        }
+      ]
+    },
+    "e3242c97-8883-4385-bce4-7d3b63b51e69": {
+      "balance": 45,
+      "history": [],
+      "balance_sats": 45
+    },
+    "063549e0-9aad-48e3-be39-2891112a6fc9": {
+      "balance": 1000,
+      "history": []
+    },
+    "873c7e08-d114-46ff-8d8b-e6a75e70a07e": {
+      "balance": 0,
+      "history": []
+    },
+    "df7c7cf6-f125-481f-8bc7-f33eeac1cb11": {
+      "balance": 5000,
+      "history": []
+    },
+    "ac088414-c4df-47e7-a071-8fd2836b05e9": {
+      "balance": 1000,
+      "history": []
+    },
+    "66809cca-d3da-48a2-9e3c-e2d903bb32b5": {
+      "balance": 950,
+      "history": [
+        {
+          "payment_hash": "dc270decda39b64009e7c1b751fa60a16581e794893af12a86558f788d71d14d",
+          "amount_sats": 50,
+          "direction": "out",
+          "counterparty_id": "marketplace",
+          "status": "succeeded",
+          "created_at": 1777198890.811598,
+          "description": "PayGent: Quality AI \u00b7 Sentiment Analyzer"
+        }
+      ],
+      "balance_sats": 950,
+      "payments": [
+        {
+          "payment_hash": "dc270decda39b64009e7c1b751fa60a16581e794893af12a86558f788d71d14d",
+          "amount_sats": 50,
+          "direction": "out",
+          "counterparty_id": "marketplace",
+          "status": "succeeded",
+          "created_at": 1777198890.811598,
+          "description": "PayGent: Quality AI \u00b7 Sentiment Analyzer"
+        }
+      ]
+    },
+    "ca6a2c52-6dab-4e8d-94ef-fbc4757884bd": {
+      "balance": 45,
+      "history": [],
+      "balance_sats": 45
+    },
+    "94237cbc-62f1-4cb8-9609-f0e27105419e": {
+      "balance": 1000,
+      "history": []
+    },
+    "005ee377-27c8-4acf-9905-252b0e0de8c9": {
+      "balance": 0,
+      "history": []
+    },
+    "f1fb058b-8242-4e33-a048-6715eda74ff3": {
+      "balance": 5000,
+      "history": []
+    },
+    "ef0ef1fb-49a5-43cc-a3a4-40d4e51441ce": {
+      "balance": 1000,
+      "history": []
+    },
+    "13fb8a51-66e8-44ca-9cf7-a28767a6d5d6": {
+      "balance": 950,
+      "history": [
+        {
+          "payment_hash": "9f055b0bbe4e35dc285bbc0e4a390c1ae35473ea8e74c946f88b27ed3a542057",
+          "amount_sats": 50,
+          "direction": "out",
+          "counterparty_id": "marketplace",
+          "status": "succeeded",
+          "created_at": 1777198911.526021,
+          "description": "PayGent: Quality AI \u00b7 Sentiment Analyzer"
+        }
+      ],
+      "balance_sats": 950,
+      "payments": [
+        {
+          "payment_hash": "9f055b0bbe4e35dc285bbc0e4a390c1ae35473ea8e74c946f88b27ed3a542057",
+          "amount_sats": 50,
+          "direction": "out",
+          "counterparty_id": "marketplace",
+          "status": "succeeded",
+          "created_at": 1777198911.526021,
+          "description": "PayGent: Quality AI \u00b7 Sentiment Analyzer"
+        }
+      ]
+    },
+    "b49dbade-8d8a-4d26-82d8-9c77c7abe83b": {
+      "balance": 45,
+      "history": [],
+      "balance_sats": 45
+    },
+    "79c596c2-a17e-4fad-a72f-9cba7ab71c0d": {
+      "balance": 1000,
+      "history": []
+    },
+    "11f247de-e229-45ec-be40-d059e39c8adc": {
+      "balance": 0,
+      "history": []
+    },
+    "f090c45b-b01e-4f7e-9e44-32bba9dd4982": {
+      "balance": 5000,
+      "history": []
+    },
+    "007ab0ff-924c-4c9a-8a50-63e674a03733": {
+      "balance": 1000,
+      "history": []
+    },
+    "4fa54ba2-882d-4397-90be-f376245f5fef": {
+      "balance": 950,
+      "history": [
+        {
+          "payment_hash": "85b1bae9bcaf865fa75b1391e7fce5f9c7f3807c5f6ceaa572feb680fc5cdccb",
+          "amount_sats": 50,
+          "direction": "out",
+          "counterparty_id": "marketplace",
+          "status": "succeeded",
+          "created_at": 1777198938.6797178,
+          "description": "PayGent: Quality AI \u00b7 Sentiment Analyzer"
+        }
+      ],
+      "balance_sats": 950,
+      "payments": [
+        {
+          "payment_hash": "85b1bae9bcaf865fa75b1391e7fce5f9c7f3807c5f6ceaa572feb680fc5cdccb",
+          "amount_sats": 50,
+          "direction": "out",
+          "counterparty_id": "marketplace",
+          "status": "succeeded",
+          "created_at": 1777198938.6797178,
+          "description": "PayGent: Quality AI \u00b7 Sentiment Analyzer"
+        }
+      ]
+    },
+    "906ff563-fd79-43ac-9bb8-aca7df0cfc09": {
+      "balance": 45,
+      "history": [],
+      "balance_sats": 45
+    },
+    "a977306e-2e55-4253-b9b9-53c8e18cb2af": {
+      "balance": 1000,
+      "history": []
+    },
+    "7feebe17-1f2d-415a-8219-5db84a77f4b3": {
+      "balance": 0,
+      "history": []
+    },
+    "b7dfc2e3-deaf-4901-b569-ed850ede55b7": {
+      "balance": 5000,
+      "history": []
+    },
+    "528f5b51-5819-40e1-9f5d-e7615eedb9ba": {
+      "balance": 1000,
+      "history": []
+    },
+    "926224e4-06b9-4f02-8167-901d0ff48ef3": {
+      "balance": 950,
+      "history": [
+        {
+          "payment_hash": "e41d0cafccb7364a7174da72521c8723e0ed96b5fdbb2ae2083c68092816a08d",
+          "amount_sats": 50,
+          "direction": "out",
+          "counterparty_id": "marketplace",
+          "status": "succeeded",
+          "created_at": 1777198968.067559,
+          "description": "PayGent: Quality AI \u00b7 Sentiment Analyzer"
+        }
+      ],
+      "balance_sats": 950,
+      "payments": [
+        {
+          "payment_hash": "e41d0cafccb7364a7174da72521c8723e0ed96b5fdbb2ae2083c68092816a08d",
+          "amount_sats": 50,
+          "direction": "out",
+          "counterparty_id": "marketplace",
+          "status": "succeeded",
+          "created_at": 1777198968.067559,
+          "description": "PayGent: Quality AI \u00b7 Sentiment Analyzer"
+        }
+      ]
+    },
+    "d4977381-e88a-418c-8b5e-3ce01f19ba30": {
+      "balance": 45,
+      "history": [],
+      "balance_sats": 45
+    },
+    "7f49639d-3bac-4413-875a-249974fc5f7d": {
+      "balance": 1000,
+      "history": []
+    },
+    "8701715a-ba99-44f4-ac64-10c8fc20b0cd": {
+      "balance": 0,
+      "history": []
+    },
+    "5532ab3b-7c8b-46d7-8d30-7aaef56ed78f": {
+      "balance": 5000,
+      "history": []
+    },
+    "c0a5cbd5-7ec3-4738-80c6-ea75ee93eb45": {
+      "balance": 1000,
+      "history": []
+    },
+    "22291785-16fd-48d1-ac58-6188d2dd382d": {
+      "balance": 950,
+      "history": [
+        {
+          "payment_hash": "85b8e513c5d952c82dc98a37f9a8f295422ec3a15a9fd9c3860993c6271713e4",
+          "amount_sats": 50,
+          "direction": "out",
+          "counterparty_id": "marketplace",
+          "status": "succeeded",
+          "created_at": 1777198992.2324789,
+          "description": "PayGent: Quality AI \u00b7 Sentiment Analyzer"
+        }
+      ],
+      "balance_sats": 950,
+      "payments": [
+        {
+          "payment_hash": "85b8e513c5d952c82dc98a37f9a8f295422ec3a15a9fd9c3860993c6271713e4",
+          "amount_sats": 50,
+          "direction": "out",
+          "counterparty_id": "marketplace",
+          "status": "succeeded",
+          "created_at": 1777198992.2324789,
+          "description": "PayGent: Quality AI \u00b7 Sentiment Analyzer"
+        }
+      ]
+    },
+    "d7f30905-5f44-4ad1-9270-7b45d951d00f": {
+      "balance": 45,
+      "history": [],
+      "balance_sats": 45
+    },
+    "96d20bf1-d90a-47d4-9f9c-f58e67bcde5b": {
+      "balance": 1000,
+      "history": []
+    },
+    "e73a4315-45f3-4e19-a7c5-99748b984dd6": {
+      "balance": 0,
+      "history": []
+    },
+    "9f8e6a49-8626-4a49-a725-ab02acb972ca": {
+      "balance": 5000,
+      "history": []
+    },
+    "505d628c-453c-467e-a207-fe4bfc32363c": {
+      "balance": 1000,
+      "history": []
+    },
+    "e50c49c6-75d6-491e-9b98-f89c3338021a": {
+      "balance": 950,
+      "history": [
+        {
+          "payment_hash": "5277e5314a41b724ef707452d51c8812cf59e1f352374b3cf913be8e7aa787e4",
+          "amount_sats": 50,
+          "direction": "out",
+          "counterparty_id": "marketplace",
+          "status": "succeeded",
+          "created_at": 1777199054.46544,
+          "description": "PayGent: Quality AI \u00b7 Sentiment Analyzer"
+        }
+      ],
+      "balance_sats": 950,
+      "payments": [
+        {
+          "payment_hash": "5277e5314a41b724ef707452d51c8812cf59e1f352374b3cf913be8e7aa787e4",
+          "amount_sats": 50,
+          "direction": "out",
+          "counterparty_id": "marketplace",
+          "status": "succeeded",
+          "created_at": 1777199054.46544,
+          "description": "PayGent: Quality AI \u00b7 Sentiment Analyzer"
+        }
+      ]
+    },
+    "0e13d95e-b9c8-4bd3-ad60-5fef976b4b24": {
+      "balance": 45,
+      "history": [],
+      "balance_sats": 45
+    },
+    "a7269d23-3c19-418d-ba6d-83302a47324c": {
+      "balance": 1000,
+      "history": []
+    },
+    "b16c2326-c81f-4ba1-ba3b-8296d704218a": {
+      "balance": 0,
+      "history": []
+    },
+    "53da5e58-9da5-4aa3-8006-f4b0d48ad553": {
+      "balance": 5000,
+      "history": []
+    },
+    "934d592a-7d7b-4989-89e7-b41075cea158": {
+      "balance": 1000,
+      "history": []
+    },
+    "b4530f2f-b00c-4ea6-a85d-47573ed1e737": {
+      "balance": 950,
+      "history": [
+        {
+          "payment_hash": "999852f80bb5b31946c7bd46edbf3e14e72eca8c69b37df38ab54093408c93bd",
+          "amount_sats": 50,
+          "direction": "out",
+          "counterparty_id": "marketplace",
+          "status": "succeeded",
+          "created_at": 1777199101.271938,
+          "description": "PayGent: Quality AI \u00b7 Sentiment Analyzer"
+        }
+      ],
+      "balance_sats": 950,
+      "payments": [
+        {
+          "payment_hash": "999852f80bb5b31946c7bd46edbf3e14e72eca8c69b37df38ab54093408c93bd",
+          "amount_sats": 50,
+          "direction": "out",
+          "counterparty_id": "marketplace",
+          "status": "succeeded",
+          "created_at": 1777199101.271938,
+          "description": "PayGent: Quality AI \u00b7 Sentiment Analyzer"
+        }
+      ]
+    },
+    "3927448c-a430-4d37-88dc-109b039e519b": {
+      "balance": 45,
+      "history": [],
+      "balance_sats": 45
+    },
+    "c0788b62-038b-45d6-8c5a-30b586349819": {
+      "balance": 1000,
+      "history": []
+    },
+    "3c86fa7c-a05b-43fa-9299-0bc46a15f9f0": {
+      "balance": 0,
+      "history": []
+    },
+    "7cdd5263-2591-4ad4-9fde-61f1daa0e6d0": {
+      "balance": 5000,
+      "history": []
+    },
+    "8ec293cf-5f44-4513-8970-fcc736fadae7": {
+      "balance": 1000,
+      "history": []
+    },
+    "45661ff5-6c52-44d1-ab97-870064e3baba": {
+      "balance": 950,
+      "history": [
+        {
+          "payment_hash": "60a876e6d19a469bd20a4086715fea0817580a8cb043b252cbb4acb8492e4774",
+          "amount_sats": 50,
+          "direction": "out",
+          "counterparty_id": "marketplace",
+          "status": "succeeded",
+          "created_at": 1777199216.3576388,
+          "description": "PayGent: Quality AI \u00b7 Sentiment Analyzer"
+        }
+      ],
+      "balance_sats": 950,
+      "payments": [
+        {
+          "payment_hash": "60a876e6d19a469bd20a4086715fea0817580a8cb043b252cbb4acb8492e4774",
+          "amount_sats": 50,
+          "direction": "out",
+          "counterparty_id": "marketplace",
+          "status": "succeeded",
+          "created_at": 1777199216.3576388,
+          "description": "PayGent: Quality AI \u00b7 Sentiment Analyzer"
+        }
+      ]
+    },
+    "6f743110-b57f-4641-9ce6-ecf0f4c833e6": {
+      "balance": 45,
+      "history": [],
+      "balance_sats": 45
+    },
+    "607257c1-0894-4d55-9c91-9ec0d75311ab": {
+      "balance": 1000,
+      "history": []
+    },
+    "0168120d-971d-4b9f-bec3-3f977e6d38ca": {
+      "balance": 0,
+      "history": []
+    },
+    "eccebae9-1ffd-4df7-8b35-a3c1c5ff070d": {
+      "balance": 5000,
+      "history": []
+    },
+    "d1c6313b-d81f-4ab7-8c87-94426c5d34f6": {
+      "balance": 1000,
+      "history": []
+    },
+    "e1d9353c-441d-4a90-984e-b2dac6eccd21": {
+      "balance": 950,
+      "history": [
+        {
+          "payment_hash": "d140f136073253321fe317a9c6ce3600686326e1a0a5aac0d7c2c03c2e5a92a2",
+          "amount_sats": 50,
+          "direction": "out",
+          "counterparty_id": "marketplace",
+          "status": "succeeded",
+          "created_at": 1777199290.81905,
+          "description": "PayGent: Quality AI \u00b7 Sentiment Analyzer"
+        }
+      ],
+      "balance_sats": 950,
+      "payments": [
+        {
+          "payment_hash": "d140f136073253321fe317a9c6ce3600686326e1a0a5aac0d7c2c03c2e5a92a2",
+          "amount_sats": 50,
+          "direction": "out",
+          "counterparty_id": "marketplace",
+          "status": "succeeded",
+          "created_at": 1777199290.81905,
+          "description": "PayGent: Quality AI \u00b7 Sentiment Analyzer"
+        }
+      ]
+    },
+    "22167f18-24ae-474e-8a88-067d0c3217af": {
+      "balance": 45,
+      "history": [],
+      "balance_sats": 45
+    },
+    "6659f6fe-1f10-48c4-bf88-edf66008c2db": {
+      "balance": 1000,
+      "history": []
+    },
+    "2cc6fde7-ac52-4873-a45f-36c88784eeb6": {
+      "balance": 0,
+      "history": []
+    },
+    "715098db-0f7b-4973-8255-109f17f07f79": {
+      "balance": 5000,
+      "history": []
+    },
+    "97e0b154-64b2-4d63-ade2-adf58aaffabe": {
+      "balance": 1000,
+      "history": []
+    },
+    "774b8359-42a2-492f-a2a9-8f3c5f895715": {
+      "balance": 5000,
+      "history": []
+    },
+    "63374cd3-0ef9-4436-a925-1e37dc2e0faa": {
+      "balance": 1000,
+      "history": []
+    },
+    "23e3d128-eccb-41e0-b457-4d24b0ab0e49": {
+      "balance": 950,
+      "history": [
+        {
+          "payment_hash": "8b1d0b878a043e67014096c97252bdee33cee86df4ff372d24a8634b6b00aa62",
+          "amount_sats": 50,
+          "direction": "out",
+          "counterparty_id": "marketplace",
+          "status": "succeeded",
+          "created_at": 1777199444.960234,
+          "description": "PayGent: Quality AI \u00b7 Sentiment Analyzer"
+        }
+      ],
+      "balance_sats": 950,
+      "payments": [
+        {
+          "payment_hash": "8b1d0b878a043e67014096c97252bdee33cee86df4ff372d24a8634b6b00aa62",
+          "amount_sats": 50,
+          "direction": "out",
+          "counterparty_id": "marketplace",
+          "status": "succeeded",
+          "created_at": 1777199444.960234,
+          "description": "PayGent: Quality AI \u00b7 Sentiment Analyzer"
+        }
+      ]
+    },
+    "270da551-1a4b-46aa-96d4-6cb034da2a6a": {
+      "balance": 45,
+      "history": [],
+      "balance_sats": 45
+    },
+    "32be9ea5-f5f9-40e3-bbd8-f223a246e946": {
+      "balance": 1000,
+      "history": []
+    },
+    "150f0e61-89fd-453f-aa81-0e9e4e1907f3": {
+      "balance": 0,
       "history": []
     }
   },
@@ -2374,6 +3593,234 @@
       "status": "settled",
       "payer_id": "6489fb9f-b2c7-441c-940f-e4e52a85e085",
       "settled_at": 1777198185.747562
+    },
+    "50af77714532e4d8d18db7e76a42f3e0090c4b07044e9598c18c6ce19ac0b15f": {
+      "payment_hash": "50af77714532e4d8d18db7e76a42f3e0090c4b07044e9598c18c6ce19ac0b15f",
+      "bolt11": "lnbcmock50_50af77714532e4d8d18db7e7",
+      "amount_sats": 50,
+      "description": "PayGent: Quality AI \u00b7 Sentiment Analyzer",
+      "issuer_id": "marketplace",
+      "created_at": 1777198504.078888,
+      "expires_at": 1777202104.078888,
+      "status": "settled",
+      "payer_id": "46c5c50a-c97f-4f43-a9c2-756af3320051",
+      "settled_at": 1777198504.085105
+    },
+    "6e6841ddc6a4ac93394580ec82edec44b8b3e9a7cf331df55437bb9899b8fd61": {
+      "payment_hash": "6e6841ddc6a4ac93394580ec82edec44b8b3e9a7cf331df55437bb9899b8fd61",
+      "bolt11": "lnbcmock50_6e6841ddc6a4ac93394580ec",
+      "amount_sats": 50,
+      "description": "PayGent: Quality AI \u00b7 Sentiment Analyzer",
+      "issuer_id": "marketplace",
+      "created_at": 1777198561.400737,
+      "expires_at": 1777202161.400737,
+      "status": "settled",
+      "payer_id": "09a46faa-f482-4ea5-bb9d-385eaafb0952",
+      "settled_at": 1777198561.407211
+    },
+    "dd3208220e1847cd52aff874c1ffa1d9c51840f25532249d28ef9857148926c5": {
+      "payment_hash": "dd3208220e1847cd52aff874c1ffa1d9c51840f25532249d28ef9857148926c5",
+      "bolt11": "lnbcmock50_dd3208220e1847cd52aff874",
+      "amount_sats": 50,
+      "description": "PayGent: Quality AI \u00b7 Sentiment Analyzer",
+      "issuer_id": "marketplace",
+      "created_at": 1777198622.366622,
+      "expires_at": 1777202222.366622,
+      "status": "settled",
+      "payer_id": "ff84cb40-4507-434d-b0d2-c3ebc7cd96ac",
+      "settled_at": 1777198622.372929
+    },
+    "2f93616d12b6f9548ae7c1826bd4a6ca7c95e90123e757f334fdc13f68884155": {
+      "payment_hash": "2f93616d12b6f9548ae7c1826bd4a6ca7c95e90123e757f334fdc13f68884155",
+      "bolt11": "lnbcmock50_2f93616d12b6f9548ae7c182",
+      "amount_sats": 50,
+      "description": "PayGent: Quality AI \u00b7 Sentiment Analyzer",
+      "issuer_id": "marketplace",
+      "created_at": 1777198627.0671868,
+      "expires_at": 1777202227.0671868,
+      "status": "settled",
+      "payer_id": "3f1880ef-51f4-4d3c-8202-e76c08f897be",
+      "settled_at": 1777198627.073301
+    },
+    "77d119f987af9d3cdacc3174fc24aed8d5364e7a4cde8b88f5ceab779c2b5981": {
+      "payment_hash": "77d119f987af9d3cdacc3174fc24aed8d5364e7a4cde8b88f5ceab779c2b5981",
+      "bolt11": "lnbcmock50_77d119f987af9d3cdacc3174",
+      "amount_sats": 50,
+      "description": "PayGent: Quality AI \u00b7 Sentiment Analyzer",
+      "issuer_id": "marketplace",
+      "created_at": 1777198752.300983,
+      "expires_at": 1777202352.300983,
+      "status": "settled",
+      "payer_id": "8bb078a3-e42c-4440-a6ca-96c4733cf9c2",
+      "settled_at": 1777198752.3072698
+    },
+    "69ec13ee7e59c0e3a746cd50129cfb50ba15d2958668c7f78243ae7ce3c65753": {
+      "payment_hash": "69ec13ee7e59c0e3a746cd50129cfb50ba15d2958668c7f78243ae7ce3c65753",
+      "bolt11": "lnbcmock50_69ec13ee7e59c0e3a746cd50",
+      "amount_sats": 50,
+      "description": "PayGent: Quality AI \u00b7 Sentiment Analyzer",
+      "issuer_id": "marketplace",
+      "created_at": 1777198792.689853,
+      "expires_at": 1777202392.689853,
+      "status": "settled",
+      "payer_id": "78290fb2-e6b1-44c5-9935-12634c54e0cf",
+      "settled_at": 1777198792.696206
+    },
+    "eddbae842fd020b30d209d9b63122e597e85c311a3053dc26ea47a08f80f2742": {
+      "payment_hash": "eddbae842fd020b30d209d9b63122e597e85c311a3053dc26ea47a08f80f2742",
+      "bolt11": "lnbcmock50_eddbae842fd020b30d209d9b",
+      "amount_sats": 50,
+      "description": "PayGent: Quality AI \u00b7 Sentiment Analyzer",
+      "issuer_id": "marketplace",
+      "created_at": 1777198815.0537658,
+      "expires_at": 1777202415.0537658,
+      "status": "settled",
+      "payer_id": "a0084eed-b3c1-4476-968e-798a5a25b6b3",
+      "settled_at": 1777198815.060576
+    },
+    "9999d9ffb03560d89de074a9c8d4bfa08f41e9552ebefd919f7aa6371d4c20df": {
+      "payment_hash": "9999d9ffb03560d89de074a9c8d4bfa08f41e9552ebefd919f7aa6371d4c20df",
+      "bolt11": "lnbcmock50_9999d9ffb03560d89de074a9",
+      "amount_sats": 50,
+      "description": "PayGent: Quality AI \u00b7 Sentiment Analyzer",
+      "issuer_id": "marketplace",
+      "created_at": 1777198837.6412559,
+      "expires_at": 1777202437.6412559,
+      "status": "settled",
+      "payer_id": "1915aef9-98c6-4a32-87e4-9c7c3568bf57",
+      "settled_at": 1777198837.6489651
+    },
+    "7f4939668bcf5ebd769e29ae1e1fab306821b111bd1f217d85c227a44a6a74d1": {
+      "payment_hash": "7f4939668bcf5ebd769e29ae1e1fab306821b111bd1f217d85c227a44a6a74d1",
+      "bolt11": "lnbcmock50_7f4939668bcf5ebd769e29ae",
+      "amount_sats": 50,
+      "description": "PayGent: Quality AI \u00b7 Sentiment Analyzer",
+      "issuer_id": "marketplace",
+      "created_at": 1777198869.547922,
+      "expires_at": 1777202469.547922,
+      "status": "settled",
+      "payer_id": "61e7f3e1-bd53-4dca-b616-4db6fd8dd12d",
+      "settled_at": 1777198869.554728
+    },
+    "dc270decda39b64009e7c1b751fa60a16581e794893af12a86558f788d71d14d": {
+      "payment_hash": "dc270decda39b64009e7c1b751fa60a16581e794893af12a86558f788d71d14d",
+      "bolt11": "lnbcmock50_dc270decda39b64009e7c1b7",
+      "amount_sats": 50,
+      "description": "PayGent: Quality AI \u00b7 Sentiment Analyzer",
+      "issuer_id": "marketplace",
+      "created_at": 1777198890.803273,
+      "expires_at": 1777202490.803273,
+      "status": "settled",
+      "payer_id": "66809cca-d3da-48a2-9e3c-e2d903bb32b5",
+      "settled_at": 1777198890.810234
+    },
+    "9f055b0bbe4e35dc285bbc0e4a390c1ae35473ea8e74c946f88b27ed3a542057": {
+      "payment_hash": "9f055b0bbe4e35dc285bbc0e4a390c1ae35473ea8e74c946f88b27ed3a542057",
+      "bolt11": "lnbcmock50_9f055b0bbe4e35dc285bbc0e",
+      "amount_sats": 50,
+      "description": "PayGent: Quality AI \u00b7 Sentiment Analyzer",
+      "issuer_id": "marketplace",
+      "created_at": 1777198911.517369,
+      "expires_at": 1777202511.517369,
+      "status": "settled",
+      "payer_id": "13fb8a51-66e8-44ca-9cf7-a28767a6d5d6",
+      "settled_at": 1777198911.524595
+    },
+    "85b1bae9bcaf865fa75b1391e7fce5f9c7f3807c5f6ceaa572feb680fc5cdccb": {
+      "payment_hash": "85b1bae9bcaf865fa75b1391e7fce5f9c7f3807c5f6ceaa572feb680fc5cdccb",
+      "bolt11": "lnbcmock50_85b1bae9bcaf865fa75b1391",
+      "amount_sats": 50,
+      "description": "PayGent: Quality AI \u00b7 Sentiment Analyzer",
+      "issuer_id": "marketplace",
+      "created_at": 1777198938.671121,
+      "expires_at": 1777202538.671121,
+      "status": "settled",
+      "payer_id": "4fa54ba2-882d-4397-90be-f376245f5fef",
+      "settled_at": 1777198938.678282
+    },
+    "e41d0cafccb7364a7174da72521c8723e0ed96b5fdbb2ae2083c68092816a08d": {
+      "payment_hash": "e41d0cafccb7364a7174da72521c8723e0ed96b5fdbb2ae2083c68092816a08d",
+      "bolt11": "lnbcmock50_e41d0cafccb7364a7174da72",
+      "amount_sats": 50,
+      "description": "PayGent: Quality AI \u00b7 Sentiment Analyzer",
+      "issuer_id": "marketplace",
+      "created_at": 1777198968.0588522,
+      "expires_at": 1777202568.0588522,
+      "status": "settled",
+      "payer_id": "926224e4-06b9-4f02-8167-901d0ff48ef3",
+      "settled_at": 1777198968.066051
+    },
+    "85b8e513c5d952c82dc98a37f9a8f295422ec3a15a9fd9c3860993c6271713e4": {
+      "payment_hash": "85b8e513c5d952c82dc98a37f9a8f295422ec3a15a9fd9c3860993c6271713e4",
+      "bolt11": "lnbcmock50_85b8e513c5d952c82dc98a37",
+      "amount_sats": 50,
+      "description": "PayGent: Quality AI \u00b7 Sentiment Analyzer",
+      "issuer_id": "marketplace",
+      "created_at": 1777198992.222661,
+      "expires_at": 1777202592.222661,
+      "status": "settled",
+      "payer_id": "22291785-16fd-48d1-ac58-6188d2dd382d",
+      "settled_at": 1777198992.23069
+    },
+    "5277e5314a41b724ef707452d51c8812cf59e1f352374b3cf913be8e7aa787e4": {
+      "payment_hash": "5277e5314a41b724ef707452d51c8812cf59e1f352374b3cf913be8e7aa787e4",
+      "bolt11": "lnbcmock50_5277e5314a41b724ef707452",
+      "amount_sats": 50,
+      "description": "PayGent: Quality AI \u00b7 Sentiment Analyzer",
+      "issuer_id": "marketplace",
+      "created_at": 1777199054.454825,
+      "expires_at": 1777202654.454825,
+      "status": "settled",
+      "payer_id": "e50c49c6-75d6-491e-9b98-f89c3338021a",
+      "settled_at": 1777199054.463008
+    },
+    "999852f80bb5b31946c7bd46edbf3e14e72eca8c69b37df38ab54093408c93bd": {
+      "payment_hash": "999852f80bb5b31946c7bd46edbf3e14e72eca8c69b37df38ab54093408c93bd",
+      "bolt11": "lnbcmock50_999852f80bb5b31946c7bd46",
+      "amount_sats": 50,
+      "description": "PayGent: Quality AI \u00b7 Sentiment Analyzer",
+      "issuer_id": "marketplace",
+      "created_at": 1777199101.262544,
+      "expires_at": 1777202701.262544,
+      "status": "settled",
+      "payer_id": "b4530f2f-b00c-4ea6-a85d-47573ed1e737",
+      "settled_at": 1777199101.270386
+    },
+    "60a876e6d19a469bd20a4086715fea0817580a8cb043b252cbb4acb8492e4774": {
+      "payment_hash": "60a876e6d19a469bd20a4086715fea0817580a8cb043b252cbb4acb8492e4774",
+      "bolt11": "lnbcmock50_60a876e6d19a469bd20a4086",
+      "amount_sats": 50,
+      "description": "PayGent: Quality AI \u00b7 Sentiment Analyzer",
+      "issuer_id": "marketplace",
+      "created_at": 1777199216.348022,
+      "expires_at": 1777202816.348022,
+      "status": "settled",
+      "payer_id": "45661ff5-6c52-44d1-ab97-870064e3baba",
+      "settled_at": 1777199216.3559759
+    },
+    "d140f136073253321fe317a9c6ce3600686326e1a0a5aac0d7c2c03c2e5a92a2": {
+      "payment_hash": "d140f136073253321fe317a9c6ce3600686326e1a0a5aac0d7c2c03c2e5a92a2",
+      "bolt11": "lnbcmock50_d140f136073253321fe317a9",
+      "amount_sats": 50,
+      "description": "PayGent: Quality AI \u00b7 Sentiment Analyzer",
+      "issuer_id": "marketplace",
+      "created_at": 1777199290.8089411,
+      "expires_at": 1777202890.8089411,
+      "status": "settled",
+      "payer_id": "e1d9353c-441d-4a90-984e-b2dac6eccd21",
+      "settled_at": 1777199290.8173099
+    },
+    "8b1d0b878a043e67014096c97252bdee33cee86df4ff372d24a8634b6b00aa62": {
+      "payment_hash": "8b1d0b878a043e67014096c97252bdee33cee86df4ff372d24a8634b6b00aa62",
+      "bolt11": "lnbcmock50_8b1d0b878a043e67014096c9",
+      "amount_sats": 50,
+      "description": "PayGent: Quality AI \u00b7 Sentiment Analyzer",
+      "issuer_id": "marketplace",
+      "created_at": 1777199444.9500039,
+      "expires_at": 1777203044.9500039,
+      "status": "settled",
+      "payer_id": "23e3d128-eccb-41e0-b457-4d24b0ab0e49",
+      "settled_at": 1777199444.958425
     }
   }
 }
