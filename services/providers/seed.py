@@ -30,7 +30,7 @@ _SEEDED_FILES: set[str] = set()
 def seed_services():
     global _SEEDED_FILES
     
-    # Environment-level kill switch for all automated tests
+    # Absolute environment-level kill switch for all automated tests
     if os.getenv("TESTING") == "1":
         return
         
@@ -47,14 +47,12 @@ def seed_services():
         from models import RegisterServiceRequest
 
         for svc in SERVICES:
-            # Atomic check-and-seed
             with get_db() as conn:
                 try:
                     existing = conn.execute("SELECT id FROM services WHERE name=? LIMIT 1", (svc["name"],)).fetchone()
                     if existing:
                         continue
                 except Exception:
-                    # Tables might not be initialized yet
                     continue
                     
             try:

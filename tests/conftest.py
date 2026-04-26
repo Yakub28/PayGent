@@ -16,12 +16,12 @@ def isolated_env(tmp_path, monkeypatch):
     db_path = str(tmp_path / f"test_{uid}.db")
     lightning_path = str(tmp_path / f"mock_{uid}.json")
     
-    # Use environment variables that our code now respects dynamically
+    # Use environment variable and monkeypatch the global DB_PATH
     monkeypatch.setenv("PAYGENT_DB_PATH", db_path)
+    monkeypatch.setattr("database.DB_PATH", db_path)
     monkeypatch.setattr("services.mock_wallet.STATE_FILE", lightning_path)
     
-    # We still need to clear modules because some might have cached DB_PATH at import time 
-    # (like mock_wallet registry initialization)
+    # We still need to clear modules because some might have cached DB_PATH at import time
     modules_to_clear = [
         "database", "services.mock_wallet", "services.wallet_manager",
         "services.agents", "services.registry", "services.router", "services.stats", "main"

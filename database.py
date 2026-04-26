@@ -3,10 +3,10 @@ import os
 from contextlib import contextmanager
 
 def get_db_path():
+    """Returns the current database path, allowing for dynamic overrides."""
     return os.environ.get("PAYGENT_DB_PATH", "paygent.db")
 
-# Keep DB_PATH for compatibility with existing tests that monkeypatch it,
-# but our own code should prefer calling get_db_path() or using the env var.
+# Global DB_PATH for compatibility with existing tests
 DB_PATH = get_db_path()
 
 def _migrate_db(conn):
@@ -27,7 +27,7 @@ def _migrate_db(conn):
                 raise
 
 def init_db():
-    # Update global DB_PATH from env just in case it changed after import
+    # Ensure the global DB_PATH is up to date with the environment
     global DB_PATH
     DB_PATH = get_db_path()
     
