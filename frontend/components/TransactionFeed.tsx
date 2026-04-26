@@ -4,7 +4,9 @@ import { Transaction } from "@/lib/api";
 interface Props { transactions: Transaction[] }
 
 function timeAgo(iso: string): string {
-  const diff = Math.floor((Date.now() - new Date(iso + "Z").getTime()) / 1000);
+  const timestamp = iso.includes("+") || iso.endsWith("Z") ? iso : iso + "Z";
+  const diff = Math.floor((Date.now() - new Date(timestamp).getTime()) / 1000);
+  if (diff < 0) return "just now";
   if (diff < 60) return `${diff}s ago`;
   if (diff < 3600) return `${Math.floor(diff / 60)}m ago`;
   return `${Math.floor(diff / 3600)}h ago`;

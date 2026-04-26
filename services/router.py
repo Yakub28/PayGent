@@ -12,7 +12,7 @@ Pre-mock-wallet flow is preserved: client calls a service, gets a 402 with
 import base64
 import uuid
 import httpx
-from datetime import datetime
+from datetime import datetime, UTC
 from fastapi import APIRouter, BackgroundTasks, Header, HTTPException
 from lexe import PaymentFilter
 from database import get_db
@@ -118,18 +118,12 @@ async def call_service(
         }
         with get_db() as conn:
             conn.execute(
-                "INSERT INTO transactions (id, service_id, payment_hash, amount_sats, fee_sats, provider_sats, status, created_at) VALUES (?,?,?,?,?,?,?,?)",
-                (
-                    txn_id, service_id, invoice_obj.payment_hash,
-                    service["price_sats"], None, None, "pending",
-                    datetime.utcnow().isoformat(),
-                ),
                 "INSERT INTO transactions (id, service_id, payment_hash, amount_sats, "
                 "fee_sats, provider_sats, status, created_at, consumer_agent_id) "
                 "VALUES (?,?,?,?,?,?,?,?,?)",
                 (txn_id, service_id, invoice_obj.payment_hash,
                  service["price_sats"], None, None, "pending",
-                 datetime.utcnow().isoformat(), req.consumer_agent_id),
+                 datetime.now(UTC).isoformat(), req.consumer_agent_id),
             )
         _payment_required(macaroon, invoice_obj.invoice)
 
@@ -177,11 +171,6 @@ async def call_service(
     if txn_id:
         service_slug = service["name"].lower().replace(" ", "-")
         background_tasks.add_task(score_and_update, txn_id, service_slug, req.input, result)
-
-            "UPDATE transactions SET status='paid', fee_sats=?, provider_sats=? "
-            "WHERE payment_hash=?",
-            (fee_sats, provider_sats, payment_hash),
-        )
 
     pending_payments.pop(macaroon, None)
     return result

@@ -1,6 +1,6 @@
 import pytest
 from unittest.mock import MagicMock, patch
-from datetime import datetime
+from datetime import datetime, UTC
 
 
 def test_score_response_returns_score_and_reason():
@@ -98,11 +98,11 @@ def test_score_and_update_writes_to_transaction(tmp_path, monkeypatch):
     with get_db() as conn:
         conn.execute(
             "INSERT INTO services (id, name, description, price_sats, endpoint_url, provider_wallet, created_at, is_active) VALUES (?,?,?,?,?,?,?,?)",
-            ("svc1", "Web Summarizer", "desc", 25, "http://localhost/summarize", "wallet1", datetime.utcnow().isoformat(), 1),
+            ("svc1", "Web Summarizer", "desc", 25, "http://localhost/summarize", "wallet1", datetime.now(UTC).isoformat(), 1),
         )
         conn.execute(
             "INSERT INTO transactions (id, service_id, payment_hash, amount_sats, status, created_at) VALUES (?,?,?,?,?,?)",
-            ("txn1", "svc1", "hash1", 25, "paid", datetime.utcnow().isoformat()),
+            ("txn1", "svc1", "hash1", 25, "paid", datetime.now(UTC).isoformat()),
         )
 
     with patch("services.scorer.score_response", return_value=(90, "Excellent summary")):
@@ -123,18 +123,18 @@ def test_score_and_update_promotes_to_silver_at_threshold(tmp_path, monkeypatch)
     with get_db() as conn:
         conn.execute(
             "INSERT INTO services (id, name, description, price_sats, endpoint_url, provider_wallet, created_at, is_active) VALUES (?,?,?,?,?,?,?,?)",
-            ("svc1", "Web Summarizer", "desc", 25, "http://localhost/summarize", "wallet1", datetime.utcnow().isoformat(), 1),
+            ("svc1", "Web Summarizer", "desc", 25, "http://localhost/summarize", "wallet1", datetime.now(UTC).isoformat(), 1),
         )
         # 9 previously scored transactions (avg 75 — meets silver score threshold)
         for i in range(9):
             conn.execute(
                 "INSERT INTO transactions (id, service_id, payment_hash, amount_sats, status, created_at, quality_score) VALUES (?,?,?,?,?,?,?)",
-                (f"txn{i}", "svc1", f"hash{i}", 25, "paid", datetime.utcnow().isoformat(), 75),
+                (f"txn{i}", "svc1", f"hash{i}", 25, "paid", datetime.now(UTC).isoformat(), 75),
             )
         # 10th transaction (unscored) — scoring it crosses the 10-call threshold
         conn.execute(
             "INSERT INTO transactions (id, service_id, payment_hash, amount_sats, status, created_at) VALUES (?,?,?,?,?,?)",
-            ("txn9", "svc1", "hash9", 25, "paid", datetime.utcnow().isoformat()),
+            ("txn9", "svc1", "hash9", 25, "paid", datetime.now(UTC).isoformat()),
         )
 
     with patch("services.scorer.score_response", return_value=(75, "Good quality")):
@@ -155,17 +155,17 @@ def test_score_and_update_stays_bronze_below_call_threshold(tmp_path, monkeypatc
     with get_db() as conn:
         conn.execute(
             "INSERT INTO services (id, name, description, price_sats, endpoint_url, provider_wallet, created_at, is_active) VALUES (?,?,?,?,?,?,?,?)",
-            ("svc1", "Web Summarizer", "desc", 25, "http://localhost/summarize", "wallet1", datetime.utcnow().isoformat(), 1),
+            ("svc1", "Web Summarizer", "desc", 25, "http://localhost/summarize", "wallet1", datetime.now(UTC).isoformat(), 1),
         )
         # Only 8 previously scored transactions — below the 10-call silver minimum
         for i in range(8):
             conn.execute(
                 "INSERT INTO transactions (id, service_id, payment_hash, amount_sats, status, created_at, quality_score) VALUES (?,?,?,?,?,?,?)",
-                (f"txn{i}", "svc1", f"hash{i}", 25, "paid", datetime.utcnow().isoformat(), 75),
+                (f"txn{i}", "svc1", f"hash{i}", 25, "paid", datetime.now(UTC).isoformat(), 75),
             )
         conn.execute(
             "INSERT INTO transactions (id, service_id, payment_hash, amount_sats, status, created_at) VALUES (?,?,?,?,?,?)",
-            ("txn8", "svc1", "hash8", 25, "paid", datetime.utcnow().isoformat()),
+            ("txn8", "svc1", "hash8", 25, "paid", datetime.now(UTC).isoformat()),
         )
 
     with patch("services.scorer.score_response", return_value=(75, "Good")):
@@ -186,17 +186,17 @@ def test_score_and_update_clamps_price_on_tier_drop(tmp_path, monkeypatch):
         # Service at silver tier with price 300 (within silver ceiling of 400)
         conn.execute(
             "INSERT INTO services (id, name, description, price_sats, endpoint_url, provider_wallet, created_at, is_active, tier) VALUES (?,?,?,?,?,?,?,?,?)",
-            ("svc1", "Web Summarizer", "desc", 300, "http://localhost/summarize", "wallet1", datetime.utcnow().isoformat(), 1, "silver"),
+            ("svc1", "Web Summarizer", "desc", 300, "http://localhost/summarize", "wallet1", datetime.now(UTC).isoformat(), 1, "silver"),
         )
         # Only 5 scored transactions with very low scores -> drops to bronze
         for i in range(5):
             conn.execute(
                 "INSERT INTO transactions (id, service_id, payment_hash, amount_sats, status, created_at, quality_score) VALUES (?,?,?,?,?,?,?)",
-                (f"txn{i}", "svc1", f"hash{i}", 300, "paid", datetime.utcnow().isoformat(), 40),
+                (f"txn{i}", "svc1", f"hash{i}", 300, "paid", datetime.now(UTC).isoformat(), 40),
             )
         conn.execute(
             "INSERT INTO transactions (id, service_id, payment_hash, amount_sats, status, created_at) VALUES (?,?,?,?,?,?)",
-            ("txn5", "svc1", "hash5", 300, "paid", datetime.utcnow().isoformat()),
+            ("txn5", "svc1", "hash5", 300, "paid", datetime.now(UTC).isoformat()),
         )
 
     with patch("services.scorer.score_response", return_value=(40, "Poor quality")):

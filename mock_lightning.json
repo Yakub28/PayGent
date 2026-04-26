@@ -1,0 +1,958 @@
+{
+  "wallets": {
+    "demo-consumer": {
+      "id": "demo-consumer",
+      "label": "Demo Consumer",
+      "balance_sats": 999275,
+      "payments": [
+        {
+          "payment_hash": "a0c82204a608611d3222f42073244d0699c016e425cf1b483744ba2132b98197",
+          "amount_sats": 25,
+          "direction": "out",
+          "status": "succeeded",
+          "created_at": 1777190974.809912
+        },
+        {
+          "payment_hash": "2e85881049320819b94be5891e564075f1c64ee2865e03add49c0ac49c3491b4",
+          "amount_sats": 25,
+          "direction": "out",
+          "counterparty_id": "marketplace",
+          "status": "succeeded",
+          "created_at": 1777196216.8648162,
+          "description": "PayGent: Web Summarizer"
+        },
+        {
+          "payment_hash": "49adf43736623479331fff58dd39f190719fdcc8583e94c1bc0e700e67429828",
+          "amount_sats": 100,
+          "direction": "out",
+          "counterparty_id": "marketplace",
+          "status": "succeeded",
+          "created_at": 1777196224.308118,
+          "description": "PayGent: Code Reviewer"
+        },
+        {
+          "payment_hash": "e37f9c19767a1daed31afab5ca911d92e996186312231046fa99ca3d2f451e8e",
+          "amount_sats": 50,
+          "direction": "out",
+          "counterparty_id": "marketplace",
+          "status": "succeeded",
+          "created_at": 1777196233.893353,
+          "description": "PayGent: Sentiment Analyzer"
+        },
+        {
+          "payment_hash": "3cfcef75fa1e38e3ed911de99f6188a8eea1edcbcb74fbe016355cdad28e15a6",
+          "amount_sats": 25,
+          "direction": "out",
+          "counterparty_id": "marketplace",
+          "status": "succeeded",
+          "created_at": 1777196359.774229,
+          "description": "PayGent: Web Summarizer"
+        },
+        {
+          "payment_hash": "7ebd67449074bf5354307557cf12f63ba04cfe7b9ce3547e94926f9541705afd",
+          "amount_sats": 100,
+          "direction": "out",
+          "counterparty_id": "marketplace",
+          "status": "succeeded",
+          "created_at": 1777196367.6065202,
+          "description": "PayGent: Code Reviewer"
+        },
+        {
+          "payment_hash": "7f6d8e5064dc2b7c93cab656cebae536ecae863e0d8a67977fefb12e5ea456d7",
+          "amount_sats": 50,
+          "direction": "out",
+          "counterparty_id": "marketplace",
+          "status": "succeeded",
+          "created_at": 1777196376.6154082,
+          "description": "PayGent: Sentiment Analyzer"
+        },
+        {
+          "payment_hash": "f591e5406e3cf544bc2aa114ec319769b7a8987ec8390150b420915d467b68bf",
+          "amount_sats": 25,
+          "direction": "out",
+          "counterparty_id": "marketplace",
+          "status": "succeeded",
+          "created_at": 1777196673.6899562,
+          "description": "PayGent: Web Summarizer"
+        },
+        {
+          "payment_hash": "9526094e01e9526c60ebbb9a08cd46c79ee7ee55c164380ce2f57b69900f9734",
+          "amount_sats": 100,
+          "direction": "out",
+          "counterparty_id": "marketplace",
+          "status": "succeeded",
+          "created_at": 1777196681.195882,
+          "description": "PayGent: Code Reviewer"
+        },
+        {
+          "payment_hash": "bc18be6f24e2f2449489c6172afacad93b563923d23e0e5538a6737cb09e8c34",
+          "amount_sats": 50,
+          "direction": "out",
+          "counterparty_id": "marketplace",
+          "status": "succeeded",
+          "created_at": 1777196690.374377,
+          "description": "PayGent: Sentiment Analyzer"
+        },
+        {
+          "payment_hash": "89b1801e98c3a3f0f0f758a936b273690426b4b663b4c58af3a34c04e99519a8",
+          "amount_sats": 25,
+          "direction": "out",
+          "counterparty_id": "marketplace",
+          "status": "succeeded",
+          "created_at": 1777196952.740295,
+          "description": "PayGent: Web Summarizer"
+        },
+        {
+          "payment_hash": "f6bafcaf983602077538e0a7caf5348acde494af25fdd31e6d5680ffe6c810b1",
+          "amount_sats": 100,
+          "direction": "out",
+          "counterparty_id": "marketplace",
+          "status": "succeeded",
+          "created_at": 1777196959.7914581,
+          "description": "PayGent: Code Reviewer"
+        },
+        {
+          "payment_hash": "78690a7eae36d4571f4cb44cd18f7e8deaf945905abb3d1fa6f5d9b5dfc7648a",
+          "amount_sats": 50,
+          "direction": "out",
+          "counterparty_id": "marketplace",
+          "status": "succeeded",
+          "created_at": 1777196969.242601,
+          "description": "PayGent: Sentiment Analyzer"
+        }
+      ],
+      "balance": 999275,
+      "history": [
+        {
+          "payment_hash": "2e85881049320819b94be5891e564075f1c64ee2865e03add49c0ac49c3491b4",
+          "amount_sats": 25,
+          "direction": "out",
+          "counterparty_id": "marketplace",
+          "status": "succeeded",
+          "created_at": 1777196216.8648162,
+          "description": "PayGent: Web Summarizer"
+        },
+        {
+          "payment_hash": "49adf43736623479331fff58dd39f190719fdcc8583e94c1bc0e700e67429828",
+          "amount_sats": 100,
+          "direction": "out",
+          "counterparty_id": "marketplace",
+          "status": "succeeded",
+          "created_at": 1777196224.308118,
+          "description": "PayGent: Code Reviewer"
+        },
+        {
+          "payment_hash": "e37f9c19767a1daed31afab5ca911d92e996186312231046fa99ca3d2f451e8e",
+          "amount_sats": 50,
+          "direction": "out",
+          "counterparty_id": "marketplace",
+          "status": "succeeded",
+          "created_at": 1777196233.893353,
+          "description": "PayGent: Sentiment Analyzer"
+        },
+        {
+          "payment_hash": "3cfcef75fa1e38e3ed911de99f6188a8eea1edcbcb74fbe016355cdad28e15a6",
+          "amount_sats": 25,
+          "direction": "out",
+          "counterparty_id": "marketplace",
+          "status": "succeeded",
+          "created_at": 1777196359.774229,
+          "description": "PayGent: Web Summarizer"
+        },
+        {
+          "payment_hash": "7ebd67449074bf5354307557cf12f63ba04cfe7b9ce3547e94926f9541705afd",
+          "amount_sats": 100,
+          "direction": "out",
+          "counterparty_id": "marketplace",
+          "status": "succeeded",
+          "created_at": 1777196367.6065202,
+          "description": "PayGent: Code Reviewer"
+        },
+        {
+          "payment_hash": "7f6d8e5064dc2b7c93cab656cebae536ecae863e0d8a67977fefb12e5ea456d7",
+          "amount_sats": 50,
+          "direction": "out",
+          "counterparty_id": "marketplace",
+          "status": "succeeded",
+          "created_at": 1777196376.6154082,
+          "description": "PayGent: Sentiment Analyzer"
+        },
+        {
+          "payment_hash": "f591e5406e3cf544bc2aa114ec319769b7a8987ec8390150b420915d467b68bf",
+          "amount_sats": 25,
+          "direction": "out",
+          "counterparty_id": "marketplace",
+          "status": "succeeded",
+          "created_at": 1777196673.6899562,
+          "description": "PayGent: Web Summarizer"
+        },
+        {
+          "payment_hash": "9526094e01e9526c60ebbb9a08cd46c79ee7ee55c164380ce2f57b69900f9734",
+          "amount_sats": 100,
+          "direction": "out",
+          "counterparty_id": "marketplace",
+          "status": "succeeded",
+          "created_at": 1777196681.195882,
+          "description": "PayGent: Code Reviewer"
+        },
+        {
+          "payment_hash": "bc18be6f24e2f2449489c6172afacad93b563923d23e0e5538a6737cb09e8c34",
+          "amount_sats": 50,
+          "direction": "out",
+          "counterparty_id": "marketplace",
+          "status": "succeeded",
+          "created_at": 1777196690.374377,
+          "description": "PayGent: Sentiment Analyzer"
+        },
+        {
+          "payment_hash": "89b1801e98c3a3f0f0f758a936b273690426b4b663b4c58af3a34c04e99519a8",
+          "amount_sats": 25,
+          "direction": "out",
+          "counterparty_id": "marketplace",
+          "status": "succeeded",
+          "created_at": 1777196952.740295,
+          "description": "PayGent: Web Summarizer"
+        },
+        {
+          "payment_hash": "f6bafcaf983602077538e0a7caf5348acde494af25fdd31e6d5680ffe6c810b1",
+          "amount_sats": 100,
+          "direction": "out",
+          "counterparty_id": "marketplace",
+          "status": "succeeded",
+          "created_at": 1777196959.7914581,
+          "description": "PayGent: Code Reviewer"
+        },
+        {
+          "payment_hash": "78690a7eae36d4571f4cb44cd18f7e8deaf945905abb3d1fa6f5d9b5dfc7648a",
+          "amount_sats": 50,
+          "direction": "out",
+          "counterparty_id": "marketplace",
+          "status": "succeeded",
+          "created_at": 1777196969.242601,
+          "description": "PayGent: Sentiment Analyzer"
+        }
+      ]
+    },
+    "marketplace": {
+      "id": "marketplace",
+      "label": "PayGent Marketplace",
+      "balance_sats": 1000734,
+      "payments": [
+        {
+          "payment_hash": "a0c82204a608611d3222f42073244d0699c016e425cf1b483744ba2132b98197",
+          "amount_sats": 25,
+          "direction": "in",
+          "status": "succeeded",
+          "created_at": 1777190974.810116
+        },
+        {
+          "payment_hash": "2e85881049320819b94be5891e564075f1c64ee2865e03add49c0ac49c3491b4",
+          "amount_sats": 25,
+          "direction": "in",
+          "counterparty_id": "demo-consumer",
+          "status": "succeeded",
+          "created_at": 1777196216.864983,
+          "description": "PayGent: Web Summarizer"
+        },
+        {
+          "payment_hash": "49adf43736623479331fff58dd39f190719fdcc8583e94c1bc0e700e67429828",
+          "amount_sats": 100,
+          "direction": "in",
+          "counterparty_id": "demo-consumer",
+          "status": "succeeded",
+          "created_at": 1777196224.3085482,
+          "description": "PayGent: Code Reviewer"
+        },
+        {
+          "payment_hash": "e37f9c19767a1daed31afab5ca911d92e996186312231046fa99ca3d2f451e8e",
+          "amount_sats": 50,
+          "direction": "in",
+          "counterparty_id": "demo-consumer",
+          "status": "succeeded",
+          "created_at": 1777196233.893897,
+          "description": "PayGent: Sentiment Analyzer"
+        },
+        {
+          "payment_hash": "3cfcef75fa1e38e3ed911de99f6188a8eea1edcbcb74fbe016355cdad28e15a6",
+          "amount_sats": 25,
+          "direction": "in",
+          "counterparty_id": "demo-consumer",
+          "status": "succeeded",
+          "created_at": 1777196359.77449,
+          "description": "PayGent: Web Summarizer"
+        },
+        {
+          "payment_hash": "7ebd67449074bf5354307557cf12f63ba04cfe7b9ce3547e94926f9541705afd",
+          "amount_sats": 100,
+          "direction": "in",
+          "counterparty_id": "demo-consumer",
+          "status": "succeeded",
+          "created_at": 1777196367.606806,
+          "description": "PayGent: Code Reviewer"
+        },
+        {
+          "payment_hash": "7f6d8e5064dc2b7c93cab656cebae536ecae863e0d8a67977fefb12e5ea456d7",
+          "amount_sats": 50,
+          "direction": "in",
+          "counterparty_id": "demo-consumer",
+          "status": "succeeded",
+          "created_at": 1777196376.615716,
+          "description": "PayGent: Sentiment Analyzer"
+        },
+        {
+          "payment_hash": "f591e5406e3cf544bc2aa114ec319769b7a8987ec8390150b420915d467b68bf",
+          "amount_sats": 25,
+          "direction": "in",
+          "counterparty_id": "demo-consumer",
+          "status": "succeeded",
+          "created_at": 1777196673.690281,
+          "description": "PayGent: Web Summarizer"
+        },
+        {
+          "payment_hash": "9526094e01e9526c60ebbb9a08cd46c79ee7ee55c164380ce2f57b69900f9734",
+          "amount_sats": 100,
+          "direction": "in",
+          "counterparty_id": "demo-consumer",
+          "status": "succeeded",
+          "created_at": 1777196681.196224,
+          "description": "PayGent: Code Reviewer"
+        },
+        {
+          "payment_hash": "bc18be6f24e2f2449489c6172afacad93b563923d23e0e5538a6737cb09e8c34",
+          "amount_sats": 50,
+          "direction": "in",
+          "counterparty_id": "demo-consumer",
+          "status": "succeeded",
+          "created_at": 1777196690.3748019,
+          "description": "PayGent: Sentiment Analyzer"
+        },
+        {
+          "payment_hash": "89b1801e98c3a3f0f0f758a936b273690426b4b663b4c58af3a34c04e99519a8",
+          "amount_sats": 25,
+          "direction": "in",
+          "counterparty_id": "demo-consumer",
+          "status": "succeeded",
+          "created_at": 1777196952.7408168,
+          "description": "PayGent: Web Summarizer"
+        },
+        {
+          "payment_hash": "f6bafcaf983602077538e0a7caf5348acde494af25fdd31e6d5680ffe6c810b1",
+          "amount_sats": 100,
+          "direction": "in",
+          "counterparty_id": "demo-consumer",
+          "status": "succeeded",
+          "created_at": 1777196959.792423,
+          "description": "PayGent: Code Reviewer"
+        },
+        {
+          "payment_hash": "78690a7eae36d4571f4cb44cd18f7e8deaf945905abb3d1fa6f5d9b5dfc7648a",
+          "amount_sats": 50,
+          "direction": "in",
+          "counterparty_id": "demo-consumer",
+          "status": "succeeded",
+          "created_at": 1777196969.243171,
+          "description": "PayGent: Sentiment Analyzer"
+        },
+        {
+          "payment_hash": "885209898ba876df6992f9edd3c396c2fd99bbf21dbdcd6c487eb2a5936bbb0e",
+          "amount_sats": 15,
+          "direction": "in",
+          "counterparty_id": "4ecb924f-46ca-409a-945e-f699d069e284",
+          "status": "succeeded",
+          "created_at": 1777197196.8600042,
+          "description": "PayGent: Provider1 \u00b7 Code Writer"
+        },
+        {
+          "payment_hash": "98ddba534da966ed9bb55b98365e36ef431720918c4f95c43717d5bc811a2c5b",
+          "amount_sats": 15,
+          "direction": "in",
+          "counterparty_id": "4ecb924f-46ca-409a-945e-f699d069e284",
+          "status": "succeeded",
+          "created_at": 1777197200.050516,
+          "description": "PayGent: Provider1 \u00b7 Code Writer"
+        },
+        {
+          "payment_hash": "d677547c476e0417524c80b66714257571adec2cca10991e0f674d02b2bd6ae7",
+          "amount_sats": 15,
+          "direction": "in",
+          "counterparty_id": "4ecb924f-46ca-409a-945e-f699d069e284",
+          "status": "succeeded",
+          "created_at": 1777197203.266141,
+          "description": "PayGent: Provider1 \u00b7 Code Writer"
+        },
+        {
+          "payment_hash": "6037b92600521d7d1934011dd1fcac9d0ce223c8da9493001c140158ea8badd2",
+          "amount_sats": 15,
+          "direction": "in",
+          "counterparty_id": "4ecb924f-46ca-409a-945e-f699d069e284",
+          "status": "succeeded",
+          "created_at": 1777197206.890208,
+          "description": "PayGent: Provider1 \u00b7 Code Writer"
+        },
+        {
+          "payment_hash": "2931fa7c0b6229d15a1780c558b1a9429b76e9dbf0f372fd76ccacbca2b6a4ee",
+          "amount_sats": 15,
+          "direction": "in",
+          "counterparty_id": "4ecb924f-46ca-409a-945e-f699d069e284",
+          "status": "succeeded",
+          "created_at": 1777197214.4742131,
+          "description": "PayGent: Provider1 \u00b7 Code Writer"
+        },
+        {
+          "payment_hash": "b268c33d6967a5fbcec00ac58b5352e451fc664ed77aab036e7e7934f4bc6673",
+          "amount_sats": 15,
+          "direction": "in",
+          "counterparty_id": "4ecb924f-46ca-409a-945e-f699d069e284",
+          "status": "succeeded",
+          "created_at": 1777197217.256379,
+          "description": "PayGent: Provider1 \u00b7 Code Writer"
+        },
+        {
+          "payment_hash": "8e0100636ab7bd16fcb336fe63da0333eda42de8d2352f3eb956b6ad7b39deff",
+          "amount_sats": 15,
+          "direction": "in",
+          "counterparty_id": "4ecb924f-46ca-409a-945e-f699d069e284",
+          "status": "succeeded",
+          "created_at": 1777197220.0974221,
+          "description": "PayGent: Provider1 \u00b7 Code Writer"
+        },
+        {
+          "payment_hash": "1892f3ac9f610ffd014245c4096c6b68c9fd71786a88e87224b400b13b93ec78",
+          "amount_sats": 15,
+          "direction": "in",
+          "counterparty_id": "4ecb924f-46ca-409a-945e-f699d069e284",
+          "status": "succeeded",
+          "created_at": 1777197223.9521332,
+          "description": "PayGent: Provider1 \u00b7 Code Writer"
+        },
+        {
+          "payment_hash": "0249e05aef22210e93f62efbc00968c791de50caf3d7049f734e4c70fed4a735",
+          "amount_sats": 15,
+          "direction": "in",
+          "counterparty_id": "4ecb924f-46ca-409a-945e-f699d069e284",
+          "status": "succeeded",
+          "created_at": 1777197227.953032,
+          "description": "PayGent: Provider1 \u00b7 Code Writer"
+        }
+      ],
+      "balance": 1000734,
+      "history": [
+        {
+          "payment_hash": "2e85881049320819b94be5891e564075f1c64ee2865e03add49c0ac49c3491b4",
+          "amount_sats": 25,
+          "direction": "in",
+          "counterparty_id": "demo-consumer",
+          "status": "succeeded",
+          "created_at": 1777196216.864983,
+          "description": "PayGent: Web Summarizer"
+        },
+        {
+          "payment_hash": "49adf43736623479331fff58dd39f190719fdcc8583e94c1bc0e700e67429828",
+          "amount_sats": 100,
+          "direction": "in",
+          "counterparty_id": "demo-consumer",
+          "status": "succeeded",
+          "created_at": 1777196224.3085482,
+          "description": "PayGent: Code Reviewer"
+        },
+        {
+          "payment_hash": "e37f9c19767a1daed31afab5ca911d92e996186312231046fa99ca3d2f451e8e",
+          "amount_sats": 50,
+          "direction": "in",
+          "counterparty_id": "demo-consumer",
+          "status": "succeeded",
+          "created_at": 1777196233.893897,
+          "description": "PayGent: Sentiment Analyzer"
+        },
+        {
+          "payment_hash": "3cfcef75fa1e38e3ed911de99f6188a8eea1edcbcb74fbe016355cdad28e15a6",
+          "amount_sats": 25,
+          "direction": "in",
+          "counterparty_id": "demo-consumer",
+          "status": "succeeded",
+          "created_at": 1777196359.77449,
+          "description": "PayGent: Web Summarizer"
+        },
+        {
+          "payment_hash": "7ebd67449074bf5354307557cf12f63ba04cfe7b9ce3547e94926f9541705afd",
+          "amount_sats": 100,
+          "direction": "in",
+          "counterparty_id": "demo-consumer",
+          "status": "succeeded",
+          "created_at": 1777196367.606806,
+          "description": "PayGent: Code Reviewer"
+        },
+        {
+          "payment_hash": "7f6d8e5064dc2b7c93cab656cebae536ecae863e0d8a67977fefb12e5ea456d7",
+          "amount_sats": 50,
+          "direction": "in",
+          "counterparty_id": "demo-consumer",
+          "status": "succeeded",
+          "created_at": 1777196376.615716,
+          "description": "PayGent: Sentiment Analyzer"
+        },
+        {
+          "payment_hash": "f591e5406e3cf544bc2aa114ec319769b7a8987ec8390150b420915d467b68bf",
+          "amount_sats": 25,
+          "direction": "in",
+          "counterparty_id": "demo-consumer",
+          "status": "succeeded",
+          "created_at": 1777196673.690281,
+          "description": "PayGent: Web Summarizer"
+        },
+        {
+          "payment_hash": "9526094e01e9526c60ebbb9a08cd46c79ee7ee55c164380ce2f57b69900f9734",
+          "amount_sats": 100,
+          "direction": "in",
+          "counterparty_id": "demo-consumer",
+          "status": "succeeded",
+          "created_at": 1777196681.196224,
+          "description": "PayGent: Code Reviewer"
+        },
+        {
+          "payment_hash": "bc18be6f24e2f2449489c6172afacad93b563923d23e0e5538a6737cb09e8c34",
+          "amount_sats": 50,
+          "direction": "in",
+          "counterparty_id": "demo-consumer",
+          "status": "succeeded",
+          "created_at": 1777196690.3748019,
+          "description": "PayGent: Sentiment Analyzer"
+        },
+        {
+          "payment_hash": "89b1801e98c3a3f0f0f758a936b273690426b4b663b4c58af3a34c04e99519a8",
+          "amount_sats": 25,
+          "direction": "in",
+          "counterparty_id": "demo-consumer",
+          "status": "succeeded",
+          "created_at": 1777196952.7408168,
+          "description": "PayGent: Web Summarizer"
+        },
+        {
+          "payment_hash": "f6bafcaf983602077538e0a7caf5348acde494af25fdd31e6d5680ffe6c810b1",
+          "amount_sats": 100,
+          "direction": "in",
+          "counterparty_id": "demo-consumer",
+          "status": "succeeded",
+          "created_at": 1777196959.792423,
+          "description": "PayGent: Code Reviewer"
+        },
+        {
+          "payment_hash": "78690a7eae36d4571f4cb44cd18f7e8deaf945905abb3d1fa6f5d9b5dfc7648a",
+          "amount_sats": 50,
+          "direction": "in",
+          "counterparty_id": "demo-consumer",
+          "status": "succeeded",
+          "created_at": 1777196969.243171,
+          "description": "PayGent: Sentiment Analyzer"
+        },
+        {
+          "payment_hash": "885209898ba876df6992f9edd3c396c2fd99bbf21dbdcd6c487eb2a5936bbb0e",
+          "amount_sats": 15,
+          "direction": "in",
+          "counterparty_id": "4ecb924f-46ca-409a-945e-f699d069e284",
+          "status": "succeeded",
+          "created_at": 1777197196.8600042,
+          "description": "PayGent: Provider1 \u00b7 Code Writer"
+        },
+        {
+          "payment_hash": "98ddba534da966ed9bb55b98365e36ef431720918c4f95c43717d5bc811a2c5b",
+          "amount_sats": 15,
+          "direction": "in",
+          "counterparty_id": "4ecb924f-46ca-409a-945e-f699d069e284",
+          "status": "succeeded",
+          "created_at": 1777197200.050516,
+          "description": "PayGent: Provider1 \u00b7 Code Writer"
+        },
+        {
+          "payment_hash": "d677547c476e0417524c80b66714257571adec2cca10991e0f674d02b2bd6ae7",
+          "amount_sats": 15,
+          "direction": "in",
+          "counterparty_id": "4ecb924f-46ca-409a-945e-f699d069e284",
+          "status": "succeeded",
+          "created_at": 1777197203.266141,
+          "description": "PayGent: Provider1 \u00b7 Code Writer"
+        },
+        {
+          "payment_hash": "6037b92600521d7d1934011dd1fcac9d0ce223c8da9493001c140158ea8badd2",
+          "amount_sats": 15,
+          "direction": "in",
+          "counterparty_id": "4ecb924f-46ca-409a-945e-f699d069e284",
+          "status": "succeeded",
+          "created_at": 1777197206.890208,
+          "description": "PayGent: Provider1 \u00b7 Code Writer"
+        },
+        {
+          "payment_hash": "2931fa7c0b6229d15a1780c558b1a9429b76e9dbf0f372fd76ccacbca2b6a4ee",
+          "amount_sats": 15,
+          "direction": "in",
+          "counterparty_id": "4ecb924f-46ca-409a-945e-f699d069e284",
+          "status": "succeeded",
+          "created_at": 1777197214.4742131,
+          "description": "PayGent: Provider1 \u00b7 Code Writer"
+        },
+        {
+          "payment_hash": "b268c33d6967a5fbcec00ac58b5352e451fc664ed77aab036e7e7934f4bc6673",
+          "amount_sats": 15,
+          "direction": "in",
+          "counterparty_id": "4ecb924f-46ca-409a-945e-f699d069e284",
+          "status": "succeeded",
+          "created_at": 1777197217.256379,
+          "description": "PayGent: Provider1 \u00b7 Code Writer"
+        },
+        {
+          "payment_hash": "8e0100636ab7bd16fcb336fe63da0333eda42de8d2352f3eb956b6ad7b39deff",
+          "amount_sats": 15,
+          "direction": "in",
+          "counterparty_id": "4ecb924f-46ca-409a-945e-f699d069e284",
+          "status": "succeeded",
+          "created_at": 1777197220.0974221,
+          "description": "PayGent: Provider1 \u00b7 Code Writer"
+        },
+        {
+          "payment_hash": "1892f3ac9f610ffd014245c4096c6b68c9fd71786a88e87224b400b13b93ec78",
+          "amount_sats": 15,
+          "direction": "in",
+          "counterparty_id": "4ecb924f-46ca-409a-945e-f699d069e284",
+          "status": "succeeded",
+          "created_at": 1777197223.9521332,
+          "description": "PayGent: Provider1 \u00b7 Code Writer"
+        },
+        {
+          "payment_hash": "0249e05aef22210e93f62efbc00968c791de50caf3d7049f734e4c70fed4a735",
+          "amount_sats": 15,
+          "direction": "in",
+          "counterparty_id": "4ecb924f-46ca-409a-945e-f699d069e284",
+          "status": "succeeded",
+          "created_at": 1777197227.953032,
+          "description": "PayGent: Provider1 \u00b7 Code Writer"
+        }
+      ]
+    }
+  },
+  "invoices": {
+    "a0c82204a608611d3222f42073244d0699c016e425cf1b483744ba2132b98197": {
+      "payment_hash": "a0c82204a608611d3222f42073244d0699c016e425cf1b483744ba2132b98197",
+      "bolt11": "lnbcmock25_a0c82204a608611d3222f420",
+      "amount_sats": 25,
+      "description": "PayGent: Web Summarizer",
+      "issuer_id": "marketplace",
+      "created_at": 1777190974.808755,
+      "expires_at": 1777194574.808755,
+      "status": "settled",
+      "payer_id": "demo-consumer",
+      "settled_at": 1777190974.810237
+    },
+    "917735fca80b167e7604ff79fb87782013850f94621d40c658cd213240dfda69": {
+      "payment_hash": "917735fca80b167e7604ff79fb87782013850f94621d40c658cd213240dfda69",
+      "bolt11": "lnbcmock25_917735fca80b167e7604ff79",
+      "amount_sats": 25,
+      "description": "PayGent: Web Summarizer",
+      "issuer_id": "marketplace",
+      "created_at": 1777195733.103883,
+      "expires_at": 1777199333.103883,
+      "status": "pending"
+    },
+    "04077fe93b9eab3cc696d3e96f41596e6534ce2d30227070c414b6bcfdddd09a": {
+      "payment_hash": "04077fe93b9eab3cc696d3e96f41596e6534ce2d30227070c414b6bcfdddd09a",
+      "bolt11": "lnbcmock100_04077fe93b9eab3cc696d3e9",
+      "amount_sats": 100,
+      "description": "PayGent: Code Reviewer",
+      "issuer_id": "marketplace",
+      "created_at": 1777195734.109772,
+      "expires_at": 1777199334.109772,
+      "status": "pending"
+    },
+    "d6bd833e05fbcb23409c23f9329ea542d759025c22b7dc57fd7cec146e153f50": {
+      "payment_hash": "d6bd833e05fbcb23409c23f9329ea542d759025c22b7dc57fd7cec146e153f50",
+      "bolt11": "lnbcmock50_d6bd833e05fbcb23409c23f9",
+      "amount_sats": 50,
+      "description": "PayGent: Sentiment Analyzer",
+      "issuer_id": "marketplace",
+      "created_at": 1777195735.115392,
+      "expires_at": 1777199335.115392,
+      "status": "pending"
+    },
+    "cff5f7bd78033c507fc1fd7d7831ccff153e1136c81363046b0e22b6a6c3934f": {
+      "payment_hash": "cff5f7bd78033c507fc1fd7d7831ccff153e1136c81363046b0e22b6a6c3934f",
+      "bolt11": "lnbcmock25_cff5f7bd78033c507fc1fd7d",
+      "amount_sats": 25,
+      "description": "PayGent: Web Summarizer",
+      "issuer_id": "marketplace",
+      "created_at": 1777195893.87403,
+      "expires_at": 1777199493.87403,
+      "status": "pending"
+    },
+    "e8384db4abb11fd85061098c00ced39de330eabc32136cf2113bb44131838c02": {
+      "payment_hash": "e8384db4abb11fd85061098c00ced39de330eabc32136cf2113bb44131838c02",
+      "bolt11": "lnbcmock100_e8384db4abb11fd85061098c",
+      "amount_sats": 100,
+      "description": "PayGent: Code Reviewer",
+      "issuer_id": "marketplace",
+      "created_at": 1777195894.879976,
+      "expires_at": 1777199494.879976,
+      "status": "pending"
+    },
+    "c1efe7d1ca0fc7d29419d3edefb845a3427a6b3fbf6d4a67277345ad9c22e1d2": {
+      "payment_hash": "c1efe7d1ca0fc7d29419d3edefb845a3427a6b3fbf6d4a67277345ad9c22e1d2",
+      "bolt11": "lnbcmock50_c1efe7d1ca0fc7d29419d3ed",
+      "amount_sats": 50,
+      "description": "PayGent: Sentiment Analyzer",
+      "issuer_id": "marketplace",
+      "created_at": 1777195895.8900049,
+      "expires_at": 1777199495.8900049,
+      "status": "pending"
+    },
+    "2e85881049320819b94be5891e564075f1c64ee2865e03add49c0ac49c3491b4": {
+      "payment_hash": "2e85881049320819b94be5891e564075f1c64ee2865e03add49c0ac49c3491b4",
+      "bolt11": "lnbcmock25_2e85881049320819b94be589",
+      "amount_sats": 25,
+      "description": "PayGent: Web Summarizer",
+      "issuer_id": "marketplace",
+      "created_at": 1777196216.862509,
+      "expires_at": 1777199816.862509,
+      "status": "settled",
+      "payer_id": "demo-consumer",
+      "settled_at": 1777196216.864681
+    },
+    "49adf43736623479331fff58dd39f190719fdcc8583e94c1bc0e700e67429828": {
+      "payment_hash": "49adf43736623479331fff58dd39f190719fdcc8583e94c1bc0e700e67429828",
+      "bolt11": "lnbcmock100_49adf43736623479331fff58",
+      "amount_sats": 100,
+      "description": "PayGent: Code Reviewer",
+      "issuer_id": "marketplace",
+      "created_at": 1777196224.303529,
+      "expires_at": 1777199824.303529,
+      "status": "settled",
+      "payer_id": "demo-consumer",
+      "settled_at": 1777196224.307772
+    },
+    "e37f9c19767a1daed31afab5ca911d92e996186312231046fa99ca3d2f451e8e": {
+      "payment_hash": "e37f9c19767a1daed31afab5ca911d92e996186312231046fa99ca3d2f451e8e",
+      "bolt11": "lnbcmock50_e37f9c19767a1daed31afab5",
+      "amount_sats": 50,
+      "description": "PayGent: Sentiment Analyzer",
+      "issuer_id": "marketplace",
+      "created_at": 1777196233.886326,
+      "expires_at": 1777199833.886326,
+      "status": "settled",
+      "payer_id": "demo-consumer",
+      "settled_at": 1777196233.892939
+    },
+    "3cfcef75fa1e38e3ed911de99f6188a8eea1edcbcb74fbe016355cdad28e15a6": {
+      "payment_hash": "3cfcef75fa1e38e3ed911de99f6188a8eea1edcbcb74fbe016355cdad28e15a6",
+      "bolt11": "lnbcmock25_3cfcef75fa1e38e3ed911de9",
+      "amount_sats": 25,
+      "description": "PayGent: Web Summarizer",
+      "issuer_id": "marketplace",
+      "created_at": 1777196359.772033,
+      "expires_at": 1777199959.772033,
+      "status": "settled",
+      "payer_id": "demo-consumer",
+      "settled_at": 1777196359.774069
+    },
+    "7ebd67449074bf5354307557cf12f63ba04cfe7b9ce3547e94926f9541705afd": {
+      "payment_hash": "7ebd67449074bf5354307557cf12f63ba04cfe7b9ce3547e94926f9541705afd",
+      "bolt11": "lnbcmock100_7ebd67449074bf5354307557",
+      "amount_sats": 100,
+      "description": "PayGent: Code Reviewer",
+      "issuer_id": "marketplace",
+      "created_at": 1777196367.6041899,
+      "expires_at": 1777199967.6041899,
+      "status": "settled",
+      "payer_id": "demo-consumer",
+      "settled_at": 1777196367.606315
+    },
+    "7f6d8e5064dc2b7c93cab656cebae536ecae863e0d8a67977fefb12e5ea456d7": {
+      "payment_hash": "7f6d8e5064dc2b7c93cab656cebae536ecae863e0d8a67977fefb12e5ea456d7",
+      "bolt11": "lnbcmock50_7f6d8e5064dc2b7c93cab656",
+      "amount_sats": 50,
+      "description": "PayGent: Sentiment Analyzer",
+      "issuer_id": "marketplace",
+      "created_at": 1777196376.612581,
+      "expires_at": 1777199976.612581,
+      "status": "settled",
+      "payer_id": "demo-consumer",
+      "settled_at": 1777196376.615155
+    },
+    "f591e5406e3cf544bc2aa114ec319769b7a8987ec8390150b420915d467b68bf": {
+      "payment_hash": "f591e5406e3cf544bc2aa114ec319769b7a8987ec8390150b420915d467b68bf",
+      "bolt11": "lnbcmock25_f591e5406e3cf544bc2aa114",
+      "amount_sats": 25,
+      "description": "PayGent: Web Summarizer",
+      "issuer_id": "marketplace",
+      "created_at": 1777196673.686935,
+      "expires_at": 1777200273.686935,
+      "status": "settled",
+      "payer_id": "demo-consumer",
+      "settled_at": 1777196673.6896992
+    },
+    "9526094e01e9526c60ebbb9a08cd46c79ee7ee55c164380ce2f57b69900f9734": {
+      "payment_hash": "9526094e01e9526c60ebbb9a08cd46c79ee7ee55c164380ce2f57b69900f9734",
+      "bolt11": "lnbcmock100_9526094e01e9526c60ebbb9a",
+      "amount_sats": 100,
+      "description": "PayGent: Code Reviewer",
+      "issuer_id": "marketplace",
+      "created_at": 1777196681.192982,
+      "expires_at": 1777200281.192982,
+      "status": "settled",
+      "payer_id": "demo-consumer",
+      "settled_at": 1777196681.195565
+    },
+    "bc18be6f24e2f2449489c6172afacad93b563923d23e0e5538a6737cb09e8c34": {
+      "payment_hash": "bc18be6f24e2f2449489c6172afacad93b563923d23e0e5538a6737cb09e8c34",
+      "bolt11": "lnbcmock50_bc18be6f24e2f2449489c617",
+      "amount_sats": 50,
+      "description": "PayGent: Sentiment Analyzer",
+      "issuer_id": "marketplace",
+      "created_at": 1777196690.370951,
+      "expires_at": 1777200290.370951,
+      "status": "settled",
+      "payer_id": "demo-consumer",
+      "settled_at": 1777196690.374016
+    },
+    "89b1801e98c3a3f0f0f758a936b273690426b4b663b4c58af3a34c04e99519a8": {
+      "payment_hash": "89b1801e98c3a3f0f0f758a936b273690426b4b663b4c58af3a34c04e99519a8",
+      "bolt11": "lnbcmock25_89b1801e98c3a3f0f0f758a9",
+      "amount_sats": 25,
+      "description": "PayGent: Web Summarizer",
+      "issuer_id": "marketplace",
+      "created_at": 1777196952.736715,
+      "expires_at": 1777200552.736715,
+      "status": "settled",
+      "payer_id": "demo-consumer",
+      "settled_at": 1777196952.7399092
+    },
+    "f6bafcaf983602077538e0a7caf5348acde494af25fdd31e6d5680ffe6c810b1": {
+      "payment_hash": "f6bafcaf983602077538e0a7caf5348acde494af25fdd31e6d5680ffe6c810b1",
+      "bolt11": "lnbcmock100_f6bafcaf983602077538e0a7",
+      "amount_sats": 100,
+      "description": "PayGent: Code Reviewer",
+      "issuer_id": "marketplace",
+      "created_at": 1777196959.783942,
+      "expires_at": 1777200559.783942,
+      "status": "settled",
+      "payer_id": "demo-consumer",
+      "settled_at": 1777196959.790439
+    },
+    "78690a7eae36d4571f4cb44cd18f7e8deaf945905abb3d1fa6f5d9b5dfc7648a": {
+      "payment_hash": "78690a7eae36d4571f4cb44cd18f7e8deaf945905abb3d1fa6f5d9b5dfc7648a",
+      "bolt11": "lnbcmock50_78690a7eae36d4571f4cb44c",
+      "amount_sats": 50,
+      "description": "PayGent: Sentiment Analyzer",
+      "issuer_id": "marketplace",
+      "created_at": 1777196969.2381382,
+      "expires_at": 1777200569.2381382,
+      "status": "settled",
+      "payer_id": "demo-consumer",
+      "settled_at": 1777196969.24212
+    },
+    "885209898ba876df6992f9edd3c396c2fd99bbf21dbdcd6c487eb2a5936bbb0e": {
+      "payment_hash": "885209898ba876df6992f9edd3c396c2fd99bbf21dbdcd6c487eb2a5936bbb0e",
+      "bolt11": "lnbcmock15_885209898ba876df6992f9ed",
+      "amount_sats": 15,
+      "description": "PayGent: Provider1 \u00b7 Code Writer",
+      "issuer_id": "marketplace",
+      "created_at": 1777197196.855936,
+      "expires_at": 1777200796.855936,
+      "status": "settled",
+      "payer_id": "4ecb924f-46ca-409a-945e-f699d069e284",
+      "settled_at": 1777197196.8591318
+    },
+    "98ddba534da966ed9bb55b98365e36ef431720918c4f95c43717d5bc811a2c5b": {
+      "payment_hash": "98ddba534da966ed9bb55b98365e36ef431720918c4f95c43717d5bc811a2c5b",
+      "bolt11": "lnbcmock15_98ddba534da966ed9bb55b98",
+      "amount_sats": 15,
+      "description": "PayGent: Provider1 \u00b7 Code Writer",
+      "issuer_id": "marketplace",
+      "created_at": 1777197200.0461419,
+      "expires_at": 1777200800.0461419,
+      "status": "settled",
+      "payer_id": "4ecb924f-46ca-409a-945e-f699d069e284",
+      "settled_at": 1777197200.049484
+    },
+    "d677547c476e0417524c80b66714257571adec2cca10991e0f674d02b2bd6ae7": {
+      "payment_hash": "d677547c476e0417524c80b66714257571adec2cca10991e0f674d02b2bd6ae7",
+      "bolt11": "lnbcmock15_d677547c476e0417524c80b6",
+      "amount_sats": 15,
+      "description": "PayGent: Provider1 \u00b7 Code Writer",
+      "issuer_id": "marketplace",
+      "created_at": 1777197203.261698,
+      "expires_at": 1777200803.261698,
+      "status": "settled",
+      "payer_id": "4ecb924f-46ca-409a-945e-f699d069e284",
+      "settled_at": 1777197203.265126
+    },
+    "6037b92600521d7d1934011dd1fcac9d0ce223c8da9493001c140158ea8badd2": {
+      "payment_hash": "6037b92600521d7d1934011dd1fcac9d0ce223c8da9493001c140158ea8badd2",
+      "bolt11": "lnbcmock15_6037b92600521d7d1934011d",
+      "amount_sats": 15,
+      "description": "PayGent: Provider1 \u00b7 Code Writer",
+      "issuer_id": "marketplace",
+      "created_at": 1777197206.885655,
+      "expires_at": 1777200806.885655,
+      "status": "settled",
+      "payer_id": "4ecb924f-46ca-409a-945e-f699d069e284",
+      "settled_at": 1777197206.889119
+    },
+    "2931fa7c0b6229d15a1780c558b1a9429b76e9dbf0f372fd76ccacbca2b6a4ee": {
+      "payment_hash": "2931fa7c0b6229d15a1780c558b1a9429b76e9dbf0f372fd76ccacbca2b6a4ee",
+      "bolt11": "lnbcmock15_2931fa7c0b6229d15a1780c5",
+      "amount_sats": 15,
+      "description": "PayGent: Provider1 \u00b7 Code Writer",
+      "issuer_id": "marketplace",
+      "created_at": 1777197214.469163,
+      "expires_at": 1777200814.469163,
+      "status": "settled",
+      "payer_id": "4ecb924f-46ca-409a-945e-f699d069e284",
+      "settled_at": 1777197214.473074
+    },
+    "b268c33d6967a5fbcec00ac58b5352e451fc664ed77aab036e7e7934f4bc6673": {
+      "payment_hash": "b268c33d6967a5fbcec00ac58b5352e451fc664ed77aab036e7e7934f4bc6673",
+      "bolt11": "lnbcmock15_b268c33d6967a5fbcec00ac5",
+      "amount_sats": 15,
+      "description": "PayGent: Provider1 \u00b7 Code Writer",
+      "issuer_id": "marketplace",
+      "created_at": 1777197217.251127,
+      "expires_at": 1777200817.251127,
+      "status": "settled",
+      "payer_id": "4ecb924f-46ca-409a-945e-f699d069e284",
+      "settled_at": 1777197217.255147
+    },
+    "8e0100636ab7bd16fcb336fe63da0333eda42de8d2352f3eb956b6ad7b39deff": {
+      "payment_hash": "8e0100636ab7bd16fcb336fe63da0333eda42de8d2352f3eb956b6ad7b39deff",
+      "bolt11": "lnbcmock15_8e0100636ab7bd16fcb336fe",
+      "amount_sats": 15,
+      "description": "PayGent: Provider1 \u00b7 Code Writer",
+      "issuer_id": "marketplace",
+      "created_at": 1777197220.092289,
+      "expires_at": 1777200820.092289,
+      "status": "settled",
+      "payer_id": "4ecb924f-46ca-409a-945e-f699d069e284",
+      "settled_at": 1777197220.096222
+    },
+    "1892f3ac9f610ffd014245c4096c6b68c9fd71786a88e87224b400b13b93ec78": {
+      "payment_hash": "1892f3ac9f610ffd014245c4096c6b68c9fd71786a88e87224b400b13b93ec78",
+      "bolt11": "lnbcmock15_1892f3ac9f610ffd014245c4",
+      "amount_sats": 15,
+      "description": "PayGent: Provider1 \u00b7 Code Writer",
+      "issuer_id": "marketplace",
+      "created_at": 1777197223.942864,
+      "expires_at": 1777200823.942864,
+      "status": "settled",
+      "payer_id": "4ecb924f-46ca-409a-945e-f699d069e284",
+      "settled_at": 1777197223.949991
+    },
+    "0249e05aef22210e93f62efbc00968c791de50caf3d7049f734e4c70fed4a735": {
+      "payment_hash": "0249e05aef22210e93f62efbc00968c791de50caf3d7049f734e4c70fed4a735",
+      "bolt11": "lnbcmock15_0249e05aef22210e93f62efb",
+      "amount_sats": 15,
+      "description": "PayGent: Provider1 \u00b7 Code Writer",
+      "issuer_id": "marketplace",
+      "created_at": 1777197227.9434738,
+      "expires_at": 1777200827.9434738,
+      "status": "settled",
+      "payer_id": "4ecb924f-46ca-409a-945e-f699d069e284",
+      "settled_at": 1777197227.9508202
+    }
+  }
+}

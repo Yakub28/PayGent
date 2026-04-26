@@ -1,100 +1,152 @@
-"""In-memory Lightning wallet simulation.
+"""File-based Mock Lightning wallet simulation.
 
-Replaces the real Lexe / LND integration with a deterministic, instantly-settling
-mock so we can drive the L402 + transaction plumbing in CI and demos without
-touching mainnet. The public API mirrors the surface used by the rest of the
-codebase (``create_invoice``, ``pay_invoice``, ``list_payments``, ``node_info``).
-
-A global registry routes ``pay_invoice`` calls to the wallet that issued the
-invoice, so balances move atomically between mock wallets like the real network.
+Allows multiple processes (e.g. server + consumer agent) to share the same
+payment state.
 """
 from __future__ import annotations
 
+import json
+import os
 import secrets
 import threading
 import time
-from dataclasses import dataclass, field
+from dataclasses import dataclass, asdict
 from types import SimpleNamespace
 from typing import Iterable
 
-
-@dataclass
-class _InvoiceRecord:
-    payment_hash: str
-    bolt11: str
-    amount_sats: int
-    description: str
-    issuer_id: str
-    created_at: float
-    expires_at: float
-    status: str = "pending"  # pending | settled | expired
-    payer_id: str | None = None
-    settled_at: float | None = None
+STATE_FILE = "mock_lightning.json"
 
 
-@dataclass
-class _PaymentRecord:
-    payment_hash: str
-    amount_sats: int
-    direction: str  # "out" (pay_invoice) or "in" (received)
-    counterparty_id: str
-    status: str
-    created_at: float
-    description: str = ""
-
-
-@dataclass
-class MockNodeInfo:
-    node_pk: str
-    balance_sats: int
-
-
-class _Registry:
-    """Thread-safe global registry of wallets and invoices."""
-
-    def __init__(self) -> None:
+class _FileRegistry:
+    def __init__(self, path: str):
+        self.path = path
         self._lock = threading.RLock()
         self._wallets: dict[str, "MockWallet"] = {}
-        self._invoices: dict[str, _InvoiceRecord] = {}
+        self._ensure_file()
+
+    def _ensure_file(self):
+        with self._lock:
+            if not os.path.exists(self.path):
+                with open(self.path, "w") as f:
+                    json.dump({"wallets": {}, "invoices": {}}, f)
+
+    def _load(self) -> dict:
+        with open(self.path, "r") as f:
+            return json.load(f)
+
+    def _save(self, data: dict):
+        with open(self.path, "w") as f:
+            json.dump(data, f, indent=2)
 
     def register(self, wallet: "MockWallet") -> None:
         with self._lock:
             self._wallets[wallet.id] = wallet
+            data = self._load()
+            if wallet.id not in data["wallets"]:
+                data["wallets"][wallet.id] = {
+                    "balance": wallet._initial_sats,
+                    "history": []
+                }
+                self._save(data)
 
     def unregister(self, wallet_id: str) -> None:
         with self._lock:
             self._wallets.pop(wallet_id, None)
+            data = self._load()
+            data["wallets"].pop(wallet_id, None)
+            self._save(data)
 
     def get_wallet(self, wallet_id: str) -> "MockWallet | None":
         with self._lock:
-            return self._wallets.get(wallet_id)
-
-    def record_invoice(self, inv: _InvoiceRecord) -> None:
-        with self._lock:
-            self._invoices[inv.payment_hash] = inv
-
-    def find_invoice_by_bolt11(self, bolt11: str) -> _InvoiceRecord | None:
-        with self._lock:
-            for inv in self._invoices.values():
-                if inv.bolt11 == bolt11:
-                    return inv
+            # Check in-memory first
+            if wallet_id in self._wallets:
+                return self._wallets[wallet_id]
+            # Check file
+            data = self._load()
+            if wallet_id in data["wallets"]:
+                # Re-instantiate if found in file but not in memory
+                return MockWallet(wallet_id)
             return None
-
-    def find_invoice_by_hash(self, payment_hash: str) -> _InvoiceRecord | None:
-        with self._lock:
-            return self._invoices.get(payment_hash)
 
     def lock(self) -> threading.RLock:
         return self._lock
 
-    def reset(self) -> None:
-        """Wipe everything. Test-only helper."""
+    def get_wallet_balance(self, wallet_id: str, default: int = 0) -> int:
+        with self._lock:
+            data = self._load()
+            w = data["wallets"].get(wallet_id, {})
+            # Handle both 'balance' and 'balance_sats' keys for compatibility
+            return w.get("balance", w.get("balance_sats", default))
+
+    def update_wallet_balance(self, wallet_id: str, balance: int):
+        with self._lock:
+            data = self._load()
+            if wallet_id not in data["wallets"]:
+                data["wallets"][wallet_id] = {"history": []}
+            
+            # Update both for compatibility
+            data["wallets"][wallet_id]["balance"] = balance
+            data["wallets"][wallet_id]["balance_sats"] = balance
+            self._save(data)
+
+    def record_invoice(self, inv_dict: dict):
+        with self._lock:
+            data = self._load()
+            data["invoices"][inv_dict["payment_hash"]] = inv_dict
+            self._save(data)
+
+    def find_invoice_by_bolt11(self, bolt11: str) -> dict | None:
+        with self._lock:
+            data = self._load()
+            for inv in data["invoices"].values():
+                if inv["bolt11"] == bolt11:
+                    return inv
+            return None
+
+    def find_invoice_by_hash(self, payment_hash: str) -> dict | None:
+        with self._lock:
+            data = self._load()
+            return data["invoices"].get(payment_hash)
+
+    def update_invoice_status(self, payment_hash: str, status: str, payer_id: str = None):
+        with self._lock:
+            data = self._load()
+            if payment_hash in data["invoices"]:
+                data["invoices"][payment_hash]["status"] = status
+                if payer_id:
+                    data["invoices"][payment_hash]["payer_id"] = payer_id
+                    data["invoices"][payment_hash]["settled_at"] = time.time()
+                self._save(data)
+
+    def add_payment_to_history(self, wallet_id: str, payment: dict):
+        with self._lock:
+            data = self._load()
+            if wallet_id not in data["wallets"]:
+                data["wallets"][wallet_id] = {"balance": 0, "history": []}
+            
+            # Handle both 'history' and 'payments' keys for compatibility
+            for key in ["history", "payments"]:
+                if key not in data["wallets"][wallet_id]:
+                    data["wallets"][wallet_id][key] = []
+                data["wallets"][wallet_id][key].append(payment)
+            self._save(data)
+
+    def get_payment_history(self, wallet_id: str) -> list[dict]:
+        with self._lock:
+            data = self._load()
+            w = data["wallets"].get(wallet_id, {})
+            # Handle both 'history' and 'payments'
+            return w.get("history", w.get("payments", []))
+
+    def reset(self):
         with self._lock:
             self._wallets.clear()
-            self._invoices.clear()
+            if os.path.exists(self.path):
+                os.remove(self.path)
+            self._ensure_file()
 
 
-REGISTRY = _Registry()
+REGISTRY = _FileRegistry(STATE_FILE)
 
 
 class InsufficientFunds(Exception):
@@ -106,30 +158,30 @@ class UnknownInvoice(Exception):
 
 
 class MockWallet:
-    """Lightning-shaped mock wallet.
-
-    Public methods deliberately mirror the subset of ``lexe.LexeWallet`` the
-    application uses, returning ``SimpleNamespace`` objects so call-sites that
-    already do ``invoice.payment_hash`` / ``info.balance_sats`` keep working.
-    """
-
     def __init__(self, wallet_id: str, label: str = "", initial_sats: int = 0) -> None:
         self.id = wallet_id
         self.label = label or wallet_id
-        self.balance_sats = int(initial_sats)
-        self._payments: list[_PaymentRecord] = []
+        self._initial_sats = int(initial_sats)
         REGISTRY.register(self)
 
-    def node_info(self) -> MockNodeInfo:
-        return MockNodeInfo(
+    @property
+    def balance_sats(self) -> int:
+        return REGISTRY.get_wallet_balance(self.id)
+
+    @balance_sats.setter
+    def balance_sats(self, value: int):
+        REGISTRY.update_wallet_balance(self.id, value)
+
+    def node_info(self) -> SimpleNamespace:
+        return SimpleNamespace(
             node_pk=f"mocknode_{self.id[:12]}",
             balance_sats=self.balance_sats,
         )
 
     def topup(self, amount_sats: int) -> int:
-        with REGISTRY.lock():
-            self.balance_sats += int(amount_sats)
-            return self.balance_sats
+        new_balance = self.balance_sats + int(amount_sats)
+        self.balance_sats = new_balance
+        return new_balance
 
     def create_invoice(
         self,
@@ -142,99 +194,86 @@ class MockWallet:
         now = time.time()
         payment_hash = secrets.token_hex(32)
         bolt11 = f"lnbcmock{amount_sats}_{payment_hash[:24]}"
-        rec = _InvoiceRecord(
-            payment_hash=payment_hash,
-            bolt11=bolt11,
-            amount_sats=amount_sats,
-            description=description,
-            issuer_id=self.id,
-            created_at=now,
-            expires_at=now + expiration_secs,
-        )
-        REGISTRY.record_invoice(rec)
+        inv_dict = {
+            "payment_hash": payment_hash,
+            "bolt11": bolt11,
+            "amount_sats": amount_sats,
+            "description": description,
+            "issuer_id": self.id,
+            "created_at": now,
+            "expires_at": now + expiration_secs,
+            "status": "pending",
+        }
+        REGISTRY.record_invoice(inv_dict)
         return SimpleNamespace(payment_hash=payment_hash, invoice=bolt11)
 
     def pay_invoice(self, bolt11: str) -> SimpleNamespace:
-        with REGISTRY.lock():
-            inv = REGISTRY.find_invoice_by_bolt11(bolt11)
-            if inv is None:
-                raise UnknownInvoice(f"no such invoice: {bolt11[:24]}...")
-            if inv.status == "settled":
-                # Idempotent re-pay is a no-op.
-                return SimpleNamespace(index=len(self._payments) - 1, payment_hash=inv.payment_hash)
-            if inv.expires_at < time.time():
-                inv.status = "expired"
-                raise UnknownInvoice("invoice expired")
+        inv = REGISTRY.find_invoice_by_bolt11(bolt11)
+        if inv is None:
+            raise UnknownInvoice(f"no such invoice: {bolt11}")
+        if inv["status"] == "settled":
+            return SimpleNamespace(index=0, payment_hash=inv["payment_hash"])
+        if inv["expires_at"] < time.time():
+            REGISTRY.update_invoice_status(inv["payment_hash"], "expired")
+            raise UnknownInvoice("invoice expired")
 
-            # Same-wallet self-pay: legal in mock, but doesn't move funds.
-            if inv.issuer_id == self.id:
-                inv.status = "settled"
-                inv.payer_id = self.id
-                inv.settled_at = time.time()
-                self._payments.append(_PaymentRecord(
-                    payment_hash=inv.payment_hash,
-                    amount_sats=0,
-                    direction="out",
-                    counterparty_id=self.id,
-                    status="succeeded",
-                    created_at=time.time(),
-                    description=inv.description,
-                ))
-                return SimpleNamespace(index=len(self._payments) - 1, payment_hash=inv.payment_hash)
+        if inv["issuer_id"] == self.id:
+            # Self-pay
+            REGISTRY.update_invoice_status(inv["payment_hash"], "settled", self.id)
+            return SimpleNamespace(index=0, payment_hash=inv["payment_hash"])
 
-            if self.balance_sats < inv.amount_sats:
-                raise InsufficientFunds(
-                    f"wallet {self.id} balance {self.balance_sats} sat < invoice {inv.amount_sats} sat"
-                )
-
-            issuer = REGISTRY.get_wallet(inv.issuer_id)
-            self.balance_sats -= inv.amount_sats
-            if issuer is not None:
-                issuer.balance_sats += inv.amount_sats
-                issuer._payments.append(_PaymentRecord(
-                    payment_hash=inv.payment_hash,
-                    amount_sats=inv.amount_sats,
-                    direction="in",
-                    counterparty_id=self.id,
-                    status="succeeded",
-                    created_at=time.time(),
-                    description=inv.description,
-                ))
-
-            inv.status = "settled"
-            inv.payer_id = self.id
-            inv.settled_at = time.time()
-            self._payments.append(_PaymentRecord(
-                payment_hash=inv.payment_hash,
-                amount_sats=inv.amount_sats,
-                direction="out",
-                counterparty_id=inv.issuer_id,
-                status="succeeded",
-                created_at=time.time(),
-                description=inv.description,
-            ))
-            return SimpleNamespace(index=len(self._payments) - 1, payment_hash=inv.payment_hash)
-
-    def list_payments(self, _filter=None) -> Iterable[SimpleNamespace]:
-        # `_filter` is ignored; signature kept for drop-in compatibility.
-        return [
-            SimpleNamespace(
-                payment_hash=p.payment_hash,
-                amount_sats=p.amount_sats,
-                direction=p.direction,
-                status=p.status,
-                counterparty_id=p.counterparty_id,
-                created_at=p.created_at,
-                description=p.description,
+        if self.balance_sats < inv["amount_sats"]:
+            raise InsufficientFunds(
+                f"wallet {self.id} balance {self.balance_sats} sat < invoice {inv['amount_sats']} sat"
             )
-            for p in self._payments
-        ]
+
+        # Atomic transfer
+        with REGISTRY.lock():
+            # Re-check balance inside lock
+            current_balance = self.balance_sats
+            if current_balance < inv["amount_sats"]:
+                 raise InsufficientFunds("Insufficient funds")
+
+            issuer_id = inv["issuer_id"]
+            issuer_balance = REGISTRY.get_wallet_balance(issuer_id)
+
+            self.balance_sats = current_balance - inv["amount_sats"]
+            REGISTRY.update_wallet_balance(issuer_id, issuer_balance + inv["amount_sats"])
+            REGISTRY.update_invoice_status(inv["payment_hash"], "settled", self.id)
+
+            # Record history
+            payment_out = {
+                "payment_hash": inv["payment_hash"],
+                "amount_sats": inv["amount_sats"],
+                "direction": "out",
+                "counterparty_id": issuer_id,
+                "status": "succeeded",
+                "created_at": time.time(),
+                "description": inv["description"],
+            }
+            REGISTRY.add_payment_to_history(self.id, payment_out)
+
+            payment_in = {
+                "payment_hash": inv["payment_hash"],
+                "amount_sats": inv["amount_sats"],
+                "direction": "in",
+                "counterparty_id": self.id,
+                "status": "succeeded",
+                "created_at": time.time(),
+                "description": inv["description"],
+            }
+            REGISTRY.add_payment_to_history(issuer_id, payment_in)
+
+        return SimpleNamespace(index=0, payment_hash=inv["payment_hash"])
+
+    def list_payments(self, _filter=None) -> list[SimpleNamespace]:
+        history = REGISTRY.get_payment_history(self.id)
+        return [SimpleNamespace(**p) for p in history]
 
 
 def is_invoice_settled(payment_hash: str) -> bool:
-    """Marketplace-side helper: check if a hash has been paid."""
     inv = REGISTRY.find_invoice_by_hash(payment_hash)
-    return inv is not None and inv.status == "settled"
+    return inv is not None and inv.get("status") == "settled"
 
 
 def reset_registry() -> None:

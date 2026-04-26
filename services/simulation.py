@@ -12,7 +12,7 @@ import random
 import re
 import time
 from collections import deque
-from datetime import datetime
+from datetime import datetime, UTC
 from typing import Any
 
 import httpx

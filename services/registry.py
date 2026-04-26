@@ -1,15 +1,13 @@
 import uuid
-from datetime import datetime
-from fastapi import APIRouter
+from datetime import datetime, UTC
+from fastapi import APIRouter, HTTPException
 from database import get_db
 from models import (
     RegisterServiceRequest, RegisterServiceResponse,
     ServiceListItem, UpdatePriceRequest, UpdatePriceResponse,
 )
-from services.wallet_manager import get_marketplace_wallet
-from config import settings
-from models import RegisterServiceRequest, RegisterServiceResponse, ServiceListItem
 from services.wallet_manager import get_marketplace_wallet, get_or_create_agent_wallet
+from config import settings
 
 router = APIRouter()
 
@@ -33,17 +31,11 @@ def register_service(req: RegisterServiceRequest):
 
     with get_db() as conn:
         conn.execute(
-            "INSERT INTO services (id, name, description, price_sats, endpoint_url, provider_wallet, created_at, is_active) VALUES (?,?,?,?,?,?,?,?)",
-            (
-                service_id, req.name, req.description, req.price_sats,
-                req.endpoint_url, provider_wallet,
-                datetime.utcnow().isoformat(), 1,
-            ),
             "INSERT INTO services (id, name, description, price_sats, endpoint_url, "
             "provider_wallet, created_at, is_active, provider_agent_id, service_type) "
             "VALUES (?,?,?,?,?,?,?,?,?,?)",
             (service_id, req.name, req.description, req.price_sats,
-             req.endpoint_url, provider_wallet, datetime.utcnow().isoformat(), 1,
+             req.endpoint_url, provider_wallet, datetime.now(UTC).isoformat(), 1,
              req.provider_agent_id, req.service_type),
         )
     return RegisterServiceResponse(service_id=service_id, provider_wallet=provider_wallet)
@@ -55,14 +47,13 @@ def list_services():
         rows = conn.execute(
             """SELECT s.id, s.name, s.description, s.price_sats,
                       s.tier, s.avg_quality_score, s.success_rate, s.price_adjusted,
+                      s.provider_agent_id, s.service_type,
                       COUNT(t.id) as call_count
                FROM services s
                LEFT JOIN transactions t ON t.service_id = s.id AND t.status = 'paid'
                WHERE s.is_active = 1
                GROUP BY s.id
                ORDER BY s.created_at"""
-            "SELECT id, name, description, price_sats, provider_agent_id, service_type "
-            "FROM services WHERE is_active=1"
         ).fetchall()
     return [ServiceListItem(**dict(r)) for r in rows]
 

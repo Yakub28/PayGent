@@ -5,7 +5,6 @@ requests
 httpx
 pydantic
 pydantic-settings
-langchain
 python-dotenv
 pytest
 pytest-asyncio

@@ -1,23 +1,18 @@
 import pytest
 from fastapi.testclient import TestClient
 from unittest.mock import patch, MagicMock
+from datetime import datetime, UTC
 
 @pytest.fixture
 def client(tmp_path, monkeypatch):
     monkeypatch.setattr("database.DB_PATH", str(tmp_path / "test.db"))
     from database import init_db, get_db
-    import uuid
-    from datetime import datetime
     init_db()
 
     with get_db() as conn:
         conn.execute(
             "INSERT INTO services (id, name, description, price_sats, endpoint_url, provider_wallet, created_at, is_active) VALUES (?,?,?,?,?,?,?,?)",
-            "INSERT INTO services (id, name, description, price_sats, endpoint_url, "
-            "provider_wallet, created_at, is_active) VALUES (?,?,?,?,?,?,?,?)",
-            ("svc1", "Test", "desc", 25,
-             "http://localhost:8000/api/providers/test",
-             "wallet_abc", datetime.utcnow().isoformat(), 1)
+            ("svc1", "Test", "desc", 25, "http://localhost:8000/api/providers/test", "wallet_abc", datetime.now(UTC).isoformat(), 1)
         )
 
     import sys
@@ -46,18 +41,12 @@ def test_call_unknown_service_returns_404(client):
 def test_call_with_valid_payment_returns_provider_response(tmp_path, monkeypatch):
     monkeypatch.setattr("database.DB_PATH", str(tmp_path / "test.db"))
     from database import init_db, get_db
-    import uuid
-    from datetime import datetime
     init_db()
 
     with get_db() as conn:
         conn.execute(
             "INSERT INTO services (id, name, description, price_sats, endpoint_url, provider_wallet, created_at, is_active) VALUES (?,?,?,?,?,?,?,?)",
-            "INSERT INTO services (id, name, description, price_sats, endpoint_url, "
-            "provider_wallet, created_at, is_active) VALUES (?,?,?,?,?,?,?,?)",
-            ("svc1", "Test", "desc", 100,
-             "http://localhost:8000/api/providers/test",
-             "wallet_abc", datetime.utcnow().isoformat(), 1)
+            ("svc1", "Test", "desc", 100, "http://localhost:8000/api/providers/test", "wallet_abc", datetime.now(UTC).isoformat(), 1)
         )
 
     import sys
@@ -74,7 +63,7 @@ def test_call_with_valid_payment_returns_provider_response(tmp_path, monkeypatch
          patch("services.router._verify_payment", return_value=True), \
          patch("services.router._call_provider", return_value={"result": "ok"}), \
          patch("services.router._pay_provider"), \
-         patch("services.router.score_and_update"):
+         patch("services.router.score_and_update"), \
          patch("services.router._settle_provider", return_value=(10, 90)):
         sys.modules.pop("main", None)
         from main import app

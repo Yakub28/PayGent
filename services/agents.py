@@ -10,7 +10,7 @@ Each agent carries its own Claude model + (optional) system prompt.
 from __future__ import annotations
 
 import uuid
-from datetime import datetime
+from datetime import datetime, UTC
 
 from fastapi import APIRouter, HTTPException
 
@@ -70,7 +70,7 @@ def create_agent(req: RegisterAgentRequest):
             raise HTTPException(status_code=400, detail=f"unknown service_type: {req.service_type}")
 
     agent_id = str(uuid.uuid4())
-    now = datetime.utcnow().isoformat()
+    now = datetime.now(UTC).isoformat()
     service_type = req.service_type if req.role == "provider" else None
 
     with get_db() as conn:

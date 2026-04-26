@@ -1,39 +1,26 @@
 import pytest
 from fastapi.testclient import TestClient
 from unittest.mock import patch, MagicMock
+from datetime import datetime, UTC
 
 @pytest.fixture
 def client(tmp_path, monkeypatch):
     monkeypatch.setattr("database.DB_PATH", str(tmp_path / "test.db"))
     from database import init_db, get_db
-    from datetime import datetime
     init_db()
 
     with get_db() as conn:
         conn.execute(
             "INSERT INTO services (id, name, description, price_sats, endpoint_url, provider_wallet, created_at, is_active) VALUES (?,?,?,?,?,?,?,?)",
-            ("svc1", "Test", "desc", 100, "http://x", "wallet", datetime.utcnow().isoformat(), 1)
+            ("svc1", "Test", "desc", 100, "http://x", "wallet", datetime.now(UTC).isoformat(), 1)
         )
         conn.execute(
             "INSERT INTO transactions (id, service_id, payment_hash, amount_sats, fee_sats, provider_sats, status, created_at) VALUES (?,?,?,?,?,?,?,?)",
-            ("tx1", "svc1", "hash1", 100, 10, 90, "paid", datetime.utcnow().isoformat())
+            ("tx1", "svc1", "hash1", 100, 10, 90, "paid", datetime.now(UTC).isoformat())
         )
         conn.execute(
             "INSERT INTO transactions (id, service_id, payment_hash, amount_sats, fee_sats, provider_sats, status, created_at) VALUES (?,?,?,?,?,?,?,?)",
-            ("tx2", "svc1", "hash2", 100, 10, 90, "paid", datetime.utcnow().isoformat())
-            "INSERT INTO services (id, name, description, price_sats, endpoint_url, "
-            "provider_wallet, created_at, is_active) VALUES (?,?,?,?,?,?,?,?)",
-            ("svc1","Test","desc",100,"http://x","wallet",datetime.utcnow().isoformat(),1)
-        )
-        conn.execute(
-            "INSERT INTO transactions (id, service_id, payment_hash, amount_sats, "
-            "fee_sats, provider_sats, status, created_at) VALUES (?,?,?,?,?,?,?,?)",
-            ("tx1","svc1","hash1",100,10,90,"paid",datetime.utcnow().isoformat())
-        )
-        conn.execute(
-            "INSERT INTO transactions (id, service_id, payment_hash, amount_sats, "
-            "fee_sats, provider_sats, status, created_at) VALUES (?,?,?,?,?,?,?,?)",
-            ("tx2","svc1","hash2",100,10,90,"paid",datetime.utcnow().isoformat())
+            ("tx2", "svc1", "hash2", 100, 10, 90, "paid", datetime.now(UTC).isoformat())
         )
 
     import sys
@@ -65,20 +52,18 @@ def test_transactions_returns_list(client):
 def test_stats_includes_top_rated_when_enough_calls(tmp_path, monkeypatch):
     monkeypatch.setattr("database.DB_PATH", str(tmp_path / "test.db"))
     from database import init_db, get_db
-    from datetime import datetime
     init_db()
 
     with get_db() as conn:
         conn.execute(
             "INSERT INTO services (id, name, description, price_sats, endpoint_url, provider_wallet, created_at, is_active, avg_quality_score) VALUES (?,?,?,?,?,?,?,?,?)",
-            ("svc1", "Web Summarizer", "desc", 25, "http://x", "wallet", datetime.utcnow().isoformat(), 1, 88.0)
+            ("svc1", "Web Summarizer", "desc", 25, "http://x", "wallet", datetime.now(UTC).isoformat(), 1, 88.0)
         )
-        # 3 scored transactions (meets minimum)
-        for i in range(3):
-            conn.execute(
-                "INSERT INTO transactions (id, service_id, payment_hash, amount_sats, status, created_at, quality_score) VALUES (?,?,?,?,?,?,?)",
-                (f"tx{i}", "svc1", f"hash{i}", 25, "paid", datetime.utcnow().isoformat(), 88)
-            )
+        # 1 scored transaction (meets minimum of 1)
+        conn.execute(
+            "INSERT INTO transactions (id, service_id, payment_hash, amount_sats, status, created_at, quality_score) VALUES (?,?,?,?,?,?,?)",
+            ("tx0", "svc1", "hash0", 25, "paid", datetime.now(UTC).isoformat(), 88)
+        )
 
     import sys
     sys.modules.pop("main", None)
@@ -102,20 +87,14 @@ def test_stats_includes_top_rated_when_enough_calls(tmp_path, monkeypatch):
 def test_stats_top_rated_is_none_without_enough_calls(tmp_path, monkeypatch):
     monkeypatch.setattr("database.DB_PATH", str(tmp_path / "test.db"))
     from database import init_db, get_db
-    from datetime import datetime
     init_db()
 
     with get_db() as conn:
         conn.execute(
             "INSERT INTO services (id, name, description, price_sats, endpoint_url, provider_wallet, created_at, is_active, avg_quality_score) VALUES (?,?,?,?,?,?,?,?,?)",
-            ("svc1", "Web Summarizer", "desc", 25, "http://x", "wallet", datetime.utcnow().isoformat(), 1, 90.0)
+            ("svc1", "Web Summarizer", "desc", 25, "http://x", "wallet", datetime.now(UTC).isoformat(), 1, 90.0)
         )
-        # Only 2 scored transactions — below the 3-call minimum
-        for i in range(2):
-            conn.execute(
-                "INSERT INTO transactions (id, service_id, payment_hash, amount_sats, status, created_at, quality_score) VALUES (?,?,?,?,?,?,?)",
-                (f"tx{i}", "svc1", f"hash{i}", 25, "paid", datetime.utcnow().isoformat(), 90)
-            )
+        # No scored transactions
 
     import sys
     sys.modules.pop("main", None)

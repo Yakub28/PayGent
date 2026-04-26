@@ -35,7 +35,7 @@ def init_db():
                 tier TEXT NOT NULL DEFAULT 'bronze',
                 avg_quality_score REAL,
                 success_rate REAL NOT NULL DEFAULT 0.0,
-                price_adjusted INTEGER NOT NULL DEFAULT 0
+                price_adjusted INTEGER NOT NULL DEFAULT 0,
                 provider_agent_id TEXT,
                 service_type TEXT
             )
@@ -51,10 +51,7 @@ def init_db():
                 status TEXT NOT NULL DEFAULT 'pending',
                 created_at TEXT NOT NULL,
                 quality_score INTEGER,
-                score_reason TEXT
-            )
-        """)
-        _migrate_db(conn)
+                score_reason TEXT,
                 consumer_agent_id TEXT
             )
         """)
@@ -70,6 +67,7 @@ def init_db():
                 is_active INTEGER NOT NULL DEFAULT 1
             )
         """)
+        _migrate_db(conn)
         # Best-effort migrations for upgrades from earlier schemas.
         for stmt in [
             "ALTER TABLE services ADD COLUMN provider_agent_id TEXT",
