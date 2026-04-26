@@ -30,11 +30,9 @@ async def lifespan(_: FastAPI):
 app = FastAPI(title="PayGent Marketplace", lifespan=lifespan)
 
 # CORS Configuration
-allowed_origins = os.getenv("CORS_ALLOWED_ORIGINS", "http://localhost:3000").split(",")
-
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=allowed_origins,
+    allow_origins=["*"],
     allow_methods=["*"],
     allow_headers=["*"],
 )
