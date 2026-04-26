@@ -8,5 +8,4 @@ pydantic-settings
 python-dotenv
 pytest
 pytest-asyncio
-psycopg2-binary
-vercel
+libsql-client

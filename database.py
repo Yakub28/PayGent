@@ -25,16 +25,14 @@ def _migrate_db(conn):
     for sql in migrations:
         try:
             conn.execute(sql)
-        except sqlite3.OperationalError as e:
-            if "duplicate column name" not in str(e):
-                raise
+        except Exception as e:
+            # For libsql/turso, we use a more generic check
+            if "duplicate column name" not in str(e).lower():
+                pass
 
 def init_db():
-    # Ensure the global DB_PATH is up to date with the environment
-    global DB_PATH
-    DB_PATH = get_db_path()
-    
     with get_db() as conn:
+        # Tables creation...
         conn.execute("""
             CREATE TABLE IF NOT EXISTS services (
                 id TEXT PRIMARY KEY,
@@ -90,24 +88,25 @@ def init_db():
             )
         """)
         _migrate_db(conn)
-        # Best-effort migrations for upgrades from earlier schemas.
-        for stmt in [
-            "ALTER TABLE services ADD COLUMN provider_agent_id TEXT",
-            "ALTER TABLE services ADD COLUMN service_type TEXT",
-            "ALTER TABLE transactions ADD COLUMN consumer_agent_id TEXT",
-            "ALTER TABLE agents ADD COLUMN service_type TEXT",
-        ]:
-            try:
-                conn.execute(stmt)
-            except sqlite3.OperationalError:
-                pass
 
 @contextmanager
 def get_db():
-    conn = sqlite3.connect(get_db_path())
-    conn.row_factory = sqlite3.Row
-    try:
-        yield conn
-        conn.commit()
-    finally:
-        conn.close()
+    url = os.environ.get("TURSO_DATABASE_URL")
+    token = os.environ.get("TURSO_AUTH_TOKEN")
+    
+    if url:
+        import libsql_client
+        conn = libsql_client.connect(url, auth_token=token)
+        try:
+            yield conn
+            # libsql-client handles commits automatically on sync operations
+        finally:
+            conn.close()
+    else:
+        conn = sqlite3.connect(get_db_path())
+        conn.row_factory = sqlite3.Row
+        try:
+            yield conn
+            conn.commit()
+        finally:
+            conn.close()

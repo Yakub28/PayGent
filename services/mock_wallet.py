@@ -14,7 +14,12 @@ from dataclasses import dataclass, asdict
 from types import SimpleNamespace
 from typing import Iterable
 
-STATE_FILE = "mock_lightning.json"
+def get_state_file():
+    if os.environ.get("VERCEL"):
+        return "/tmp/mock_lightning.json"
+    return "mock_lightning.json"
+
+STATE_FILE = get_state_file()
 
 
 class _FileRegistry:
