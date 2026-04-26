@@ -12,7 +12,7 @@ import {
   deleteAgent,
 } from "@/lib/api";
 
-const DEFAULT_MODEL = "claude-sonnet-4-5";
+const DEFAULT_MODEL = "claude-haiku-4-5";
 const FALLBACK_TYPES: ServiceTypeInfo[] = [
   {
     key: "code_writer",
@@ -164,7 +164,7 @@ export default function AgentsPage() {
           <input
             value={form.model}
             onChange={(e) => setForm({ ...form, model: e.target.value })}
-            placeholder="claude-sonnet-4-5"
+            placeholder="claude-haiku-4-5"
             className="w-full bg-gray-950 border border-gray-700 rounded px-3 py-2"
           />
         </Field>

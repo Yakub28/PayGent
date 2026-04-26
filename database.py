@@ -18,6 +18,7 @@ def _migrate_db(conn):
         "ALTER TABLE services ADD COLUMN avg_quality_score REAL",
         "ALTER TABLE services ADD COLUMN success_rate REAL NOT NULL DEFAULT 0.0",
         "ALTER TABLE services ADD COLUMN price_adjusted INTEGER NOT NULL DEFAULT 0",
+        "ALTER TABLE services ADD COLUMN provider_id TEXT",
     ]
     for sql in migrations:
         try:
@@ -47,7 +48,8 @@ def init_db():
                 success_rate REAL NOT NULL DEFAULT 0.0,
                 price_adjusted INTEGER NOT NULL DEFAULT 0,
                 provider_agent_id TEXT,
-                service_type TEXT
+                service_type TEXT,
+                provider_id TEXT
             )
         """)
         conn.execute("""
@@ -75,6 +77,14 @@ def init_db():
                 service_type TEXT,
                 created_at TEXT NOT NULL,
                 is_active INTEGER NOT NULL DEFAULT 1
+            )
+        """)
+        conn.execute("""
+            CREATE TABLE IF NOT EXISTS providers (
+                id           TEXT PRIMARY KEY,
+                company_name TEXT NOT NULL,
+                api_key      TEXT NOT NULL UNIQUE,
+                created_at   TEXT NOT NULL
             )
         """)
         _migrate_db(conn)

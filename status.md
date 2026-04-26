@@ -199,7 +199,7 @@ on merge if convenient.
   is_active`. (Older `ollama_base_url` column is migrated-in but ignored.)
 - `roles`: `consumer | provider`.
 - Per-agent identity: every Claude call uses the agent's stored `model` (e.g.
-  `claude-sonnet-4-5`) and optional `system_prompt`. Different agents can run
+  `claude-haiku-4-5`) and optional `system_prompt`. Different agents can run
   different Claude models simultaneously.
 - Wallet life-cycle: every agent has a `MockWallet` keyed by `agent_id`,
   created on first reference and dropped on `DELETE /api/agents/{id}`.
@@ -263,7 +263,7 @@ is `settings.anthropic_model` (configurable in `.env`).
   **Service type** dropdown (populated from `/api/service-types`); the price
   field auto-defaults to that type's recommended price. Languages and
   Ollama-base-URL fields have been removed. Default model field is
-  `claude-sonnet-4-5`.
+  `claude-haiku-4-5`.
 - **`/simulation`** — rate slider, `use_llm` toggle, start/stop button, live
   status panel, and an event feed showing prompt / Claude result /
   service-type badge / latency / sats moved.
@@ -309,7 +309,7 @@ frontend/
 tests/                        pytest suite
 status.md                     ← this file
 README.md                     end-user setup
-.env / .env.example           ANTHROPIC_API_KEY + ANTHROPIC_MODEL (default claude-sonnet-4-5)
+.env / .env.example           ANTHROPIC_API_KEY + ANTHROPIC_MODEL (default claude-haiku-4-5)
 ```
 
 The `utils/` and `services/intelligence.py` directories are vestigial from the
@@ -354,7 +354,7 @@ Pydantic schemas for every request/response live in `models.py`.
 FEE_RATE=0.10                    # marketplace cut (0..1)
 PROVIDER_BASE_URL=http://localhost:8000
 ANTHROPIC_API_KEY=sk-ant-...     # required for live LLM calls
-ANTHROPIC_MODEL=claude-sonnet-4-5
+ANTHROPIC_MODEL=claude-haiku-4-5
 ```
 
 `LEXE_CLIENT_CREDENTIALS` and `CONSUMER_LEXE_CREDENTIALS` keys are still read
@@ -422,7 +422,7 @@ with Anthropic Claude and generalised the agent model:
    migrations); dropped reliance on the unused `ollama_base_url` column.
 5. Agents page lost the *Languages* and *Ollama base URL* fields and gained a
    *Service type* dropdown driven by `/api/service-types`. Default model is
-   `claude-sonnet-4-5`.
+   `claude-haiku-4-5`.
 6. Simulation orchestrator now picks per-type sample inputs and renders a
    generic `result_text` per event — the UI shows code, JSON reviews,
    summaries, and sentiment classifications in the same feed.

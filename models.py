@@ -1,6 +1,14 @@
 from pydantic import BaseModel, Field
 from typing import Optional, Any, Literal
 
+class CreateProviderRequest(BaseModel):
+    company_name: str
+
+class CreateProviderResponse(BaseModel):
+    provider_id: str
+    company_name: str
+    api_key: str
+
 class RegisterServiceRequest(BaseModel):
     name: str
     description: str
@@ -8,6 +16,7 @@ class RegisterServiceRequest(BaseModel):
     endpoint_url: str
     provider_agent_id: Optional[str] = None
     service_type: Optional[str] = None
+    api_key: Optional[str] = None
 
 class RegisterServiceResponse(BaseModel):
     service_id: str
@@ -25,6 +34,8 @@ class ServiceListItem(BaseModel):
     price_adjusted: bool = False
     provider_agent_id: Optional[str] = None
     service_type: Optional[str] = None
+    company_name: Optional[str] = None
+    is_verified: bool = False
 
 class CallServiceRequest(BaseModel):
     input: Any
@@ -69,7 +80,7 @@ ServiceType = Literal["code_writer", "code_reviewer", "summarizer", "sentiment"]
 class RegisterAgentRequest(BaseModel):
     name: str
     role: AgentRole
-    model: str = "claude-sonnet-4-5"
+    model: str = "claude-haiku-4-5"
     system_prompt: Optional[str] = None
     initial_balance_sats: int = Field(default=0, ge=0)
     # Provider-only:

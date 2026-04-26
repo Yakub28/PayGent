@@ -34,6 +34,12 @@ export default function ServiceCatalog({ services }: Props) {
                     {s.tier.charAt(0).toUpperCase() + s.tier.slice(1)}
                   </span>
                 </div>
+                {s.is_verified && s.company_name && (
+                  <div className="text-xs text-green-600 flex items-center gap-1 mt-0.5">
+                    <span>✓</span>
+                    <span>{s.company_name}</span>
+                  </div>
+                )}
                 <div className="text-sm text-gray-400">{s.description}</div>
                 <div className="flex items-center gap-3 mt-1">
                   {s.avg_quality_score !== null ? (

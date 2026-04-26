@@ -14,7 +14,8 @@ from services.providers.summarizer import router as summarizer_router
 from services.providers.code_reviewer import router as code_reviewer_router
 from services.providers.sentiment import router as sentiment_router
 from services.providers.code_writer import router as code_writer_router
-from services.providers.seed import seed_services
+from services.admin import router as admin_router
+from services.providers.seed import seed_services, seed_providers
 
 # Make sure the schema exists before the first request
 init_db()
@@ -22,6 +23,7 @@ init_db()
 @asynccontextmanager
 async def lifespan(_: FastAPI):
     init_db()
+    seed_providers()
     seed_services()
     yield
 
@@ -46,6 +48,7 @@ app.include_router(summarizer_router, prefix="/api")
 app.include_router(code_reviewer_router, prefix="/api")
 app.include_router(sentiment_router, prefix="/api")
 app.include_router(code_writer_router, prefix="/api")
+app.include_router(admin_router, prefix="/api")
 
 
 @app.get("/")

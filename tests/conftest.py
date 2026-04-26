@@ -40,4 +40,4 @@ def mock_settings_credentials(monkeypatch):
     monkeypatch.setenv("LEXE_CLIENT_CREDENTIALS", "test_creds")
     monkeypatch.setenv("CONSUMER_LEXE_CREDENTIALS", "test_consumer_creds")
     monkeypatch.setenv("ANTHROPIC_API_KEY", "test-key")
-    monkeypatch.setenv("ANTHROPIC_MODEL", "claude-sonnet-4-5")
+    monkeypatch.setenv("ANTHROPIC_MODEL", "claude-haiku-4-5")

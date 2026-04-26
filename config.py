@@ -16,6 +16,7 @@ class Settings(BaseSettings):
     gold_min_score: float = 85.0
     gold_min_calls: int = 25
     anthropic_api_key: str = ""
-    anthropic_model: str = "claude-sonnet-4-5"
+    anthropic_model: str = "claude-haiku-4-5"
+    anthropic_provider_key: str = "pvd_demo_anthropic"
 
 settings = Settings()

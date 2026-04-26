@@ -11,6 +11,7 @@ def test_init_db_creates_tables():
         names = [t["name"] for t in tables]
     assert "services" in names
     assert "transactions" in names
+    assert "providers" in names
 
 def test_get_db_commits_on_exit():
     # Fresh isolated DB from fixture
@@ -29,3 +30,10 @@ def test_init_db_creates_agents_table():
             "SELECT name FROM sqlite_master WHERE type='table'"
         ).fetchall()]
     assert "agents" in names
+
+def test_services_has_provider_id_column():
+    # init_db is already called by fixture
+    with get_db() as conn:
+        cols = conn.execute("PRAGMA table_info(services)").fetchall()
+        col_names = [c["name"] for c in cols]
+    assert "provider_id" in col_names

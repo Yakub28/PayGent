@@ -105,3 +105,57 @@ def test_list_services_includes_tier_and_call_count(client):
     assert svc["tier"] == "bronze"
     assert "call_count" in svc
     assert "avg_quality_score" in svc
+
+
+def test_register_with_valid_api_key_links_provider(client):
+    # Create a provider first
+    from database import get_db
+    import uuid
+    from datetime import datetime, UTC
+    provider_id = str(uuid.uuid4())
+    with get_db() as conn:
+        conn.execute(
+            "INSERT INTO providers (id, company_name, api_key, created_at) VALUES (?,?,?,?)",
+            (provider_id, "Acme Corp", "pvd_testkey123", datetime.now(UTC).isoformat()),
+        )
+    # Register a service with that key
+    response = client.post("/api/services/register", json={
+        "name": "Acme Service",
+        "description": "Test",
+        "price_sats": 50,
+        "endpoint_url": "http://localhost/acme",
+        "api_key": "pvd_testkey123",
+    })
+    assert response.status_code == 200
+
+    services = client.get("/api/services").json()
+    acme = next(s for s in services if s["name"] == "Acme Service")
+    assert acme["is_verified"] is True
+    assert acme["company_name"] == "Acme Corp"
+
+
+def test_register_without_api_key_is_unverified(client):
+    client.post("/api/services/register", json={
+        "name": "Unknown Service",
+        "description": "No key",
+        "price_sats": 10,
+        "endpoint_url": "http://localhost/unknown",
+    })
+    services = client.get("/api/services").json()
+    svc = next(s for s in services if s["name"] == "Unknown Service")
+    assert svc["is_verified"] is False
+    assert svc["company_name"] is None
+
+
+def test_register_with_invalid_api_key_is_unverified(client):
+    client.post("/api/services/register", json={
+        "name": "Bad Key Service",
+        "description": "Wrong key",
+        "price_sats": 10,
+        "endpoint_url": "http://localhost/bad",
+        "api_key": "pvd_doesnotexist",
+    })
+    services = client.get("/api/services").json()
+    svc = next(s for s in services if s["name"] == "Bad Key Service")
+    assert svc["is_verified"] is False
+    assert svc["company_name"] is None

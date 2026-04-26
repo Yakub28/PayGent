@@ -13,6 +13,8 @@ export interface Service {
   price_adjusted: boolean;
   provider_agent_id: string | null;
   service_type: string | null;
+  company_name: string | null;
+  is_verified: boolean;
 }
 
 export interface Transaction {

@@ -78,7 +78,7 @@ PayGent is a Python prototype for the **Spiral Agent Economy**: autonomous agent
   - `code_reviewer` — reviews code for bugs and quality (returns JSON).
   - `summarizer` — summarizes raw text or a URL in 3 sentences.
   - `sentiment` — classifies text as positive/negative/neutral.
-- **Per-agent Claude** — Every agent record carries its own `model` (e.g. `claude-haiku-4-5`, `claude-sonnet-4-5`, `claude-opus-4`) and optional `system_prompt`.
+- **Per-agent Claude** — Every agent record carries its own `model` (e.g. `claude-haiku-4-5`, `claude-haiku-4-5`, `claude-opus-4`) and optional `system_prompt`.
 - **Simulation orchestrator** — Background asyncio task that drives high-frequency consumer↔provider transactions to stress-test the Lightning plumbing.
 
 ## 🛠 Tech Stack
@@ -134,7 +134,7 @@ pip install -r requirements.txt
 FEE_RATE=0.10
 PROVIDER_BASE_URL=http://localhost:8000
 ANTHROPIC_API_KEY=sk-ant-...
-ANTHROPIC_MODEL=claude-sonnet-4-5
+ANTHROPIC_MODEL=claude-haiku-4-5
 ```
 
 `LEXE_CLIENT_CREDENTIALS` is no longer required — leave it empty.

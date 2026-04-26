@@ -29,14 +29,23 @@ def register_service(req: RegisterServiceRequest):
         wallet = get_marketplace_wallet()
         provider_wallet = f"provider_{service_id[:8]}_{wallet.id}"
 
+    provider_id = None
+    if req.api_key:
+        with get_db() as conn:
+            row = conn.execute(
+                "SELECT id FROM providers WHERE api_key=?", (req.api_key,)
+            ).fetchone()
+            if row:
+                provider_id = row["id"]
+
     with get_db() as conn:
         conn.execute(
             "INSERT INTO services (id, name, description, price_sats, endpoint_url, "
-            "provider_wallet, created_at, is_active, provider_agent_id, service_type) "
-            "VALUES (?,?,?,?,?,?,?,?,?,?)",
+            "provider_wallet, created_at, is_active, provider_agent_id, service_type, provider_id) "
+            "VALUES (?,?,?,?,?,?,?,?,?,?,?)",
             (service_id, req.name, req.description, req.price_sats,
              req.endpoint_url, provider_wallet, datetime.now(UTC).isoformat(), 1,
-             req.provider_agent_id, req.service_type),
+             req.provider_agent_id, req.service_type, provider_id),
         )
     return RegisterServiceResponse(service_id=service_id, provider_wallet=provider_wallet)
 
@@ -48,9 +57,12 @@ def list_services():
             """SELECT s.id, s.name, s.description, s.price_sats,
                       s.tier, s.avg_quality_score, s.success_rate, s.price_adjusted,
                       s.provider_agent_id, s.service_type,
+                      p.company_name,
+                      CASE WHEN p.id IS NOT NULL THEN 1 ELSE 0 END as is_verified,
                       COUNT(t.id) as call_count
                FROM services s
                LEFT JOIN transactions t ON t.service_id = s.id AND t.status = 'paid'
+               LEFT JOIN providers p ON p.id = s.provider_id
                WHERE s.is_active = 1
                GROUP BY s.id
                ORDER BY s.created_at"""
