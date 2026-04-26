@@ -1,6 +1,7 @@
 import pytest
 import time
 import re
+import asyncio
 from fastapi.testclient import TestClient
 from datetime import datetime, UTC
 from unittest.mock import patch, MagicMock, AsyncMock
@@ -26,6 +27,7 @@ def test_full_marketplace_lifecycle(app, tmp_path, monkeypatch):
     """
     db_path = str(tmp_path / "lifecycle.db")
     lightning_path = str(tmp_path / "lightning_lifecycle.json")
+    monkeypatch.setenv("PAYGENT_DB_PATH", db_path)
     monkeypatch.setattr("database.DB_PATH", db_path)
     monkeypatch.setattr("services.mock_wallet.STATE_FILE", lightning_path)
     
@@ -94,7 +96,6 @@ def test_full_marketplace_lifecycle(app, tmp_path, monkeypatch):
         assert provider_record["balance_sats"] == 45 
         
         stats = client.get("/api/stats").json()
-        # Seeded services might have made calls if simulation ran, so we check >= 50
         assert stats["total_volume_sats"] >= 50
 
 def test_simulation_workflow(app, tmp_path, monkeypatch):
@@ -103,6 +104,7 @@ def test_simulation_workflow(app, tmp_path, monkeypatch):
     """
     db_path = str(tmp_path / "sim.db")
     lightning_path = str(tmp_path / "lightning_sim.json")
+    monkeypatch.setenv("PAYGENT_DB_PATH", db_path)
     monkeypatch.setattr("database.DB_PATH", db_path)
     monkeypatch.setattr("services.mock_wallet.STATE_FILE", lightning_path)
     
@@ -114,7 +116,7 @@ def test_simulation_workflow(app, tmp_path, monkeypatch):
         client.post("/api/agents", json={"name": "C1", "role": "consumer", "initial_balance_sats": 1000})
         client.post("/api/agents", json={"name": "P1", "role": "provider", "service_type": "code_writer"})
         
-        # Mock the internal call so it doesn't need a real network connection to localhost:8000
+        # Mock the internal call
         mock_event = SimulationEvent(
             timestamp=datetime.now(UTC).isoformat(),
             consumer_agent_id="c1",
@@ -140,8 +142,8 @@ def test_simulation_workflow(app, tmp_path, monkeypatch):
             })
             assert start_resp.status_code == 200
             
-            # Wait for simulation to finish
-            max_wait = 5
+            # Wait longer for CI runners
+            max_wait = 10
             start_time = time.time()
             while time.time() - start_time < max_wait:
                 status = client.get("/api/simulation/status").json()
@@ -161,7 +163,6 @@ def test_multiprocess_persistence_simulation(tmp_path, monkeypatch):
     """
     lightning_path = str(tmp_path / "shared_wallet.json")
     
-    # We must import fresh to avoid previous test state
     import sys
     sys.modules.pop("services.mock_wallet", None)
     from services.mock_wallet import _FileRegistry, MockWallet
@@ -169,22 +170,16 @@ def test_multiprocess_persistence_simulation(tmp_path, monkeypatch):
     reg1 = _FileRegistry(lightning_path)
     reg2 = _FileRegistry(lightning_path)
     
-    # Process 1 creates a wallet and an invoice
     with patch("services.mock_wallet.REGISTRY", reg1):
         w1 = MockWallet("wallet1", initial_sats=100)
         inv = w1.create_invoice(3600, 50, "Shared")
         
-    # Process 2 sees the wallet and pays the invoice
     with patch("services.mock_wallet.REGISTRY", reg2):
         w2 = MockWallet("wallet2", initial_sats=200)
-        # Verify it can find the invoice created by reg1
         found_inv = reg2.find_invoice_by_bolt11(inv.invoice)
         assert found_inv is not None
-        
-        # Pay it
         w2.pay_invoice(inv.invoice)
         assert w2.balance_sats == 150
         
-    # Process 1 sees the updated balance
     with patch("services.mock_wallet.REGISTRY", reg1):
         assert w1.balance_sats == 150 
