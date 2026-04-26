@@ -3,7 +3,8 @@ import time
 import re
 from fastapi.testclient import TestClient
 from datetime import datetime, UTC
-from unittest.mock import patch, MagicMock
+from unittest.mock import patch, MagicMock, AsyncMock
+from models import SimulationEvent
 
 @pytest.fixture
 def app():
@@ -113,28 +114,46 @@ def test_simulation_workflow(app, tmp_path, monkeypatch):
         client.post("/api/agents", json={"name": "C1", "role": "consumer", "initial_balance_sats": 1000})
         client.post("/api/agents", json={"name": "P1", "role": "provider", "service_type": "code_writer"})
         
-        # Start simulation
-        start_resp = client.post("/api/simulation/start", json={
-            "rate_per_sec": 10,
-            "use_llm": False,
-            "max_iterations": 2
-        })
-        assert start_resp.status_code == 200
+        # Mock the internal call so it doesn't need a real network connection to localhost:8000
+        mock_event = SimulationEvent(
+            timestamp=datetime.now(UTC).isoformat(),
+            consumer_agent_id="c1",
+            consumer_name="C1",
+            provider_agent_id="p1",
+            provider_name="P1",
+            service_type="code_writer",
+            prompt="write code",
+            result_text="print('ok')",
+            sats_paid=15,
+            duration_ms=100,
+            success=True
+        )
         
-        # Wait for simulation to finish
-        max_wait = 5
-        start_time = time.time()
-        while time.time() - start_time < max_wait:
+        with patch("services.simulation._run_one_call", new_callable=AsyncMock) as mock_run:
+            mock_run.return_value = mock_event
+            
+            # Start simulation
+            start_resp = client.post("/api/simulation/start", json={
+                "rate_per_sec": 10,
+                "use_llm": False,
+                "max_iterations": 2
+            })
+            assert start_resp.status_code == 200
+            
+            # Wait for simulation to finish
+            max_wait = 5
+            start_time = time.time()
+            while time.time() - start_time < max_wait:
+                status = client.get("/api/simulation/status").json()
+                if status["iterations"] >= 1:
+                    break
+                time.sleep(0.5)
+            
             status = client.get("/api/simulation/status").json()
-            if status["iterations"] >= 1:
-                break
-            time.sleep(0.5)
-        
-        status = client.get("/api/simulation/status").json()
-        assert status["iterations"] >= 1
-        
-        # Stop
-        client.post("/api/simulation/stop")
+            assert status["iterations"] >= 1
+            
+            # Stop
+            client.post("/api/simulation/stop")
 
 def test_multiprocess_persistence_simulation(tmp_path, monkeypatch):
     """
