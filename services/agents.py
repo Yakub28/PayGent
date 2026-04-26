@@ -2,30 +2,27 @@
 
 A consumer agent has a wallet that gets debited when it pays for services.
 A provider agent has a wallet that gets credited (minus marketplace fee) when
-its service is invoked, AND owns one auto-registered "Code Writer" service.
+its service is invoked, AND owns one auto-registered service of the chosen
+``service_type`` (code_writer / code_reviewer / summarizer / sentiment).
 
-Each agent carries its own model + system_prompt + (optional) Ollama base URL,
-so different agents can run different LLMs simultaneously against the same
-Ollama server (or even different servers).
+Each agent carries its own Claude model + (optional) system prompt.
 """
 from __future__ import annotations
 
-import threading
 import uuid
 from datetime import datetime
 
-from fastapi import APIRouter, BackgroundTasks, HTTPException
+from fastapi import APIRouter, HTTPException
 
-from config import settings
 from database import get_db
 from models import (
     AgentRecord,
-    ModelPullStatus,
     RegisterAgentRequest,
     RegisterServiceRequest,
+    ServiceTypeInfo,
     TopupRequest,
 )
-from services.providers.llm import ollama_has_model, ollama_pull
+from services.providers import types as ptypes
 from services.registry import register_service
 from services.wallet_manager import (
     drop_agent_wallet,
@@ -33,10 +30,6 @@ from services.wallet_manager import (
 )
 
 router = APIRouter()
-
-# Track in-flight model pulls so registrations don't pull twice.
-_pulling: set[str] = set()
-_pulling_lock = threading.Lock()
 
 
 def _row_to_agent(row: dict) -> AgentRecord:
@@ -55,7 +48,7 @@ def _row_to_agent(row: dict) -> AgentRecord:
         role=row["role"],
         model=row["model"],
         system_prompt=row.get("system_prompt"),
-        ollama_base_url=row.get("ollama_base_url"),
+        service_type=row.get("service_type"),
         balance_sats=wallet.balance_sats,
         created_at=row["created_at"],
         is_active=bool(row["is_active"]),
@@ -63,53 +56,44 @@ def _row_to_agent(row: dict) -> AgentRecord:
     )
 
 
-def _ensure_model_async(model: str, base_url: str | None) -> None:
-    key = f"{base_url or settings.ollama_base_url}::{model}"
-    with _pulling_lock:
-        if key in _pulling:
-            return
-        _pulling.add(key)
-    try:
-        if ollama_has_model(model, base_url=base_url):
-            return
-        ollama_pull(model, base_url=base_url)
-    except Exception as e:
-        print(f"[agents] best-effort pull of {model!r} failed: {e}")
-    finally:
-        with _pulling_lock:
-            _pulling.discard(key)
+@router.get("/service-types", response_model=list[ServiceTypeInfo])
+def list_service_types():
+    return [ServiceTypeInfo(**s) for s in ptypes.list_specs()]
 
 
 @router.post("/agents", response_model=AgentRecord)
-def create_agent(req: RegisterAgentRequest, background: BackgroundTasks):
+def create_agent(req: RegisterAgentRequest):
+    if req.role == "provider":
+        if not req.service_type:
+            raise HTTPException(status_code=400, detail="provider agents require service_type")
+        if req.service_type not in ptypes.SERVICE_TYPES:
+            raise HTTPException(status_code=400, detail=f"unknown service_type: {req.service_type}")
+
     agent_id = str(uuid.uuid4())
     now = datetime.utcnow().isoformat()
+    service_type = req.service_type if req.role == "provider" else None
 
     with get_db() as conn:
         conn.execute(
             "INSERT INTO agents (id, name, role, model, system_prompt, "
-            "ollama_base_url, created_at, is_active) VALUES (?,?,?,?,?,?,?,1)",
+            "service_type, created_at, is_active) VALUES (?,?,?,?,?,?,?,1)",
             (agent_id, req.name, req.role, req.model, req.system_prompt,
-             req.ollama_base_url, now),
+             service_type, now),
         )
 
     get_or_create_agent_wallet(agent_id, label=req.name, initial_sats=req.initial_balance_sats)
 
-    # Provider agents auto-register a "Code Writer" service tied to themselves.
     if req.role == "provider":
-        endpoint = f"{settings.provider_base_url}/api/providers/code-write"
+        spec = ptypes.SERVICE_TYPES[req.service_type]  # type: ignore[index]
+        price = req.service_price_sats or spec.default_price_sats
         register_service(RegisterServiceRequest(
-            name=f"{req.name} · Code Writer",
-            description=(
-                "Writes a short code snippet for a given prompt + language. "
-                f"Languages: {', '.join(req.languages)}."
-            ),
-            price_sats=req.service_price_sats,
-            endpoint_url=endpoint,
+            name=f"{req.name} · {spec.label}",
+            description=spec.description,
+            price_sats=price,
+            endpoint_url=ptypes.endpoint_url(req.service_type),  # type: ignore[arg-type]
             provider_agent_id=agent_id,
+            service_type=req.service_type,
         ))
-
-    background.add_task(_ensure_model_async, req.model, req.ollama_base_url)
 
     with get_db() as conn:
         row = conn.execute("SELECT * FROM agents WHERE id=?", (agent_id,)).fetchone()
@@ -147,18 +131,6 @@ def topup_agent(agent_id: str, req: TopupRequest):
         raise HTTPException(status_code=404, detail="agent not found")
     wallet = get_or_create_agent_wallet(agent_id, label=row["name"])
     wallet.topup(req.amount_sats)
+    with get_db() as conn:
+        row = conn.execute("SELECT * FROM agents WHERE id=?", (agent_id,)).fetchone()
     return _row_to_agent(dict(row))
-
-
-@router.get("/models/check", response_model=ModelPullStatus)
-def check_model(model: str, base_url: str | None = None):
-    return ModelPullStatus(model=model, pulled=ollama_has_model(model, base_url=base_url))
-
-
-@router.post("/models/pull", response_model=ModelPullStatus)
-def pull_model(model: str, base_url: str | None = None):
-    try:
-        ollama_pull(model, base_url=base_url)
-        return ModelPullStatus(model=model, pulled=True)
-    except Exception as e:
-        return ModelPullStatus(model=model, pulled=False, detail=str(e))

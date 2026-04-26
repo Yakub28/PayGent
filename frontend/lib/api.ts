@@ -7,6 +7,7 @@ export interface Service {
   description: string;
   price_sats: number;
   provider_agent_id: string | null;
+  service_type: string | null;
 }
 
 export interface Transaction {
@@ -30,6 +31,11 @@ export interface Stats {
 }
 
 export type AgentRole = "consumer" | "provider";
+export type ServiceType =
+  | "code_writer"
+  | "code_reviewer"
+  | "summarizer"
+  | "sentiment";
 
 export interface Agent {
   id: string;
@@ -37,11 +43,18 @@ export interface Agent {
   role: AgentRole;
   model: string;
   system_prompt: string | null;
-  ollama_base_url: string | null;
+  service_type: ServiceType | null;
   balance_sats: number;
   created_at: string;
   is_active: boolean;
   service_id: string | null;
+}
+
+export interface ServiceTypeInfo {
+  key: ServiceType;
+  label: string;
+  description: string;
+  default_price_sats: number;
 }
 
 export interface RegisterAgentPayload {
@@ -49,15 +62,13 @@ export interface RegisterAgentPayload {
   role: AgentRole;
   model?: string;
   system_prompt?: string | null;
-  ollama_base_url?: string | null;
   initial_balance_sats?: number;
-  service_price_sats?: number;
-  languages?: string[];
+  service_type?: ServiceType | null;
+  service_price_sats?: number | null;
 }
 
 export interface SimulationConfig {
   rate_per_sec: number;
-  languages: string[];
   use_llm: boolean;
   max_iterations?: number | null;
 }
@@ -79,9 +90,9 @@ export interface SimulationEvent {
   consumer_name: string;
   provider_agent_id: string;
   provider_name: string;
-  language: string;
+  service_type: string;
   prompt: string;
-  code: string | null;
+  result_text: string | null;
   sats_paid: number;
   duration_ms: number;
   success: boolean;
@@ -112,6 +123,8 @@ export const fetchServices = () => getJson<Service[]>("/api/services");
 export const fetchTransactions = () => getJson<Transaction[]>("/api/transactions");
 
 export const fetchAgents = () => getJson<Agent[]>("/api/agents");
+export const fetchServiceTypes = () =>
+  getJson<ServiceTypeInfo[]>("/api/service-types");
 export const registerAgent = (payload: RegisterAgentPayload) =>
   postJson<Agent>("/api/agents", payload);
 export const topupAgent = (id: string, amount_sats: number) =>

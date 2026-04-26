@@ -9,12 +9,18 @@ import {
   SimulationEvent,
 } from "@/lib/api";
 
+const TYPE_LABELS: Record<string, string> = {
+  code_writer: "Code Writer",
+  code_reviewer: "Code Reviewer",
+  summarizer: "Summarizer",
+  sentiment: "Sentiment",
+};
+
 export default function SimulationPage() {
   const [status, setStatus] = useState<SimulationStatus | null>(null);
   const [events, setEvents] = useState<SimulationEvent[]>([]);
   const [rate, setRate] = useState(2);
   const [useLLM, setUseLLM] = useState(true);
-  const [languages, setLanguages] = useState("python, typescript, go");
   const [error, setError] = useState<string | null>(null);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
@@ -42,14 +48,7 @@ export default function SimulationPage() {
   async function start() {
     setError(null);
     try {
-      await startSimulation({
-        rate_per_sec: rate,
-        use_llm: useLLM,
-        languages: languages
-          .split(",")
-          .map((s) => s.trim())
-          .filter(Boolean),
-      });
+      await startSimulation({ rate_per_sec: rate, use_llm: useLLM });
       await refresh();
     } catch (e: unknown) {
       setError(e instanceof Error ? e.message : String(e));
@@ -70,9 +69,10 @@ export default function SimulationPage() {
     <main className="max-w-5xl mx-auto p-8">
       <h1 className="text-3xl font-bold mb-2">High-Frequency Simulation</h1>
       <p className="text-gray-400 mb-6">
-        Drives consumer agents to repeatedly buy code-writing services from
-        provider agents. Each call: 402 → mock invoice → instant payment →
-        retry → fee split. Pure plumbing stress-test for the Lightning flow.
+        Drives consumer agents to repeatedly buy services from provider agents
+        across all registered service types. Each call: 402 → mock invoice →
+        instant payment → retry → fee split. Real Claude responses unless you
+        flip the LLM-bypass toggle.
       </p>
 
       <div className="grid md:grid-cols-2 gap-4 mb-6">
@@ -89,21 +89,13 @@ export default function SimulationPage() {
               className="w-full bg-gray-950 border border-gray-700 rounded px-3 py-2 mt-1"
             />
           </label>
-          <label className="block text-sm mb-3">
-            <span className="text-gray-400">Languages (comma separated)</span>
-            <input
-              value={languages}
-              onChange={(e) => setLanguages(e.target.value)}
-              className="w-full bg-gray-950 border border-gray-700 rounded px-3 py-2 mt-1"
-            />
-          </label>
           <label className="flex items-center gap-2 text-sm mb-4">
             <input
               type="checkbox"
               checked={useLLM}
               onChange={(e) => setUseLLM(e.target.checked)}
             />
-            <span>Use consumer LLM to invent prompts (slower, more realistic)</span>
+            <span>Call Claude for real responses (slower, more realistic)</span>
           </label>
           <div className="flex gap-2">
             {!status?.running ? (
@@ -156,8 +148,8 @@ export default function SimulationPage() {
                   <span className="text-gray-400">{e.consumer_name}</span>
                   <span className="text-gray-600 mx-2">→</span>
                   <span className="text-gray-400">{e.provider_name}</span>
-                  <span className="ml-3 text-purple-400 text-xs">
-                    {e.language}
+                  <span className="ml-3 text-purple-300 text-xs bg-purple-900/40 px-2 py-0.5 rounded">
+                    {TYPE_LABELS[e.service_type] ?? e.service_type}
                   </span>
                 </div>
                 <div className="text-xs text-gray-500">
@@ -165,9 +157,9 @@ export default function SimulationPage() {
                 </div>
               </div>
               <div className="mt-2 text-sm text-gray-300">{e.prompt}</div>
-              {e.code && (
-                <pre className="mt-2 bg-black/40 border border-gray-800 rounded p-2 text-xs overflow-x-auto text-green-300 max-h-40">
-                  {e.code}
+              {e.result_text && (
+                <pre className="mt-2 bg-black/40 border border-gray-800 rounded p-2 text-xs overflow-x-auto whitespace-pre-wrap text-green-300 max-h-40">
+                  {e.result_text}
                 </pre>
               )}
               {e.error && (

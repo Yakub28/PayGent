@@ -1,6 +1,6 @@
 fastapi
 uvicorn
-lexe-sdk
+anthropic
 requests
 httpx
 pydantic

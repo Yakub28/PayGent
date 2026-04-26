@@ -12,7 +12,6 @@ def register_service(req: RegisterServiceRequest):
     service_id = str(uuid.uuid4())
 
     if req.provider_agent_id:
-        # Per-agent wallet for incoming payouts.
         wallet = get_or_create_agent_wallet(req.provider_agent_id, label=req.name)
         provider_wallet = wallet.id
     else:
@@ -22,11 +21,11 @@ def register_service(req: RegisterServiceRequest):
     with get_db() as conn:
         conn.execute(
             "INSERT INTO services (id, name, description, price_sats, endpoint_url, "
-            "provider_wallet, created_at, is_active, provider_agent_id) "
-            "VALUES (?,?,?,?,?,?,?,?,?)",
+            "provider_wallet, created_at, is_active, provider_agent_id, service_type) "
+            "VALUES (?,?,?,?,?,?,?,?,?,?)",
             (service_id, req.name, req.description, req.price_sats,
              req.endpoint_url, provider_wallet, datetime.utcnow().isoformat(), 1,
-             req.provider_agent_id),
+             req.provider_agent_id, req.service_type),
         )
     return RegisterServiceResponse(service_id=service_id, provider_wallet=provider_wallet)
 
@@ -34,7 +33,7 @@ def register_service(req: RegisterServiceRequest):
 def list_services():
     with get_db() as conn:
         rows = conn.execute(
-            "SELECT id, name, description, price_sats, provider_agent_id "
+            "SELECT id, name, description, price_sats, provider_agent_id, service_type "
             "FROM services WHERE is_active=1"
         ).fetchall()
     return [ServiceListItem(**dict(r)) for r in rows]

@@ -15,7 +15,8 @@ def init_db():
                 provider_wallet TEXT NOT NULL,
                 created_at TEXT NOT NULL,
                 is_active INTEGER NOT NULL DEFAULT 1,
-                provider_agent_id TEXT
+                provider_agent_id TEXT,
+                service_type TEXT
             )
         """)
         conn.execute("""
@@ -38,7 +39,7 @@ def init_db():
                 role TEXT NOT NULL,
                 model TEXT NOT NULL,
                 system_prompt TEXT,
-                ollama_base_url TEXT,
+                service_type TEXT,
                 created_at TEXT NOT NULL,
                 is_active INTEGER NOT NULL DEFAULT 1
             )
@@ -46,7 +47,9 @@ def init_db():
         # Best-effort migrations for upgrades from earlier schemas.
         for stmt in [
             "ALTER TABLE services ADD COLUMN provider_agent_id TEXT",
+            "ALTER TABLE services ADD COLUMN service_type TEXT",
             "ALTER TABLE transactions ADD COLUMN consumer_agent_id TEXT",
+            "ALTER TABLE agents ADD COLUMN service_type TEXT",
         ]:
             try:
                 conn.execute(stmt)

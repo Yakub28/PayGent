@@ -7,6 +7,7 @@ class RegisterServiceRequest(BaseModel):
     price_sats: int
     endpoint_url: str
     provider_agent_id: Optional[str] = None
+    service_type: Optional[str] = None
 
 class RegisterServiceResponse(BaseModel):
     service_id: str
@@ -18,6 +19,7 @@ class ServiceListItem(BaseModel):
     description: str
     price_sats: int
     provider_agent_id: Optional[str] = None
+    service_type: Optional[str] = None
 
 class CallServiceRequest(BaseModel):
     input: Any
@@ -44,17 +46,17 @@ class StatsResponse(BaseModel):
 # ---------- Agents ----------
 
 AgentRole = Literal["consumer", "provider"]
+ServiceType = Literal["code_writer", "code_reviewer", "summarizer", "sentiment"]
 
 class RegisterAgentRequest(BaseModel):
     name: str
     role: AgentRole
-    model: str = "llama3.1"
+    model: str = "claude-sonnet-4-5"
     system_prompt: Optional[str] = None
-    ollama_base_url: Optional[str] = None
     initial_balance_sats: int = Field(default=0, ge=0)
     # Provider-only:
-    service_price_sats: int = Field(default=20, ge=1)
-    languages: list[str] = Field(default_factory=lambda: ["python", "typescript", "go"])
+    service_type: Optional[ServiceType] = None
+    service_price_sats: Optional[int] = Field(default=None, ge=1)
 
 class AgentRecord(BaseModel):
     id: str
@@ -62,7 +64,7 @@ class AgentRecord(BaseModel):
     role: AgentRole
     model: str
     system_prompt: Optional[str] = None
-    ollama_base_url: Optional[str] = None
+    service_type: Optional[str] = None
     balance_sats: int
     created_at: str
     is_active: bool
@@ -71,16 +73,16 @@ class AgentRecord(BaseModel):
 class TopupRequest(BaseModel):
     amount_sats: int = Field(ge=1)
 
-class ModelPullStatus(BaseModel):
-    model: str
-    pulled: bool
-    detail: Optional[str] = None
+class ServiceTypeInfo(BaseModel):
+    key: str
+    label: str
+    description: str
+    default_price_sats: int
 
 # ---------- Simulation ----------
 
 class SimulationConfig(BaseModel):
     rate_per_sec: float = Field(default=1.0, gt=0, le=200)
-    languages: list[str] = Field(default_factory=lambda: ["python", "typescript", "go", "rust"])
     use_llm: bool = True
     max_iterations: Optional[int] = None  # None = run until stopped
 
@@ -100,9 +102,9 @@ class SimulationEvent(BaseModel):
     consumer_name: str
     provider_agent_id: str
     provider_name: str
-    language: str
+    service_type: str
     prompt: str
-    code: Optional[str]
+    result_text: Optional[str]
     sats_paid: int
     duration_ms: int
     success: bool

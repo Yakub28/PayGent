@@ -3,16 +3,46 @@ import { useEffect, useState } from "react";
 import {
   Agent,
   AgentRole,
+  ServiceType,
+  ServiceTypeInfo,
   fetchAgents,
+  fetchServiceTypes,
   registerAgent,
   topupAgent,
   deleteAgent,
 } from "@/lib/api";
 
-const DEFAULT_MODEL = "llama3.1";
+const DEFAULT_MODEL = "claude-sonnet-4-5";
+const FALLBACK_TYPES: ServiceTypeInfo[] = [
+  {
+    key: "code_writer",
+    label: "Code Writer",
+    description: "Writes a code snippet from a prompt.",
+    default_price_sats: 15,
+  },
+  {
+    key: "code_reviewer",
+    label: "Code Reviewer",
+    description: "Reviews code for bugs and quality.",
+    default_price_sats: 25,
+  },
+  {
+    key: "summarizer",
+    label: "Summarizer",
+    description: "Summarizes text in 3 sentences.",
+    default_price_sats: 10,
+  },
+  {
+    key: "sentiment",
+    label: "Sentiment Analyzer",
+    description: "Classifies text as positive / negative / neutral.",
+    default_price_sats: 8,
+  },
+];
 
 export default function AgentsPage() {
   const [agents, setAgents] = useState<Agent[]>([]);
+  const [types, setTypes] = useState<ServiceTypeInfo[]>(FALLBACK_TYPES);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -21,25 +51,36 @@ export default function AgentsPage() {
     role: "consumer" as AgentRole,
     model: DEFAULT_MODEL,
     system_prompt: "",
-    ollama_base_url: "",
     initial_balance_sats: 100000,
-    service_price_sats: 20,
-    languages: "python, typescript, go",
+    service_type: "code_writer" as ServiceType,
+    service_price_sats: 15,
   });
 
   async function refresh() {
     try {
       setAgents(await fetchAgents());
-    } catch (e) {
-      // ignore
+    } catch {
+      // ignore transient errors
     }
   }
 
   useEffect(() => {
     refresh();
+    fetchServiceTypes()
+      .then((t) => {
+        if (t.length > 0) setTypes(t);
+      })
+      .catch(() => {});
     const i = setInterval(refresh, 3000);
     return () => clearInterval(i);
   }, []);
+
+  // When the user picks a different service type, default the price to that type's default.
+  useEffect(() => {
+    const t = types.find((t) => t.key === form.service_type);
+    if (t) setForm((f) => ({ ...f, service_price_sats: t.default_price_sats }));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [form.service_type, types]);
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
@@ -51,13 +92,11 @@ export default function AgentsPage() {
         role: form.role,
         model: form.model.trim() || DEFAULT_MODEL,
         system_prompt: form.system_prompt.trim() || null,
-        ollama_base_url: form.ollama_base_url.trim() || null,
         initial_balance_sats: Number(form.initial_balance_sats) || 0,
-        service_price_sats: Number(form.service_price_sats) || 20,
-        languages: form.languages
-          .split(",")
-          .map((s) => s.trim())
-          .filter(Boolean),
+        service_type:
+          form.role === "provider" ? form.service_type : null,
+        service_price_sats:
+          form.role === "provider" ? Number(form.service_price_sats) : null,
       });
       setForm({ ...form, name: "", system_prompt: "" });
       await refresh();
@@ -83,14 +122,15 @@ export default function AgentsPage() {
 
   const consumers = agents.filter((a) => a.role === "consumer");
   const providers = agents.filter((a) => a.role === "provider");
+  const selectedType = types.find((t) => t.key === form.service_type);
 
   return (
     <main className="max-w-5xl mx-auto p-8">
       <h1 className="text-3xl font-bold mb-2">Agents</h1>
       <p className="text-gray-400 mb-6">
         Register consumer and provider agents. Each agent runs against its own
-        Ollama model identity. Provider agents auto-publish a Code Writer
-        service to the marketplace.
+        Claude model identity. Provider agents auto-publish a service of the
+        chosen type to the marketplace.
       </p>
 
       <form
@@ -115,43 +155,17 @@ export default function AgentsPage() {
             }
             className="w-full bg-gray-950 border border-gray-700 rounded px-3 py-2"
           >
-            <option value="consumer">Consumer (buys code)</option>
-            <option value="provider">Provider (writes code)</option>
+            <option value="consumer">Consumer (buys services)</option>
+            <option value="provider">Provider (sells a service)</option>
           </select>
         </Field>
 
-        <Field label="Ollama model">
+        <Field label="Claude model">
           <input
             value={form.model}
             onChange={(e) => setForm({ ...form, model: e.target.value })}
-            placeholder="llama3.1"
+            placeholder="claude-sonnet-4-5"
             className="w-full bg-gray-950 border border-gray-700 rounded px-3 py-2"
-          />
-        </Field>
-
-        <Field label="Ollama base URL (optional)">
-          <input
-            value={form.ollama_base_url}
-            onChange={(e) =>
-              setForm({ ...form, ollama_base_url: e.target.value })
-            }
-            placeholder="leave blank to use server default"
-            className="w-full bg-gray-950 border border-gray-700 rounded px-3 py-2"
-          />
-        </Field>
-
-        <Field label="System prompt (optional)" full>
-          <textarea
-            value={form.system_prompt}
-            onChange={(e) =>
-              setForm({ ...form, system_prompt: e.target.value })
-            }
-            placeholder={
-              form.role === "provider"
-                ? "Default: senior-engineer code-only persona"
-                : "Default: helper-needing engineer persona"
-            }
-            className="w-full bg-gray-950 border border-gray-700 rounded px-3 py-2 h-20"
           />
         </Field>
 
@@ -170,6 +184,44 @@ export default function AgentsPage() {
             />
           </Field>
         ) : (
+          <Field label="Service type">
+            <select
+              value={form.service_type}
+              onChange={(e) =>
+                setForm({
+                  ...form,
+                  service_type: e.target.value as ServiceType,
+                })
+              }
+              className="w-full bg-gray-950 border border-gray-700 rounded px-3 py-2"
+            >
+              {types.map((t) => (
+                <option key={t.key} value={t.key}>
+                  {t.label}
+                </option>
+              ))}
+            </select>
+          </Field>
+        )}
+
+        <Field label="System prompt (optional)" full>
+          <textarea
+            value={form.system_prompt}
+            onChange={(e) =>
+              setForm({ ...form, system_prompt: e.target.value })
+            }
+            placeholder={
+              form.role === "provider"
+                ? `Default persona for ${
+                    selectedType?.label ?? "this service"
+                  }`
+                : "Default: helper-needing engineer persona"
+            }
+            className="w-full bg-gray-950 border border-gray-700 rounded px-3 py-2 h-20"
+          />
+        </Field>
+
+        {form.role === "provider" && (
           <Field label="Service price per call (sats)">
             <input
               type="number"
@@ -185,14 +237,11 @@ export default function AgentsPage() {
           </Field>
         )}
 
-        {form.role === "provider" && (
-          <Field label="Languages (comma separated)">
-            <input
-              value={form.languages}
-              onChange={(e) => setForm({ ...form, languages: e.target.value })}
-              className="w-full bg-gray-950 border border-gray-700 rounded px-3 py-2"
-            />
-          </Field>
+        {form.role === "provider" && selectedType && (
+          <div className="md:col-span-2 text-xs text-gray-500">
+            <span className="text-gray-400">{selectedType.label}:</span>{" "}
+            {selectedType.description}
+          </div>
         )}
 
         {error && (
@@ -209,8 +258,8 @@ export default function AgentsPage() {
         </div>
       </form>
 
-      <Group title="Consumer agents" agents={consumers} onTopup={topup} onDelete={remove} />
-      <Group title="Provider agents" agents={providers} onTopup={topup} onDelete={remove} />
+      <Group title="Consumer agents" agents={consumers} types={types} onTopup={topup} onDelete={remove} />
+      <Group title="Provider agents" agents={providers} types={types} onTopup={topup} onDelete={remove} />
     </main>
   );
 }
@@ -235,14 +284,19 @@ function Field({
 function Group({
   title,
   agents,
+  types,
   onTopup,
   onDelete,
 }: {
   title: string;
   agents: Agent[];
+  types: ServiceTypeInfo[];
   onTopup: (id: string) => void;
   onDelete: (id: string) => void;
 }) {
+  const labelFor = (key: string | null) =>
+    types.find((t) => t.key === key)?.label ?? key ?? "—";
+
   return (
     <section className="mb-8">
       <h2 className="text-xl font-semibold mb-3">
@@ -260,7 +314,14 @@ function Group({
             >
               <div className="flex items-start justify-between gap-2">
                 <div>
-                  <div className="font-semibold">{a.name}</div>
+                  <div className="font-semibold flex items-center gap-2">
+                    {a.name}
+                    {a.service_type && (
+                      <span className="text-[10px] uppercase tracking-wider bg-purple-900/60 text-purple-200 px-2 py-0.5 rounded">
+                        {labelFor(a.service_type)}
+                      </span>
+                    )}
+                  </div>
                   <div className="text-xs text-gray-500">
                     {a.id.slice(0, 8)} · {a.model}
                   </div>

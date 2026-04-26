@@ -1,8 +1,7 @@
 """Code-writing provider: writes a short snippet for a given prompt+language.
 
-Each provider agent gets one of these registered as a service. The orchestrator
-points the marketplace at this endpoint with `provider_agent_id` so we know
-*which* agent's LLM should answer.
+Each provider agent of type `code_writer` registers a service that points here.
+The agent record carries the Claude model and (optional) system prompt.
 """
 from __future__ import annotations
 
@@ -11,7 +10,7 @@ from fastapi import APIRouter, HTTPException
 
 from database import get_db
 from models import CallServiceRequest
-from services.providers.llm import ollama_chat
+from services.providers.llm import claude_chat
 
 router = APIRouter()
 
@@ -28,7 +27,8 @@ def _agent(provider_agent_id: str | None) -> dict | None:
         return None
     with get_db() as conn:
         row = conn.execute(
-            "SELECT id, name, model, system_prompt, ollama_base_url FROM agents WHERE id=? AND is_active=1",
+            "SELECT id, name, model, system_prompt FROM agents "
+            "WHERE id=? AND is_active=1",
             (provider_agent_id,),
         ).fetchone()
     return dict(row) if row else None
@@ -38,16 +38,17 @@ def _agent(provider_agent_id: str | None) -> dict | None:
 def code_write(req: CallServiceRequest):
     payload = req.input
     if not isinstance(payload, dict):
-        raise HTTPException(status_code=400, detail="input must be {prompt, language, provider_agent_id?}")
+        raise HTTPException(status_code=400, detail="input must be {prompt, language?, provider_agent_id?}")
     prompt = payload.get("prompt", "")
     language = payload.get("language", "python")
     if not prompt:
         raise HTTPException(status_code=400, detail="prompt required")
 
+    agent = _agent(payload.get("provider_agent_id"))
+
     # Stress mode short-circuits the LLM so the simulation can saturate the
     # Lightning plumbing without being LLM-bound.
     if payload.get("stress"):
-        agent = _agent(payload.get("provider_agent_id"))
         return {
             "language": language,
             "code": f"// stub {language} response for: {prompt[:80]}",
@@ -56,9 +57,7 @@ def code_write(req: CallServiceRequest):
             "model": agent["model"] if agent else None,
         }
 
-    agent = _agent(payload.get("provider_agent_id"))
     model = agent["model"] if agent else None
-    base_url = agent["ollama_base_url"] if agent else None
     system = (
         agent["system_prompt"]
         if agent and agent.get("system_prompt")
@@ -75,11 +74,10 @@ def code_write(req: CallServiceRequest):
     )
 
     try:
-        raw = ollama_chat(
+        raw = claude_chat(
             prompt=user_prompt,
             system=system,
             model=model,
-            base_url=base_url,
             max_tokens=512,
             temperature=0.3,
         )
