@@ -129,6 +129,36 @@ def test_score_and_update_promotes_to_silver_at_threshold(tmp_path, monkeypatch)
         assert abs(svc["avg_quality_score"] - 75.0) < 0.01
 
 
+def test_score_and_update_stays_bronze_below_call_threshold(tmp_path, monkeypatch):
+    monkeypatch.setattr("database.DB_PATH", str(tmp_path / "test.db"))
+    from database import init_db, get_db
+    init_db()
+
+    with get_db() as conn:
+        conn.execute(
+            "INSERT INTO services (id, name, description, price_sats, endpoint_url, provider_wallet, created_at, is_active) VALUES (?,?,?,?,?,?,?,?)",
+            ("svc1", "Web Summarizer", "desc", 25, "http://localhost/summarize", "wallet1", datetime.utcnow().isoformat(), 1),
+        )
+        # Only 8 previously scored transactions — below the 10-call silver minimum
+        for i in range(8):
+            conn.execute(
+                "INSERT INTO transactions (id, service_id, payment_hash, amount_sats, status, created_at, quality_score) VALUES (?,?,?,?,?,?,?)",
+                (f"txn{i}", "svc1", f"hash{i}", 25, "paid", datetime.utcnow().isoformat(), 75),
+            )
+        conn.execute(
+            "INSERT INTO transactions (id, service_id, payment_hash, amount_sats, status, created_at) VALUES (?,?,?,?,?,?)",
+            ("txn8", "svc1", "hash8", 25, "paid", datetime.utcnow().isoformat()),
+        )
+
+    with patch("services.scorer.score_response", return_value=(75, "Good")):
+        from services.scorer import score_and_update
+        score_and_update("txn8", "web-summarizer", {"url": "https://example.com"}, {"summary": "..."})
+
+    with get_db() as conn:
+        svc = conn.execute("SELECT tier FROM services WHERE id='svc1'").fetchone()
+        assert svc["tier"] == "bronze"  # 9 scored calls — one below silver threshold of 10
+
+
 def test_score_and_update_clamps_price_on_tier_drop(tmp_path, monkeypatch):
     monkeypatch.setattr("database.DB_PATH", str(tmp_path / "test.db"))
     from database import init_db, get_db

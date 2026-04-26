@@ -1,7 +1,10 @@
 import json
+import logging
 import anthropic
 from database import get_db
 from config import settings
+
+logger = logging.getLogger(__name__)
 
 RUBRICS = {
     "web-summarizer": (
@@ -70,7 +73,8 @@ def score_response(service_name: str, input_data, output_data: dict) -> tuple[in
         )
         result = json.loads(message.content[0].text)
         return int(result["score"]), str(result["reason"])
-    except Exception:
+    except Exception as exc:
+        logger.warning("scorer failed for %s: %s", service_name, exc)
         return 50, "scorer error"
 
 
@@ -151,5 +155,5 @@ def score_and_update(
                SET avg_quality_score=?, success_rate=?, tier=?,
                    price_sats=?, price_adjusted=?
                WHERE id=?""",
-            (avg_score, success_rate, new_tier, new_price, price_adjusted, service_id),
+            (avg_score, success_rate, new_tier, new_price, int(price_adjusted), service_id),
         )
