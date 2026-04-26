@@ -1,7 +1,11 @@
 fastapi
 uvicorn
-lexe-sdk
+anthropic
 requests
+httpx
 pydantic
+pydantic-settings
 langchain
 python-dotenv
+pytest
+pytest-asyncio

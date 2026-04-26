@@ -1,95 +1,100 @@
 import os
 import sys
+import re
+import time
+import requests
 
-# Ensure the project root is in the python path
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-import requests
-import re
-from langchain.tools import tool
-from utils.lexe_client import get_lexe_wallet
-import time
+from services.wallet_manager import get_consumer_wallet
+
+BASE_URL = os.getenv("PROVIDER_BASE_URL", "http://localhost:8000")
 
 class L402Client:
-    def __init__(self, wallet):
-        self.wallet = wallet
-        self.tokens = {} # url -> {"macaroon": ..., "preimage": ...}
+    def __init__(self):
+        self.wallet = get_consumer_wallet()
+        self.tokens: dict[str, dict] = {}
 
-    def call_api(self, url):
+    def call(self, service_id: str, input_data) -> dict:
+        url = f"{BASE_URL}/api/services/{service_id}/call"
+        payload = {"input": input_data}
         headers = {}
-        if url in self.tokens:
-            token = self.tokens[url]
-            headers["Authorization"] = f"L402 {token['macaroon']}:{token['preimage']}"
-        
-        response = requests.get(url, headers=headers)
-        
+
+        if service_id in self.tokens:
+            t = self.tokens[service_id]
+            headers["Authorization"] = f"L402 {t['macaroon']}:{t['preimage']}"
+
+        response = requests.post(url, json=payload, headers=headers)
+
         if response.status_code == 402:
-            print("Received 402 Payment Required. Handling payment...")
-            auth_header = response.headers.get("WWW-Authenticate")
-            if not auth_header:
-                raise Exception("Missing WWW-Authenticate header")
-            
-            # Extract macaroon and invoice
-            macaroon_match = re.search(r'macaroon="([^"]+)"', auth_header)
-            invoice_match = re.search(r'invoice="([^"]+)"', auth_header)
-            
+            print(f"  → 402 Payment Required")
+            www_auth = response.headers.get("WWW-Authenticate", "")
+            macaroon_match = re.search(r'macaroon="([^"]+)"', www_auth)
+            invoice_match = re.search(r'invoice="([^"]+)"', www_auth)
+
             if not macaroon_match or not invoice_match:
                 raise Exception("Could not parse WWW-Authenticate header")
-                
+
             macaroon = macaroon_match.group(1)
             invoice = invoice_match.group(1)
-            
-            print(f"Paying invoice: {invoice[:20]}...")
-            
+
+            print(f"  → Paying invoice {invoice[:30]}...")
             try:
-                payment_result = self.wallet.pay_invoice(invoice)
-                print(f"Payment successful! Index: {payment_result.index}")
+                result = self.wallet.pay_invoice(invoice)
+                print(f"  → Payment sent (index: {result.index})")
             except Exception as e:
-                if "We cannot pay ourselves" in str(e):
-                    print("Note: Same-wallet detected. Proceeding with dummy payment for demo.")
+                if "cannot pay ourselves" in str(e).lower():
+                    print(f"  → Same-wallet detected (demo mode). Proceeding.")
                 else:
-                    raise e
-            
-            # Since Lexe SDK doesn't easily return preimage, we use a dummy 
-            # and the server verifies via its own wallet status.
-            dummy_preimage = "00" * 32 
-            
-            # Store token
-            self.tokens[url] = {
-                "macaroon": macaroon,
-                "preimage": dummy_preimage
-            }
-            
-            # Wait a moment for payment to propagate/state to sync
-            time.sleep(1)
-            
-            # Retry
-            return self.call_api(url)
-            
+                    raise
+
+            time.sleep(2)
+
+            self.tokens[service_id] = {"macaroon": macaroon, "preimage": "00" * 32}
+            return self.call(service_id, input_data)
+
+        response.raise_for_status()
         return response.json()
 
-@tool
-def get_market_intelligence(query: str):
-    """Fetches high-value market intelligence using automated Lightning payments."""
-    wallet = get_lexe_wallet()
-    client = L402Client(wallet)
-    url = "http://localhost:8000/api/get-intelligence"
-    
-    try:
-        result = client.call_api(url)
-        return result
-    except Exception as e:
-        return f"Error: {str(e)}"
+
+def discover_services() -> list[dict]:
+    response = requests.get(f"{BASE_URL}/api/services")
+    response.raise_for_status()
+    return response.json()
+
+
+def run_demo():
+    print("=" * 60)
+    print("PayGent Consumer Agent — Demo Run")
+    print("=" * 60)
+
+    client = L402Client()
+
+    services = discover_services()
+    print(f"\nDiscovered {len(services)} services:")
+    for s in services:
+        print(f"  [{s['id'][:8]}] {s['name']} — {s['price_sats']} sats")
+
+    tasks = [
+        (services[0]["id"], "https://example.com"),
+        (services[1]["id"], {"code": "def add(a,b): return a+b", "language": "python"}),
+        (services[2]["id"], "Lightning payments are making agent economies possible!"),
+    ]
+
+    for service_id, input_data in tasks:
+        service_name = next(s["name"] for s in services if s["id"] == service_id)
+        print(f"\n--- Calling: {service_name} ---")
+        try:
+            result = client.call(service_id, input_data)
+            print(f"  Result: {result}")
+        except Exception as e:
+            print(f"  Error: {e}")
+        time.sleep(1)
+
+    print("\n" + "=" * 60)
+    print("Demo complete. Check the dashboard for transaction history.")
+    print("=" * 60)
+
 
 if __name__ == "__main__":
-    # Example usage without LangChain full chain for demonstration
-    print("Starting Consumer Agent Demo (Single-Wallet Mode)...")
-    wallet = get_lexe_wallet()
-    client = L402Client(wallet)
-    
-    # Simulate multiple tasks to show scalability
-    for i in range(1, 4):
-        print(f"\n--- Task {i} ---")
-        intelligence = get_market_intelligence.run(f"Run task {i}")
-        print(f"Agent received intelligence: {intelligence}")
-        time.sleep(1)
+    run_demo()
