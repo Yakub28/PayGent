@@ -1,5 +1,11 @@
 // frontend/lib/api.ts
-const BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+const getBaseUrl = () => {
+  if (process.env.NEXT_PUBLIC_API_URL) return process.env.NEXT_PUBLIC_API_URL;
+  if (typeof window !== "undefined") return ""; // Relative path for browser
+  return "http://localhost:8000"; // Fallback for SSR
+};
+
+const BASE = getBaseUrl();
 
 export interface Service {
   id: string;
