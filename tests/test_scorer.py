@@ -54,6 +54,24 @@ def test_score_response_fallback_on_api_error():
     assert reason == "scorer error"
 
 
+def test_score_response_handles_markdown_wrapped_json():
+    mock_message = MagicMock()
+    mock_message.content = [MagicMock(text='```json\n{"score": 77, "reason": "Good output"}\n```')]
+    mock_client = MagicMock()
+    mock_client.messages.create.return_value = mock_message
+
+    with patch("services.scorer.anthropic.Anthropic", return_value=mock_client):
+        from services.scorer import score_response
+        score, reason = score_response(
+            "sentiment-analyzer",
+            {"text": "great product"},
+            {"verdict": "positive", "confidence": 0.9},
+        )
+
+    assert score == 77
+    assert reason == "Good output"
+
+
 def test_score_response_fallback_on_invalid_json():
     mock_message = MagicMock()
     mock_message.content = [MagicMock(text="not valid json at all")]

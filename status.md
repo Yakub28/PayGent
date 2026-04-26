@@ -2,7 +2,7 @@
 
 ## Current State: Complete (Mock Payments Active)
 
-All 19 implementation tasks finished. 13/13 tests passing. TypeScript compiles clean.
+All features built and tested. 29/29 tests passing. TypeScript compiles clean. Demo runs end-to-end.
 
 Real Lightning settlement is temporarily replaced with a file-based mock wallet while Lexe network access is resolved. The full L402 flow works end-to-end — only the payment rail is mocked. Swapping in real Lexe requires changing one function in `services/wallet_manager.py`.
 
@@ -14,14 +14,16 @@ Real Lightning settlement is temporarily replaced with a file-based mock wallet 
 - **L402 Payment Router** — full Lightning paywall: issues invoices, verifies settlement, proxies to provider, records 10% fee split
 - **Mock Wallet** — file-based (`mock_payments.json`) payment simulation; same interface as real Lexe SDK; drop-in replaceable
 - **3 AI Provider Services** — Web Summarizer (25 sat), Code Reviewer (100 sat), Sentiment Analyzer (50 sat) — all powered by Claude Haiku
-- **Stats API** — total volume, fees earned, call count, live wallet balance
-- **Startup Seeding** — 3 services auto-registered on first launch
+- **Reputation Scoring** — every paid call is scored 0–100 by Claude Haiku via a service-specific rubric, running as a `BackgroundTask` (zero latency impact); score + one-sentence reason stored per transaction
+- **Tier System** — Bronze / Silver / Gold tiers computed from rolling avg quality score (last 20 calls) and total scored call count; recomputed after every transaction
+- **Dynamic Pricing** — tier sets a price ceiling (Bronze 150 sat, Silver 400 sat, Gold unlimited); price auto-clamped on tier drop; providers can raise price via `PATCH /api/services/{id}/price`
+- **Stats API** — total volume, fees earned, call count, live wallet balance, top-rated service
 
 ### Frontend (Next.js + TypeScript + Tailwind)
 
-- **Stats Bar** — live volume, fees, calls, and marketplace wallet balance
-- **Service Catalog** — lists registered services with descriptions and prices
-- **Transaction Feed** — live payment history with status, amounts, fees, and relative timestamps
+- **Stats Bar** — live volume, fees, calls, marketplace wallet balance, top-rated service
+- **Service Catalog** — tier badge (Bronze/Silver/Gold), avg quality score, call count
+- **Transaction Feed** — quality score per row, "scoring…" placeholder until scored, score reason as secondary line
 - **3-second auto-polling** — dashboard updates without refresh
 
 ### Consumer Agent
@@ -36,14 +38,14 @@ Real Lightning settlement is temporarily replaced with a file-based mock wallet 
 |---|---|
 | Backend | Python 3.11+, FastAPI, SQLite |
 | Payments | Mock wallet (file-based) → Lexe SDK (drop-in swap) |
-| AI | Anthropic Claude Haiku |
+| AI | Anthropic Claude Haiku (providers + reputation scorer) |
 | Frontend | Next.js 16, TypeScript, Tailwind CSS v4 |
-| Tests | pytest, 13 tests, all passing |
+| Tests | pytest, 29 tests, all passing |
 
 ## File Counts
 
-- 14 Python source files
-- 5 test files (13 tests)
+- 15 Python source files
+- 6 test files (29 tests)
 - 5 TypeScript/TSX files
 
 ## Switching to Real Lightning
@@ -103,3 +105,4 @@ python agents/consumer_agent.py
 - Refund logic for failed provider calls
 - Rate limiting and macaroon attenuation
 - Multi-node testing across independent Lexe instances
+- Authentication on the price PATCH endpoint

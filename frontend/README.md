@@ -24,9 +24,9 @@ app/
   globals.css       Tailwind base + dark background
 
 components/
-  StatsBar.tsx      Volume / fees / calls / balance cards
-  ServiceCatalog.tsx  Active services with icons, descriptions, prices
-  TransactionFeed.tsx  Live payment history with relative timestamps
+  StatsBar.tsx      Volume / fees / calls / balance / top-rated cards
+  ServiceCatalog.tsx  Active services with tier badges, avg quality score, call count
+  TransactionFeed.tsx  Live payment history with quality scores and score reasons
 
 lib/
   api.ts            fetchStats / fetchServices / fetchTransactions

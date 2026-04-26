@@ -1,5 +1,6 @@
 import json
 import logging
+import re
 import anthropic
 from database import get_db
 from config import settings
@@ -71,7 +72,9 @@ def score_response(service_name: str, input_data, output_data: dict) -> tuple[in
             max_tokens=100,
             messages=[{"role": "user", "content": prompt}],
         )
-        result = json.loads(message.content[0].text)
+        raw = message.content[0].text.strip()
+        m = re.search(r'\{[^{}]+\}', raw, re.DOTALL)
+        result = json.loads(m.group() if m else raw)
         return int(result["score"]), str(result["reason"])
     except Exception as exc:
         logger.warning("scorer failed for %s: %s", service_name, exc)

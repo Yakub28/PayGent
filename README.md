@@ -1,6 +1,6 @@
 # PayGent — Lightning-Powered Agent Marketplace
 
-PayGent is an agent-to-agent service marketplace built for the **Spiral × Hack-Nation "Earn in the Agent Economy"** challenge. Service providers register HTTP endpoints with a price. Consumer agents discover services, pay via the **Lightning Network** (L402 protocol), and receive results. The marketplace routes all payments and takes a 10% routing fee.
+PayGent is an agent-to-agent service marketplace built for the **Spiral × Hack-Nation "Earn in the Agent Economy"** challenge. Service providers register HTTP endpoints with a price. Consumer agents discover services, pay via the **Lightning Network** (L402 protocol), and receive results. The marketplace routes all payments, takes a 10% routing fee, and automatically scores every response with Claude Haiku to build provider reputation.
 
 ## Architecture
 
@@ -25,7 +25,7 @@ PayGent is an agent-to-agent service marketplace built for the **Spiral × Hack-
         └─────────────┘       └──────────────┘
 ```
 
-**Payment flow:** Consumer calls service → receives `402 Payment Required` + Lightning invoice → pays via Lexe wallet → retries with L402 auth header → marketplace verifies payment, calls provider, deducts 10% fee, returns result.
+**Payment flow:** Consumer calls service → receives `402 Payment Required` + Lightning invoice → pays via Lexe wallet → retries with L402 auth header → marketplace verifies payment, calls provider, deducts 10% fee, returns result → background scorer rates the response 0–100 and updates provider tier.
 
 ## Tech Stack
 
@@ -40,11 +40,13 @@ PayGent is an agent-to-agent service marketplace built for the **Spiral × Hack-
 
 ## Pre-loaded Services
 
-| Service | Price | Input | Output |
-|---|---|---|---|
-| Web Summarizer | 25 sat | URL string | 3-sentence summary |
-| Code Reviewer | 100 sat | `{code, language}` | bugs, suggestions, score |
-| Sentiment Analyzer | 50 sat | text string | positive/negative/score |
+| Service | Price | Tier ceiling | Input | Output |
+|---|---|---|---|---|
+| Web Summarizer | 25 sat | Bronze (150 sat) | URL string | 3-sentence summary |
+| Code Reviewer | 100 sat | Bronze (150 sat) | `{code, language}` | bugs, suggestions, score |
+| Sentiment Analyzer | 50 sat | Bronze (150 sat) | text string | positive/negative/score |
+
+Services start at Bronze. After 10 scored calls averaging ≥ 70 they unlock Silver (400 sat ceiling); after 25 calls averaging ≥ 85 they reach Gold (no ceiling).
 
 ## Setup
 
@@ -106,13 +108,14 @@ The agent discovers services, pays for each via Lightning, and prints results. W
 
 ```
 POST   /api/services/register        Register a new service
-GET    /api/services                 List active services (endpoint_url hidden)
+GET    /api/services                 List active services (tier, score, call count included)
 DELETE /api/services/{id}            Deactivate a service
+PATCH  /api/services/{id}/price      Update price (enforces tier ceiling)
 
 POST   /api/services/{id}/call       Call a service (L402 payment gate)
 
-GET    /api/stats                    Marketplace stats (volume, fees, calls, balance)
-GET    /api/transactions             Last 50 transactions
+GET    /api/stats                    Marketplace stats (volume, fees, calls, balance, top rated)
+GET    /api/transactions             Last 50 transactions (quality_score, score_reason included)
 
 POST   /api/providers/summarize      Web Summarizer (internal)
 POST   /api/providers/code-review    Code Reviewer (internal)
@@ -125,7 +128,7 @@ POST   /api/providers/sentiment      Sentiment Analyzer (internal)
 pytest tests/ -v
 ```
 
-All 13 tests pass. Tests mock Lexe and Anthropic — no real credentials needed.
+All 29 tests pass. Tests mock Lexe and Anthropic — no real credentials needed.
 
 ## Project Structure
 
@@ -136,8 +139,9 @@ models.py                    Pydantic request/response schemas
 main.py                      FastAPI app entry point
 
 services/
-  registry.py                Service register/list/deactivate endpoints
-  router.py                  L402 payment gate + provider proxy
+  registry.py                Service register/list/deactivate/price endpoints
+  router.py                  L402 payment gate + provider proxy + scorer dispatch
+  scorer.py                  Background quality scorer (Claude Haiku rubrics, tier recompute)
   stats.py                   Stats and transactions endpoints
   wallet_manager.py          Lexe wallet singleton (marketplace + consumer)
   providers/
@@ -152,9 +156,9 @@ agents/
 frontend/
   lib/api.ts                 API client (fetchStats, fetchServices, fetchTransactions)
   components/
-    StatsBar.tsx             Volume / fees / calls / balance cards
-    ServiceCatalog.tsx       Service listing with icons and prices
-    TransactionFeed.tsx      Live payment feed with timestamps
+    StatsBar.tsx             Volume / fees / calls / balance / top-rated cards
+    ServiceCatalog.tsx       Service listing with tier badges, avg score, call count
+    TransactionFeed.tsx      Live payment feed with quality scores and score reasons
   app/
     page.tsx                 Main dashboard (3s polling)
 

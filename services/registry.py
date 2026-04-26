@@ -47,7 +47,8 @@ def list_services():
                FROM services s
                LEFT JOIN transactions t ON t.service_id = s.id AND t.status = 'paid'
                WHERE s.is_active = 1
-               GROUP BY s.id"""
+               GROUP BY s.id
+               ORDER BY s.created_at"""
         ).fetchall()
     return [ServiceListItem(**dict(r)) for r in rows]
 

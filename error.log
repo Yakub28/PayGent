@@ -1,0 +1,1 @@
+{"detail":"Provider error: Client error '400 Bad Request' for url 'http://localhost:8000/api/providers/summarize'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400"}
