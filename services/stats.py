@@ -5,6 +5,7 @@ from services.wallet_manager import get_marketplace_wallet
 
 router = APIRouter()
 
+
 @router.get("/stats", response_model=StatsResponse)
 def get_stats():
     wallet = get_marketplace_wallet()
@@ -19,12 +20,28 @@ def get_stats():
                FROM transactions WHERE status='paid'"""
         ).fetchone()
 
+        top = conn.execute(
+            """SELECT s.name, s.tier
+               FROM services s
+               WHERE s.is_active = 1
+                 AND s.avg_quality_score IS NOT NULL
+                 AND (
+                     SELECT COUNT(*) FROM transactions
+                     WHERE service_id = s.id AND quality_score IS NOT NULL
+                 ) >= 3
+               ORDER BY s.avg_quality_score DESC
+               LIMIT 1"""
+        ).fetchone()
+
     return StatsResponse(
         total_volume_sats=row["volume"],
         total_fees_sats=row["fees"],
         total_calls=row["calls"],
         marketplace_balance_sats=balance,
+        top_rated_name=top["name"] if top else None,
+        top_rated_tier=top["tier"] if top else None,
     )
+
 
 @router.get("/transactions", response_model=list[TransactionRecord])
 def get_transactions():
