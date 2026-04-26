@@ -5,7 +5,6 @@ class Settings(BaseSettings):
 
     lexe_client_credentials: str = ""
     consumer_lexe_credentials: str = ""
-    anthropic_api_key: str = ""
     fee_rate: float = 0.10
     provider_base_url: str = "http://localhost:8000"
 
@@ -16,5 +15,7 @@ class Settings(BaseSettings):
     silver_min_calls: int = 10
     gold_min_score: float = 85.0
     gold_min_calls: int = 25
+    anthropic_api_key: str = ""
+    anthropic_model: str = "claude-sonnet-4-5"
 
 settings = Settings()

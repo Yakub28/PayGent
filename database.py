@@ -36,6 +36,8 @@ def init_db():
                 avg_quality_score REAL,
                 success_rate REAL NOT NULL DEFAULT 0.0,
                 price_adjusted INTEGER NOT NULL DEFAULT 0
+                provider_agent_id TEXT,
+                service_type TEXT
             )
         """)
         conn.execute("""
@@ -53,6 +55,32 @@ def init_db():
             )
         """)
         _migrate_db(conn)
+                consumer_agent_id TEXT
+            )
+        """)
+        conn.execute("""
+            CREATE TABLE IF NOT EXISTS agents (
+                id TEXT PRIMARY KEY,
+                name TEXT NOT NULL,
+                role TEXT NOT NULL,
+                model TEXT NOT NULL,
+                system_prompt TEXT,
+                service_type TEXT,
+                created_at TEXT NOT NULL,
+                is_active INTEGER NOT NULL DEFAULT 1
+            )
+        """)
+        # Best-effort migrations for upgrades from earlier schemas.
+        for stmt in [
+            "ALTER TABLE services ADD COLUMN provider_agent_id TEXT",
+            "ALTER TABLE services ADD COLUMN service_type TEXT",
+            "ALTER TABLE transactions ADD COLUMN consumer_agent_id TEXT",
+            "ALTER TABLE agents ADD COLUMN service_type TEXT",
+        ]:
+            try:
+                conn.execute(stmt)
+            except sqlite3.OperationalError:
+                pass
 
 @contextmanager
 def get_db():

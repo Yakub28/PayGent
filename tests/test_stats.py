@@ -21,6 +21,19 @@ def client(tmp_path, monkeypatch):
         conn.execute(
             "INSERT INTO transactions (id, service_id, payment_hash, amount_sats, fee_sats, provider_sats, status, created_at) VALUES (?,?,?,?,?,?,?,?)",
             ("tx2", "svc1", "hash2", 100, 10, 90, "paid", datetime.utcnow().isoformat())
+            "INSERT INTO services (id, name, description, price_sats, endpoint_url, "
+            "provider_wallet, created_at, is_active) VALUES (?,?,?,?,?,?,?,?)",
+            ("svc1","Test","desc",100,"http://x","wallet",datetime.utcnow().isoformat(),1)
+        )
+        conn.execute(
+            "INSERT INTO transactions (id, service_id, payment_hash, amount_sats, "
+            "fee_sats, provider_sats, status, created_at) VALUES (?,?,?,?,?,?,?,?)",
+            ("tx1","svc1","hash1",100,10,90,"paid",datetime.utcnow().isoformat())
+        )
+        conn.execute(
+            "INSERT INTO transactions (id, service_id, payment_hash, amount_sats, "
+            "fee_sats, provider_sats, status, created_at) VALUES (?,?,?,?,?,?,?,?)",
+            ("tx2","svc1","hash2",100,10,90,"paid",datetime.utcnow().isoformat())
         )
 
     import sys
