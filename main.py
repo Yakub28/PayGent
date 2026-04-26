@@ -33,8 +33,8 @@ app = FastAPI(title="PayGent Marketplace", lifespan=lifespan)
 allowed_origins = os.getenv("CORS_ALLOWED_ORIGINS", "http://localhost:3000").split(",")
 # Add wildcard patterns for Vercel deployments
 allowed_origins.extend([
-    "https://paygent.vercel.app",
-    "https://paygent.vercel.sh",
+    "https://*.vercel.app",
+    "https://*.vercel.sh",
 ])
 
 app.add_middleware(
