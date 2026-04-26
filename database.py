@@ -11,6 +11,35 @@ def get_db_path():
 # Global DB_PATH for compatibility with existing tests
 DB_PATH = get_db_path()
 
+class LibsqlCursorAdapter:
+    """Adapts libsql ResultSet to behave slightly more like a sqlite3 cursor/row."""
+    def __init__(self, result_set):
+        self.rows = result_set
+        self.index = 0
+    
+    def fetchone(self):
+        if self.index < len(self.rows):
+            row = self.rows[self.index]
+            self.index += 1
+            return row
+        return None
+    
+    def fetchall(self):
+        return self.rows
+
+class LibsqlConnectionAdapter:
+    """Adapts libsql SyncConnection to match sqlite3 connection API."""
+    def __init__(self, conn):
+        self.conn = conn
+    
+    def execute(self, sql, parameters=()):
+        # Handle ? to %s conversion if needed, but Turso supports ?
+        res = self.conn.execute(sql, parameters)
+        return LibsqlCursorAdapter(res)
+    
+    def close(self):
+        self.conn.close()
+
 def _migrate_db(conn):
     """Add new columns to existing databases. Silently skips if already present."""
     migrations = [
@@ -26,8 +55,8 @@ def _migrate_db(conn):
         try:
             conn.execute(sql)
         except Exception as e:
-            # For libsql/turso, we use a more generic check
-            if "duplicate column name" not in str(e).lower():
+            msg = str(e).lower()
+            if "duplicate" not in msg and "already exists" not in msg:
                 pass
 
 def init_db():
@@ -98,8 +127,7 @@ def get_db():
         import libsql_client
         conn = libsql_client.connect(url, auth_token=token)
         try:
-            yield conn
-            # libsql-client handles commits automatically on sync operations
+            yield LibsqlConnectionAdapter(conn)
         finally:
             conn.close()
     else:
