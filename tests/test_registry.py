@@ -56,3 +56,55 @@ def test_list_services_excludes_inactive(client):
     client.delete(f"/api/services/{service_id}")
     response = client.get("/api/services")
     assert response.json() == []
+
+
+def test_update_price_within_ceiling_succeeds(client):
+    r = client.post("/api/services/register", json={
+        "name": "Test Service",
+        "description": "A test",
+        "price_sats": 50,
+        "endpoint_url": "http://localhost:8000/api/providers/test"
+    })
+    service_id = r.json()["service_id"]
+
+    response = client.patch(f"/api/services/{service_id}/price", json={"price_sats": 100})
+    assert response.status_code == 200
+    data = response.json()
+    assert data["price_sats"] == 100
+    assert data["tier"] == "bronze"
+    assert data["tier_ceiling"] == 150
+
+
+def test_update_price_exceeds_bronze_ceiling_returns_400(client):
+    r = client.post("/api/services/register", json={
+        "name": "Test Service",
+        "description": "A test",
+        "price_sats": 50,
+        "endpoint_url": "http://localhost:8000/api/providers/test"
+    })
+    service_id = r.json()["service_id"]
+
+    response = client.patch(f"/api/services/{service_id}/price", json={"price_sats": 200})
+    assert response.status_code == 400
+    assert "Bronze" in response.json()["detail"]
+    assert "150" in response.json()["detail"]
+
+
+def test_update_price_unknown_service_returns_404(client):
+    response = client.patch("/api/services/nonexistent/price", json={"price_sats": 50})
+    assert response.status_code == 404
+
+
+def test_list_services_includes_tier_and_call_count(client):
+    client.post("/api/services/register", json={
+        "name": "Test Service",
+        "description": "A test",
+        "price_sats": 25,
+        "endpoint_url": "http://localhost:8000/api/providers/test"
+    })
+    response = client.get("/api/services")
+    assert response.status_code == 200
+    svc = response.json()[0]
+    assert svc["tier"] == "bronze"
+    assert "call_count" in svc
+    assert "avg_quality_score" in svc
