@@ -1,11 +1,11 @@
 import httpx
-import anthropic
 from fastapi import APIRouter, HTTPException
+
 from models import CallServiceRequest
-from config import settings
+from services.providers.llm import ollama_chat
 
 router = APIRouter()
-anthropic_client = anthropic.Anthropic(api_key=settings.anthropic_api_key)
+
 
 @router.post("/providers/summarize")
 def summarize(req: CallServiceRequest):
@@ -19,12 +19,12 @@ def summarize(req: CallServiceRequest):
     except Exception as e:
         raise HTTPException(status_code=422, detail=f"Could not fetch URL: {e}")
 
-    message = anthropic_client.messages.create(
-        model="claude-haiku-4-5-20251001",
+    summary = ollama_chat(
+        prompt=(
+            "Summarize the following webpage content in exactly 3 sentences. "
+            "Reply with the summary text only, no preamble.\n\n"
+            f"{page_text}"
+        ),
         max_tokens=256,
-        messages=[{
-            "role": "user",
-            "content": f"Summarize the following webpage content in exactly 3 sentences:\n\n{page_text}"
-        }]
     )
-    return {"summary": message.content[0].text}
+    return {"summary": summary}

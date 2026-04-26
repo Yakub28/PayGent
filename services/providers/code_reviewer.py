@@ -1,11 +1,12 @@
 import json
-import anthropic
+
 from fastapi import APIRouter, HTTPException
+
 from models import CallServiceRequest
-from config import settings
+from services.providers.llm import ollama_chat
 
 router = APIRouter()
-anthropic_client = anthropic.Anthropic(api_key=settings.anthropic_api_key)
+
 
 @router.post("/providers/code-review")
 def code_review(req: CallServiceRequest):
@@ -14,19 +15,15 @@ def code_review(req: CallServiceRequest):
     code = req.input.get("code", "")
     language = req.input.get("language", "unknown")
 
-    message = anthropic_client.messages.create(
-        model="claude-haiku-4-5-20251001",
+    raw = ollama_chat(
+        prompt=(
+            f"Review this {language} code. Reply with JSON only (no markdown, no prose):\n"
+            '{"bugs": [...], "suggestions": [...], "score": 1-10}\n\n'
+            f"Code:\n{code}"
+        ),
         max_tokens=512,
-        messages=[{
-            "role": "user",
-            "content": (
-                f"Review this {language} code. Reply with JSON only:\n"
-                f'{{"bugs": [...], "suggestions": [...], "score": 1-10}}\n\n'
-                f"Code:\n{code}"
-            )
-        }]
+        json_mode=True,
     )
-    raw = message.content[0].text.strip()
     try:
         return json.loads(raw)
     except json.JSONDecodeError:

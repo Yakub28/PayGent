@@ -7,6 +7,5 @@ pydantic
 pydantic-settings
 langchain
 python-dotenv
-anthropic
 pytest
 pytest-asyncio

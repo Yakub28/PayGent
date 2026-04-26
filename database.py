@@ -14,7 +14,8 @@ def init_db():
                 endpoint_url TEXT NOT NULL,
                 provider_wallet TEXT NOT NULL,
                 created_at TEXT NOT NULL,
-                is_active INTEGER NOT NULL DEFAULT 1
+                is_active INTEGER NOT NULL DEFAULT 1,
+                provider_agent_id TEXT
             )
         """)
         conn.execute("""
@@ -26,9 +27,31 @@ def init_db():
                 fee_sats INTEGER,
                 provider_sats INTEGER,
                 status TEXT NOT NULL DEFAULT 'pending',
-                created_at TEXT NOT NULL
+                created_at TEXT NOT NULL,
+                consumer_agent_id TEXT
             )
         """)
+        conn.execute("""
+            CREATE TABLE IF NOT EXISTS agents (
+                id TEXT PRIMARY KEY,
+                name TEXT NOT NULL,
+                role TEXT NOT NULL,
+                model TEXT NOT NULL,
+                system_prompt TEXT,
+                ollama_base_url TEXT,
+                created_at TEXT NOT NULL,
+                is_active INTEGER NOT NULL DEFAULT 1
+            )
+        """)
+        # Best-effort migrations for upgrades from earlier schemas.
+        for stmt in [
+            "ALTER TABLE services ADD COLUMN provider_agent_id TEXT",
+            "ALTER TABLE transactions ADD COLUMN consumer_agent_id TEXT",
+        ]:
+            try:
+                conn.execute(stmt)
+            except sqlite3.OperationalError:
+                pass
 
 @contextmanager
 def get_db():

@@ -1,22 +1,27 @@
 import pytest
 from unittest.mock import patch, MagicMock
 
+
 @pytest.fixture
 def client():
     import sys
-    for mod in ["main", "services.providers.summarizer", "services.providers.code_reviewer", "services.providers.sentiment"]:
+    for mod in [
+        "main",
+        "services.providers.summarizer",
+        "services.providers.code_reviewer",
+        "services.providers.sentiment",
+        "services.providers.llm",
+    ]:
         sys.modules.pop(mod, None)
     from main import app
     from fastapi.testclient import TestClient
     return TestClient(app)
 
-def test_summarizer_returns_summary(client):
-    mock_response = MagicMock()
-    mock_response.content = [MagicMock(text="This is a 3-sentence summary.")]
 
+def test_summarizer_returns_summary(client):
     with patch("httpx.get") as mock_get, \
-         patch("services.providers.summarizer.anthropic_client.messages.create",
-               return_value=mock_response):
+         patch("services.providers.summarizer.ollama_chat",
+               return_value="This is a 3-sentence summary."):
         mock_get.return_value.text = "<html><body>Hello world content</body></html>"
         from fastapi.testclient import TestClient
         from main import app
@@ -24,14 +29,13 @@ def test_summarizer_returns_summary(client):
         response = client.post("/api/providers/summarize", json={"input": "https://example.com"})
 
     assert response.status_code == 200
-    assert "summary" in response.json()
+    body = response.json()
+    assert body["summary"] == "This is a 3-sentence summary."
+
 
 def test_code_reviewer_returns_review(client):
-    mock_response = MagicMock()
-    mock_response.content = [MagicMock(text='{"bugs":[],"suggestions":["Use type hints"],"score":8}')]
-
-    with patch("services.providers.code_reviewer.anthropic_client.messages.create",
-               return_value=mock_response):
+    with patch("services.providers.code_reviewer.ollama_chat",
+               return_value='{"bugs":[],"suggestions":["Use type hints"],"score":8}'):
         from fastapi.testclient import TestClient
         from main import app
         client = TestClient(app)
@@ -43,12 +47,10 @@ def test_code_reviewer_returns_review(client):
     data = response.json()
     assert "bugs" in data or "review" in data
 
-def test_sentiment_returns_analysis(client):
-    mock_response = MagicMock()
-    mock_response.content = [MagicMock(text='{"sentiment":"positive","score":0.9,"confidence":0.95}')]
 
-    with patch("services.providers.sentiment.anthropic_client.messages.create",
-               return_value=mock_response):
+def test_sentiment_returns_analysis(client):
+    with patch("services.providers.sentiment.ollama_chat",
+               return_value='{"sentiment":"positive","score":0.9,"confidence":0.95}'):
         from fastapi.testclient import TestClient
         from main import app
         client = TestClient(app)

@@ -6,6 +6,7 @@ export interface Service {
   name: string;
   description: string;
   price_sats: number;
+  provider_agent_id: string | null;
 }
 
 export interface Transaction {
@@ -18,6 +19,7 @@ export interface Transaction {
   provider_sats: number | null;
   status: string;
   created_at: string;
+  consumer_agent_id: string | null;
 }
 
 export interface Stats {
@@ -27,17 +29,102 @@ export interface Stats {
   marketplace_balance_sats: number;
 }
 
-export async function fetchStats(): Promise<Stats> {
-  const res = await fetch(`${BASE}/api/stats`, { cache: "no-store" });
+export type AgentRole = "consumer" | "provider";
+
+export interface Agent {
+  id: string;
+  name: string;
+  role: AgentRole;
+  model: string;
+  system_prompt: string | null;
+  ollama_base_url: string | null;
+  balance_sats: number;
+  created_at: string;
+  is_active: boolean;
+  service_id: string | null;
+}
+
+export interface RegisterAgentPayload {
+  name: string;
+  role: AgentRole;
+  model?: string;
+  system_prompt?: string | null;
+  ollama_base_url?: string | null;
+  initial_balance_sats?: number;
+  service_price_sats?: number;
+  languages?: string[];
+}
+
+export interface SimulationConfig {
+  rate_per_sec: number;
+  languages: string[];
+  use_llm: boolean;
+  max_iterations?: number | null;
+}
+
+export interface SimulationStatus {
+  running: boolean;
+  rate_per_sec: number;
+  iterations: number;
+  successes: number;
+  failures: number;
+  started_at: string | null;
+  last_event: string | null;
+  use_llm: boolean;
+}
+
+export interface SimulationEvent {
+  timestamp: string;
+  consumer_agent_id: string;
+  consumer_name: string;
+  provider_agent_id: string;
+  provider_name: string;
+  language: string;
+  prompt: string;
+  code: string | null;
+  sats_paid: number;
+  duration_ms: number;
+  success: boolean;
+  error: string | null;
+}
+
+async function getJson<T>(path: string): Promise<T> {
+  const res = await fetch(`${BASE}${path}`, { cache: "no-store" });
+  if (!res.ok) throw new Error(`${res.status} ${path}`);
   return res.json();
 }
 
-export async function fetchServices(): Promise<Service[]> {
-  const res = await fetch(`${BASE}/api/services`, { cache: "no-store" });
+async function postJson<T>(path: string, body: unknown): Promise<T> {
+  const res = await fetch(`${BASE}${path}`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body),
+  });
+  if (!res.ok) {
+    const text = await res.text();
+    throw new Error(`${res.status} ${path}: ${text}`);
+  }
   return res.json();
 }
 
-export async function fetchTransactions(): Promise<Transaction[]> {
-  const res = await fetch(`${BASE}/api/transactions`, { cache: "no-store" });
-  return res.json();
+export const fetchStats = () => getJson<Stats>("/api/stats");
+export const fetchServices = () => getJson<Service[]>("/api/services");
+export const fetchTransactions = () => getJson<Transaction[]>("/api/transactions");
+
+export const fetchAgents = () => getJson<Agent[]>("/api/agents");
+export const registerAgent = (payload: RegisterAgentPayload) =>
+  postJson<Agent>("/api/agents", payload);
+export const topupAgent = (id: string, amount_sats: number) =>
+  postJson<Agent>(`/api/agents/${id}/topup`, { amount_sats });
+export async function deleteAgent(id: string): Promise<void> {
+  await fetch(`${BASE}/api/agents/${id}`, { method: "DELETE" });
 }
+
+export const fetchSimulationStatus = () =>
+  getJson<SimulationStatus>("/api/simulation/status");
+export const fetchSimulationEvents = (limit = 50) =>
+  getJson<SimulationEvent[]>(`/api/simulation/events?limit=${limit}`);
+export const startSimulation = (cfg: SimulationConfig) =>
+  postJson<SimulationStatus>("/api/simulation/start", cfg);
+export const stopSimulation = () =>
+  postJson<SimulationStatus>("/api/simulation/stop", {});

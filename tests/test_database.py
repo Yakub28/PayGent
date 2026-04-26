@@ -20,9 +20,18 @@ def test_get_db_commits_on_exit():
     init_db()
     with get_db() as conn:
         conn.execute(
-            "INSERT INTO services VALUES (?,?,?,?,?,?,?,?)",
+            "INSERT INTO services (id, name, description, price_sats, endpoint_url, "
+            "provider_wallet, created_at, is_active) VALUES (?,?,?,?,?,?,?,?)",
             ("id1","name","desc",10,"http://x","wallet1","2026-01-01",1)
         )
     with get_db() as conn:
         row = conn.execute("SELECT id FROM services WHERE id=?", ("id1",)).fetchone()
     assert row is not None
+
+def test_init_db_creates_agents_table():
+    init_db()
+    with get_db() as conn:
+        names = [t["name"] for t in conn.execute(
+            "SELECT name FROM sqlite_master WHERE type='table'"
+        ).fetchall()]
+    assert "agents" in names
