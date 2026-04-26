@@ -1,3 +1,4 @@
+import os
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -15,12 +16,8 @@ from services.providers.sentiment import router as sentiment_router
 from services.providers.code_writer import router as code_writer_router
 from services.providers.seed import seed_services
 
-
-# Make sure the schema exists before the first request, even if the lifespan
-# hook hasn't fired yet (e.g. the DB file was deleted while the server was
-# already running).
+# Make sure the schema exists before the first request
 init_db()
-
 
 @asynccontextmanager
 async def lifespan(_: FastAPI):
@@ -28,12 +25,14 @@ async def lifespan(_: FastAPI):
     seed_services()
     yield
 
-
 app = FastAPI(title="PayGent Marketplace", lifespan=lifespan)
+
+# CORS Configuration
+allowed_origins = os.getenv("CORS_ALLOWED_ORIGINS", "http://localhost:3000").split(",")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],
+    allow_origins=allowed_origins,
     allow_methods=["*"],
     allow_headers=["*"],
 )

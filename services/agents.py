@@ -70,6 +70,10 @@ def create_agent(req: RegisterAgentRequest):
             raise HTTPException(status_code=400, detail=f"unknown service_type: {req.service_type}")
 
     agent_id = str(uuid.uuid4())
+    
+    # Create the wallet FIRST with the requested initial balance
+    get_or_create_agent_wallet(agent_id, label=req.name, initial_sats=req.initial_balance_sats)
+
     now = datetime.now(UTC).isoformat()
     service_type = req.service_type if req.role == "provider" else None
 
@@ -80,8 +84,6 @@ def create_agent(req: RegisterAgentRequest):
             (agent_id, req.name, req.role, req.model, req.system_prompt,
              service_type, now),
         )
-
-    get_or_create_agent_wallet(agent_id, label=req.name, initial_sats=req.initial_balance_sats)
 
     if req.role == "provider":
         spec = ptypes.SERVICE_TYPES[req.service_type]  # type: ignore[index]
