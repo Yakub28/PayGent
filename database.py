@@ -4,6 +4,8 @@ from contextlib import contextmanager
 
 def get_db_path():
     """Returns the current database path, allowing for dynamic overrides."""
+    if os.environ.get("VERCEL"):
+        return "/tmp/paygent.db"
     return os.environ.get("PAYGENT_DB_PATH", "paygent.db")
 
 # Global DB_PATH for compatibility with existing tests
