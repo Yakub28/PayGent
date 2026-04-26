@@ -29,12 +29,18 @@ async def lifespan(_: FastAPI):
 
 app = FastAPI(title="PayGent Marketplace", lifespan=lifespan)
 
-# CORS Configuration
+# CORS Configuration - allow Vercel preview URLs and localhost
 allowed_origins = os.getenv("CORS_ALLOWED_ORIGINS", "http://localhost:3000").split(",")
+# Add wildcard patterns for Vercel deployments
+allowed_origins.extend([
+    "https://*.vercel.app",
+    "https://*.vercel.sh",
+])
 
 app.add_middleware(
     CORSMiddleware,
     allow_origins=allowed_origins,
+    allow_origin_regex=r"https://.*\.(vercel\.app|vercel\.sh)$",
     allow_methods=["*"],
     allow_headers=["*"],
 )

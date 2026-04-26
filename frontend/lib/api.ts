@@ -1,5 +1,7 @@
 // frontend/lib/api.ts
-const BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+// In production on Vercel, API is at same origin under /api
+// In development, fallback to localhost:8000
+const BASE = process.env.NEXT_PUBLIC_API_URL || (typeof window !== "undefined" && window.location.hostname !== "localhost" ? "" : "http://localhost:8000");
 
 export interface Service {
   id: string;
