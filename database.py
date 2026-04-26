@@ -16,8 +16,9 @@ def _migrate_db(conn):
     for sql in migrations:
         try:
             conn.execute(sql)
-        except sqlite3.OperationalError:
-            pass  # column already exists
+        except sqlite3.OperationalError as e:
+            if "duplicate column name" not in str(e):
+                raise
 
 def init_db():
     with get_db() as conn:
