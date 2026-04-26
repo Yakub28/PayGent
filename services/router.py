@@ -2,25 +2,29 @@ import base64
 import uuid
 import httpx
 from datetime import datetime
-from fastapi import APIRouter, Header, HTTPException
+from fastapi import APIRouter, BackgroundTasks, Header, HTTPException
 from lexe import PaymentFilter
 from database import get_db
 from models import CallServiceRequest
 from services.wallet_manager import get_marketplace_wallet
+from services.scorer import score_and_update
 from config import settings
 
 router = APIRouter()
 pending_payments: dict[str, dict] = {}
 
+
 def _generate_macaroon(payment_hash: str) -> str:
     return base64.b64encode(f"v=1,hash={payment_hash}".encode()).decode()
+
 
 def _payment_required(macaroon: str, invoice: str):
     raise HTTPException(
         status_code=402,
         detail="Payment Required",
-        headers={"WWW-Authenticate": f'L402 macaroon="{macaroon}", invoice="{invoice}"'}
+        headers={"WWW-Authenticate": f'L402 macaroon="{macaroon}", invoice="{invoice}"'},
     )
+
 
 def _verify_payment(payment_hash: str) -> bool:
     wallet = get_marketplace_wallet()
@@ -31,22 +35,26 @@ def _verify_payment(payment_hash: str) -> bool:
         for p in payments
     )
 
+
 async def _call_provider(endpoint_url: str, input_data) -> dict:
     async with httpx.AsyncClient(timeout=30.0) as client:
         response = await client.post(endpoint_url, json={"input": input_data})
         response.raise_for_status()
         return response.json()
 
+
 def _pay_provider(provider_wallet: str, provider_sats: int):
     # In v1 all providers are internal (same wallet).
     # This is a no-op recorded for accounting only.
     pass
 
+
 @router.post("/services/{service_id}/call")
 async def call_service(
     service_id: str,
     req: CallServiceRequest,
-    authorization: str = Header(None)
+    background_tasks: BackgroundTasks,
+    authorization: str = Header(None),
 ):
     with get_db() as conn:
         row = conn.execute(
@@ -62,20 +70,23 @@ async def call_service(
         invoice_obj = wallet.create_invoice(
             expiration_secs=3600,
             amount_sats=service["price_sats"],
-            description=f"PayGent: {service['name']}"
+            description=f"PayGent: {service['name']}",
         )
         macaroon = _generate_macaroon(invoice_obj.payment_hash)
+        txn_id = str(uuid.uuid4())
         pending_payments[macaroon] = {
             "payment_hash": invoice_obj.payment_hash,
-            "service_id": service_id
+            "service_id": service_id,
+            "txn_id": txn_id,
         }
-        txn_id = str(uuid.uuid4())
         with get_db() as conn:
             conn.execute(
                 "INSERT INTO transactions (id, service_id, payment_hash, amount_sats, fee_sats, provider_sats, status, created_at) VALUES (?,?,?,?,?,?,?,?)",
-                (txn_id, service_id, invoice_obj.payment_hash,
-                 service["price_sats"], None, None, "pending",
-                 datetime.utcnow().isoformat())
+                (
+                    txn_id, service_id, invoice_obj.payment_hash,
+                    service["price_sats"], None, None, "pending",
+                    datetime.utcnow().isoformat(),
+                ),
             )
         _payment_required(macaroon, invoice_obj.invoice)
 
@@ -93,10 +104,6 @@ async def call_service(
     payment_hash = entry["payment_hash"]
 
     if not _verify_payment(payment_hash):
-        with get_db() as conn:
-            invoice_row = conn.execute(
-                "SELECT * FROM transactions WHERE payment_hash=?", (payment_hash,)
-            ).fetchone()
         _payment_required(macaroon, "")
 
     # Payment confirmed — call provider
@@ -109,14 +116,20 @@ async def call_service(
     fee_sats = int(service["price_sats"] * settings.fee_rate)
     provider_sats = service["price_sats"] - fee_sats
 
+    txn_id = entry.get("txn_id")
     with get_db() as conn:
         conn.execute(
             """UPDATE transactions SET status='paid', fee_sats=?, provider_sats=?
                WHERE payment_hash=?""",
-            (fee_sats, provider_sats, payment_hash)
+            (fee_sats, provider_sats, payment_hash),
         )
 
     _pay_provider(service["provider_wallet"], provider_sats)
     del pending_payments[macaroon]
+
+    # Fire quality scorer as a background task (does not affect response latency)
+    if txn_id:
+        service_slug = service["name"].lower().replace(" ", "-")
+        background_tasks.add_task(score_and_update, txn_id, service_slug, req.input, result)
 
     return result

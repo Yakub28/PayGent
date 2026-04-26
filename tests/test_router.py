@@ -61,14 +61,16 @@ def test_call_with_valid_payment_returns_provider_response(tmp_path, monkeypatch
     macaroon = "testmacaroon=="
     router_module.pending_payments[macaroon] = {
         "payment_hash": "paidhash123",
-        "service_id": "svc1"
+        "service_id": "svc1",
+        "txn_id": "txn-test-uuid",
     }
 
     from unittest.mock import patch
     with patch("services.router.get_marketplace_wallet") as mock_wallet, \
          patch("services.router._verify_payment", return_value=True), \
          patch("services.router._call_provider", return_value={"result": "ok"}), \
-         patch("services.router._pay_provider"):
+         patch("services.router._pay_provider"), \
+         patch("services.router.score_and_update"):
         sys.modules.pop("main", None)
         from main import app
         from fastapi.testclient import TestClient
