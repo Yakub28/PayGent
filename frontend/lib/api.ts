@@ -1,11 +1,7 @@
 // frontend/lib/api.ts
-const getBaseUrl = () => {
-  if (process.env.NEXT_PUBLIC_API_URL) return process.env.NEXT_PUBLIC_API_URL;
-  if (typeof window !== "undefined") return ""; // Relative path for browser
-  return "http://localhost:8000"; // Fallback for SSR
-};
-
-const BASE = getBaseUrl();
+// In production on Vercel, API is at same origin under /api
+// In development, fallback to localhost:8000
+const BASE = process.env.NEXT_PUBLIC_API_URL || (typeof window !== "undefined" && window.location.hostname !== "localhost" ? "" : "http://localhost:8000");
 
 export interface Service {
   id: string;
