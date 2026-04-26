@@ -1,11 +1,8 @@
 fastapi
-uvicorn
 anthropic
 requests
 httpx
 pydantic
 pydantic-settings
 python-dotenv
-pytest
-pytest-asyncio
 libsql-client
