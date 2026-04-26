@@ -106,8 +106,13 @@ def score_and_update(
                ORDER BY created_at DESC LIMIT 20""",
             (service_id,),
         ).fetchall()
-        scored_count = len(scores)
-        avg_score = sum(r["quality_score"] for r in scores) / scored_count if scored_count else None
+        window = len(scores)
+        avg_score = sum(r["quality_score"] for r in scores) / window if window else None
+
+        scored_count = conn.execute(
+            "SELECT COUNT(*) as n FROM transactions WHERE service_id=? AND quality_score IS NOT NULL",
+            (service_id,),
+        ).fetchone()["n"]
 
         total = conn.execute(
             "SELECT COUNT(*) as n FROM transactions WHERE service_id=?", (service_id,)
@@ -143,6 +148,8 @@ def score_and_update(
         svc = conn.execute(
             "SELECT price_sats FROM services WHERE id=?", (service_id,)
         ).fetchone()
+        if not svc:
+            return
         current_price = svc["price_sats"]
         price_adjusted = False
         new_price = current_price
