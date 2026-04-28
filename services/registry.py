@@ -33,7 +33,7 @@ def register_service(req: RegisterServiceRequest):
     if req.api_key:
         with get_db() as conn:
             row = conn.execute(
-                "SELECT id FROM providers WHERE api_key=?", (req.api_key,)
+                "SELECT id FROM providers WHERE api_key=%s", (req.api_key,)
             ).fetchone()
             if row:
                 provider_id = row["id"]
@@ -42,7 +42,7 @@ def register_service(req: RegisterServiceRequest):
         conn.execute(
             "INSERT INTO services (id, name, description, price_sats, endpoint_url, "
             "provider_wallet, created_at, is_active, provider_agent_id, service_type, provider_id) "
-            "VALUES (?,?,?,?,?,?,?,?,?,?,?)",
+            "VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",
             (service_id, req.name, req.description, req.price_sats,
              req.endpoint_url, provider_wallet, datetime.now(UTC).isoformat(), 1,
              req.provider_agent_id, req.service_type, provider_id),
@@ -73,7 +73,7 @@ def list_services():
 @router.delete("/services/{service_id}")
 def deactivate_service(service_id: str):
     with get_db() as conn:
-        conn.execute("UPDATE services SET is_active=0 WHERE id=?", (service_id,))
+        conn.execute("UPDATE services SET is_active=0 WHERE id=%s", (service_id,))
     return {"status": "deactivated"}
 
 
@@ -81,7 +81,7 @@ def deactivate_service(service_id: str):
 def update_service_price(service_id: str, req: UpdatePriceRequest):
     with get_db() as conn:
         row = conn.execute(
-            "SELECT id, tier, is_active FROM services WHERE id=?", (service_id,)
+            "SELECT id, tier, is_active FROM services WHERE id=%s", (service_id,)
         ).fetchone()
 
     if not row or not row["is_active"]:
@@ -98,7 +98,7 @@ def update_service_price(service_id: str, req: UpdatePriceRequest):
 
     with get_db() as conn:
         conn.execute(
-            "UPDATE services SET price_sats=?, price_adjusted=0 WHERE id=?",
+            "UPDATE services SET price_sats=%s, price_adjusted=0 WHERE id=%s",
             (req.price_sats, service_id),
         )
 

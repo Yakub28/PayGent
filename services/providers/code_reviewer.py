@@ -15,7 +15,7 @@ def _agent(provider_agent_id: str | None) -> dict | None:
         return None
     with get_db() as conn:
         row = conn.execute(
-            "SELECT id, name, model, system_prompt FROM agents WHERE id=? AND is_active=1",
+            "SELECT id, name, model, system_prompt FROM agents WHERE id=%s AND is_active=1",
             (provider_agent_id,),
         ).fetchone()
     return dict(row) if row else None

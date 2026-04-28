@@ -94,7 +94,7 @@ async def call_service(
 ):
     with get_db() as conn:
         row = conn.execute(
-            "SELECT * FROM services WHERE id=? AND is_active=1", (service_id,)
+            "SELECT * FROM services WHERE id=%s AND is_active=1", (service_id,)
         ).fetchone()
     if not row:
         raise HTTPException(status_code=404, detail="Service not found")
@@ -120,7 +120,7 @@ async def call_service(
             conn.execute(
                 "INSERT INTO transactions (id, service_id, payment_hash, amount_sats, "
                 "fee_sats, provider_sats, status, created_at, consumer_agent_id) "
-                "VALUES (?,?,?,?,?,?,?,?,?)",
+                "VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s)",
                 (txn_id, service_id, invoice_obj.payment_hash,
                  service["price_sats"], None, None, "pending",
                  datetime.now(UTC).isoformat(), req.consumer_agent_id),
@@ -159,8 +159,8 @@ async def call_service(
     txn_id = entry.get("txn_id")
     with get_db() as conn:
         conn.execute(
-            """UPDATE transactions SET status='paid', fee_sats=?, provider_sats=?
-               WHERE payment_hash=?""",
+            """UPDATE transactions SET status='paid', fee_sats=%s, provider_sats=%s
+               WHERE payment_hash=%s""",
             (fee_sats, provider_sats, payment_hash),
         )
 

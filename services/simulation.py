@@ -48,7 +48,7 @@ STATE = _SimState()
 def _list_agents(role: str) -> list[dict]:
     with get_db() as conn:
         rows = conn.execute(
-            "SELECT * FROM agents WHERE role=? AND is_active=1", (role,)
+            "SELECT * FROM agents WHERE role=%s AND is_active=1", (role,)
         ).fetchall()
     return [dict(r) for r in rows]
 
@@ -56,7 +56,7 @@ def _list_agents(role: str) -> list[dict]:
 def _service_for_provider(provider_id: str) -> dict | None:
     with get_db() as conn:
         row = conn.execute(
-            "SELECT * FROM services WHERE provider_agent_id=? AND is_active=1 LIMIT 1",
+            "SELECT * FROM services WHERE provider_agent_id=%s AND is_active=1 LIMIT 1",
             (provider_id,),
         ).fetchone()
     return dict(row) if row else None

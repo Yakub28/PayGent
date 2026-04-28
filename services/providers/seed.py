@@ -40,13 +40,13 @@ def seed_providers():
         
     with get_db() as conn:
         existing = conn.execute(
-            "SELECT id FROM providers WHERE api_key=?", (settings.anthropic_provider_key,)
+            "SELECT id FROM providers WHERE api_key=%s", (settings.anthropic_provider_key,)
         ).fetchone()
         if existing:
             return
         provider_id = str(uuid.uuid4())
         conn.execute(
-            "INSERT INTO providers (id, company_name, api_key, created_at) VALUES (?,?,?,?)",
+            "INSERT INTO providers (id, company_name, api_key, created_at) VALUES (%s,%s,%s,%s)",
             (provider_id, ANTHROPIC_COMPANY, settings.anthropic_provider_key, datetime.now(UTC).isoformat()),
         )
         print(f"  Seeded Anthropic provider -> {provider_id}")
@@ -73,7 +73,7 @@ def seed_services():
         for svc in SERVICES:
             with get_db() as conn:
                 try:
-                    existing = conn.execute("SELECT id FROM services WHERE name=? AND is_active=1 LIMIT 1", (svc["name"],)).fetchone()
+                    existing = conn.execute("SELECT id FROM services WHERE name=%s AND is_active=1 LIMIT 1", (svc["name"],)).fetchone()
                     if existing:
                         continue
                 except Exception:

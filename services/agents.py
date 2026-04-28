@@ -37,7 +37,7 @@ def _row_to_agent(row: dict) -> AgentRecord:
     service_id = None
     with get_db() as conn:
         svc = conn.execute(
-            "SELECT id FROM services WHERE provider_agent_id=? AND is_active=1 LIMIT 1",
+            "SELECT id FROM services WHERE provider_agent_id=%s AND is_active=1 LIMIT 1",
             (row["id"],),
         ).fetchone()
         if svc:
@@ -80,7 +80,7 @@ def create_agent(req: RegisterAgentRequest):
     with get_db() as conn:
         conn.execute(
             "INSERT INTO agents (id, name, role, model, system_prompt, "
-            "service_type, created_at, is_active) VALUES (?,?,?,?,?,?,?,1)",
+            "service_type, created_at, is_active) VALUES (%s,%s,%s,%s,%s,%s,%s,1)",
             (agent_id, req.name, req.role, req.model, req.system_prompt,
              service_type, now),
         )
@@ -98,7 +98,7 @@ def create_agent(req: RegisterAgentRequest):
         ))
 
     with get_db() as conn:
-        row = conn.execute("SELECT * FROM agents WHERE id=?", (agent_id,)).fetchone()
+        row = conn.execute("SELECT * FROM agents WHERE id=%s", (agent_id,)).fetchone()
     return _row_to_agent(dict(row))
 
 
@@ -106,17 +106,38 @@ def create_agent(req: RegisterAgentRequest):
 def list_agents():
     with get_db() as conn:
         rows = conn.execute(
-            "SELECT * FROM agents WHERE is_active=1 ORDER BY created_at DESC"
+            """SELECT a.*, s.id as service_id
+               FROM agents a
+               LEFT JOIN services s ON s.provider_agent_id = a.id AND s.is_active = 1
+               WHERE a.is_active = 1
+               ORDER BY a.created_at DESC"""
         ).fetchall()
-    return [_row_to_agent(dict(r)) for r in rows]
+    
+    results = []
+    for row in rows:
+        r = dict(row)
+        wallet = get_or_create_agent_wallet(r["id"], label=r["name"])
+        results.append(AgentRecord(
+            id=r["id"],
+            name=r["name"],
+            role=r["role"],
+            model=r["model"],
+            system_prompt=r.get("system_prompt"),
+            service_type=r.get("service_type"),
+            balance_sats=wallet.balance_sats,
+            created_at=r["created_at"],
+            is_active=bool(r["is_active"]),
+            service_id=r.get("service_id"),
+        ))
+    return results
 
 
 @router.delete("/agents/{agent_id}")
 def delete_agent(agent_id: str):
     with get_db() as conn:
-        conn.execute("UPDATE agents SET is_active=0 WHERE id=?", (agent_id,))
+        conn.execute("UPDATE agents SET is_active=0 WHERE id=%s", (agent_id,))
         conn.execute(
-            "UPDATE services SET is_active=0 WHERE provider_agent_id=?",
+            "UPDATE services SET is_active=0 WHERE provider_agent_id=%s",
             (agent_id,),
         )
     drop_agent_wallet(agent_id)
@@ -127,12 +148,12 @@ def delete_agent(agent_id: str):
 def topup_agent(agent_id: str, req: TopupRequest):
     with get_db() as conn:
         row = conn.execute(
-            "SELECT * FROM agents WHERE id=? AND is_active=1", (agent_id,)
+            "SELECT * FROM agents WHERE id=%s AND is_active=1", (agent_id,)
         ).fetchone()
     if not row:
         raise HTTPException(status_code=404, detail="agent not found")
     wallet = get_or_create_agent_wallet(agent_id, label=row["name"])
     wallet.topup(req.amount_sats)
     with get_db() as conn:
-        row = conn.execute("SELECT * FROM agents WHERE id=?", (agent_id,)).fetchone()
+        row = conn.execute("SELECT * FROM agents WHERE id=%s", (agent_id,)).fetchone()
     return _row_to_agent(dict(row))

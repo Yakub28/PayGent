@@ -92,12 +92,12 @@ def score_and_update(
 
     with get_db() as conn:
         conn.execute(
-            "UPDATE transactions SET quality_score=?, score_reason=? WHERE id=?",
+            "UPDATE transactions SET quality_score=%s, score_reason=%s WHERE id=%s",
             (score, reason, transaction_id),
         )
 
         row = conn.execute(
-            "SELECT service_id FROM transactions WHERE id=?", (transaction_id,)
+            "SELECT service_id FROM transactions WHERE id=%s", (transaction_id,)
         ).fetchone()
         if not row:
             return
@@ -105,7 +105,7 @@ def score_and_update(
 
         scores = conn.execute(
             """SELECT quality_score FROM transactions
-               WHERE service_id=? AND quality_score IS NOT NULL
+               WHERE service_id=%s AND quality_score IS NOT NULL
                ORDER BY created_at DESC LIMIT 20""",
             (service_id,),
         ).fetchall()
@@ -113,15 +113,15 @@ def score_and_update(
         avg_score = sum(r["quality_score"] for r in scores) / window if window else None
 
         scored_count = conn.execute(
-            "SELECT COUNT(*) as n FROM transactions WHERE service_id=? AND quality_score IS NOT NULL",
+            "SELECT COUNT(*) as n FROM transactions WHERE service_id=%s AND quality_score IS NOT NULL",
             (service_id,),
         ).fetchone()["n"]
 
         total = conn.execute(
-            "SELECT COUNT(*) as n FROM transactions WHERE service_id=?", (service_id,)
+            "SELECT COUNT(*) as n FROM transactions WHERE service_id=%s", (service_id,)
         ).fetchone()["n"]
         paid = conn.execute(
-            "SELECT COUNT(*) as n FROM transactions WHERE service_id=? AND status='paid'",
+            "SELECT COUNT(*) as n FROM transactions WHERE service_id=%s AND status='paid'",
             (service_id,),
         ).fetchone()["n"]
         success_rate = paid / total if total > 0 else 0.0
@@ -149,7 +149,7 @@ def score_and_update(
         ceiling = ceilings[new_tier]
 
         svc = conn.execute(
-            "SELECT price_sats FROM services WHERE id=?", (service_id,)
+            "SELECT price_sats FROM services WHERE id=%s", (service_id,)
         ).fetchone()
         if not svc:
             return
@@ -162,8 +162,8 @@ def score_and_update(
 
         conn.execute(
             """UPDATE services
-               SET avg_quality_score=?, success_rate=?, tier=?,
-                   price_sats=?, price_adjusted=?
-               WHERE id=?""",
+               SET avg_quality_score=%s, success_rate=%s, tier=%s,
+                   price_sats=%s, price_adjusted=%s
+               WHERE id=%s""",
             (avg_score, success_rate, new_tier, new_price, int(price_adjusted), service_id),
         )

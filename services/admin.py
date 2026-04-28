@@ -14,7 +14,7 @@ def create_provider(req: CreateProviderRequest):
     api_key = f"pvd_{secrets.token_hex(16)}"
     with get_db() as conn:
         conn.execute(
-            "INSERT INTO providers (id, company_name, api_key, created_at) VALUES (?,?,?,?)",
+            "INSERT INTO providers (id, company_name, api_key, created_at) VALUES (%s,%s,%s,%s)",
             (provider_id, req.company_name, api_key, datetime.now(UTC).isoformat()),
         )
     return CreateProviderResponse(

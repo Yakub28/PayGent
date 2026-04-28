@@ -1,4 +1,5 @@
 import os
+import logging
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -17,24 +18,35 @@ from services.providers.code_writer import router as code_writer_router
 from services.admin import router as admin_router
 from services.providers.seed import seed_services, seed_providers
 
+logger = logging.getLogger(__name__)
+
 # Make sure the schema exists before the first request
 init_db()
 
 @asynccontextmanager
 async def lifespan(_: FastAPI):
-    init_db()
-    seed_providers()
-    seed_services()
+    try:
+        init_db()
+        seed_providers()
+        seed_services()
+    except Exception as e:
+        logger.error("Startup initialization failed: %s", e)
     yield
 
 app = FastAPI(title="PayGent Marketplace", lifespan=lifespan)
 
-# CORS Configuration
+# CORS Configuration - allow Vercel preview URLs and localhost
 allowed_origins = os.getenv("CORS_ALLOWED_ORIGINS", "http://localhost:3000").split(",")
+# Add wildcard patterns for Vercel deployments
+allowed_origins.extend([
+    "https://*.vercel.app",
+    "https://*.vercel.sh",
+])
 
 app.add_middleware(
     CORSMiddleware,
     allow_origins=allowed_origins,
+    allow_origin_regex=r"https://.*\.(vercel\.app|vercel\.sh)$",
     allow_methods=["*"],
     allow_headers=["*"],
 )
